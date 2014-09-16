@@ -1,0 +1,146 @@
+<!-- $Id: card_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader.htm"}
+<div class="main-div">
+<form method="post" action="wx_news.php" name="theForm" enctype="multipart/form-data" onsubmit="return validate()">
+<table cellspacing="1" cellpadding="3" width="100%">
+  <tr>
+    <td class="label">{$lang.news_name}</td>
+    <td><input type="text" name="news_name" maxlength="60" size = "30" value="{$news.news_name|escape}" />{$lang.require_field}</td>
+  </tr>
+<!--   <tr>
+    <td class="label"><a href="javascript:showNotice('notice_cardfee');" title="{$lang.form_notice}">
+        <img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.card_fee}</td>
+    <td><input type="text" name="card_fee" maxlength="60" size="30" value="{$card.card_fee}" />{$lang.require_field}
+    <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="notice_cardfee">{$lang.notice_cardfee}</span>
+    </td>
+  </tr>
+  <tr>
+    <td class="label"><a href="javascript:showNotice('notice_cardfreemoney');" title="{$lang.form_notice}">
+        <img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.free_money}</td>
+    <td><input type="text" name="free_money" maxlength="60" size="30" value="{$card.free_money}" />{$lang.require_field}
+    <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="notice_cardfreemoney">{$lang.notice_cardfreemoney}</span>
+    </td>
+  </tr>
+  <tr>
+    <td class="label">{if $card.card_img neq ""}<a href="javascript:showNotice('warn_cardimg');" title="{$lang.form_notice}">
+        <img src="images/warning_small.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{/if}{$lang.card_img}</td>
+    <td><input type="file" name="card_img"  size="45">{if $card.card_img neq ""}<input type="button" value="{$lang.drop_card_img}" onclick="if (confirm('{$lang.confirm_drop_card_img}'))location.href='card.php?act=drop_card_img&id={$card.card_id}'">{/if}
+    <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="warn_cardimg">{$lang.warn_cardimg}</span>
+    </td>
+  </tr> -->
+  <tr>
+    <td class="label">{$lang.news_desc}</td>
+    <td><textarea  name="news_desc" cols="60" rows="4">{$news.news_desc|escape}</textarea></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>
+      <input type="submit" class="button" value="{$lang.button_submit}" />
+      <input type="reset" class="button" value="{$lang.button_reset}" />
+      <input type="hidden" name="act" value="{$form_action}" />
+      <input type="hidden" name="id" value="{$news.news_id}" />
+      <input type="hidden" name="old_news_name" value="{$news.news_name}" />
+    </td>
+  </tr>
+</table>
+<!-- 添加图文 -->
+<table width="90%" id="article-table" style="display:block" align="center">
+  <!-- 图文列表 -->
+  <tr>
+    <td>
+      {foreach from=$img_list item=img key=i}
+      <div id="gallery_{$img.img_id}" style="float:left; text-align:center; border: 1px solid #DADADA; margin: 4px; padding:2px;">
+        <a href="javascript:;" onclick="if (confirm('{$lang.drop_img_confirm}')) dropImg('{$img.img_id}')">[-]</a><br />
+        <a href="goods.php?act=show_image&img_url={$img.img_url}" target="_blank">
+        <img src="../{if $img.thumb_url}{$img.thumb_url}{else}{$img.img_url}{/if}" {if $thumb_width neq 0}width="{$thumb_width}"{/if} {if $thumb_height neq 0}height="{$thumb_height}"{/if} border="0" />
+        </a><br />
+        <input type="text" value="{$img.img_desc|escape}" size="15" name="old_img_desc[{$img.img_id}]" />
+      </div>
+      {/foreach}
+    </td>
+  </tr>
+  <tr><td>&nbsp;</td></tr>
+  <!-- 添加图文 -->
+  <tr>
+    <td>
+      <a href="javascript:;" onclick="addActicle(this)">[+]</a>
+      {$lang.article_title}   <input type="text" name="article_title" size="20" />
+      {$lang.article_author}  <input type="text" name="article_author" size="20" />
+      {$lang.article_digest}  <input type="text" name="article_digest" size="20" />
+      {$lang.article_thumb}   <input type="text" name="article_thumb" />
+      {$lang.article_content} <input type="text" name="article_content" />
+      {$lang.article_source}
+      <input type="text" size="40" value="{$lang.img_file}" style="color:#aaa;" 
+        onfocus="if (this.value == '{$lang.img_file}'){this.value='http://';this.style.color='#000';}" name=""/>
+      {$lang.article_as_cover}<input type="radio" name="article_as_cover" value="0"  />
+    </td>
+  </tr>
+</table>
+</form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+<script language="JavaScript">
+<!--
+document.forms['theForm'].elements['news_name'].focus();
+/**
+ * 检查表单输入的数据
+ */
+function validate()
+{
+    validator = new Validator("theForm");
+    validator.required("news_name",  no_news_name);
+/*    validator.isNumber("card_fee",   cardfee_un_num, 1);
+    validator.isNumber("free_money", cardmoney_un_num, 1);*/
+    return validator.passed();
+}
+onload = function()
+{
+    // 开始检查订单
+    startCheckOrder();
+}
+
+  /**
+   * 添加图文
+   */
+  function addArticle(obj)
+  {
+      var src  = obj.parentNode.parentNode;
+      var idx  = rowindex(src);
+      var tbl  = document.getElementById('article-table');
+      var row  = tbl.insertRow(idx + 1);
+      var cell = row.insertCell(-1);
+      cell.innerHTML = src.cells[0].innerHTML.replace(/(.*)(addArticle)(.*)(\[)(\+)/i, "$1removeActicle$3$4-");
+  }
+
+  /**
+   * 删除图文
+   */
+  function removeActicle(obj)
+  {
+      var row = rowindex(obj.parentNode.parentNode);
+      var tbl = document.getElementById('article-table');
+
+      tbl.deleteRow(row);
+  }
+
+  /**
+   * 删除图片文件
+   */
+  // function dropActicle(imgId)
+  // {
+  //   Ajax.call('goods.php?is_ajax=1&act=drop_image', "img_id="+imgId, dropImgResponse, "GET", "JSON");
+  // }
+
+  // function dropImgResponse(result)
+  // {
+  //     if (result.error == 0)
+  //     {
+  //         document.getElementById('gallery_' + result.content).style.display = 'none';
+  //     }
+  // }
+
+//-->
+</script>
+{/literal}
+{include file="pagefooter.htm"}

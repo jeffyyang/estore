@@ -1,0 +1,97 @@
+<!-- $Id: category_info.htm 16752 2009-10-20 09:59:38Z wangleisvn $ -->
+{include file="pageheader.htm"}
+<!-- start add new category form -->
+<div class="main-div">
+  <form action="wx_menu.php" method="post" name="theForm" enctype="multipart/form-data" onsubmit="return validate()">
+  <table width="100%" id="general-table">
+      <tr>
+        <td class="label">{$lang.wx_menu_name}:</td>
+        <td>
+          <input type='text' name='menu_name' maxlength="20" value='{$wx_menu_info.menu_name|escape:html}' size='27' /> <font color="red">*</font>
+        </td>
+      </tr>
+      <tr>
+        <td class="label">{$lang.wx_menu_parent_id}:</td>
+        <td>
+          <select name="parent_id">
+            <option value="0">{$lang.menu_top}</option>
+            {$parent_select}
+          </select>
+        </td>
+      </tr>
+      <div id="leaf_menu_div" style="display:none" >
+      <tr>
+        <td class="label">{$lang.wx_menu_type}:</td>
+        <td>
+          <input type="radio" name="menu_type" value="view"  {if $wx_menu_info.menu_type eq "view"}  checked="true" {/if} /> {$lang.wx_menu_type_url}
+          <input type="radio" name="menu_type" value="click" {if $wx_menu_info.menu_type eq "click"} checked="true" {/if} /> {$lang.wx_menu_type_event}
+        </td>
+      </tr>
+      <tr>
+        <td class="label"><a href="javascript:showNotice('noticeUrl');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.notice_style}"></a>{$lang.wx_menu_view_url}:</td>
+        <td>
+          <input type="text" name="web_url" value="{$wx_menu_info.web_url}" size="40" /> <br />
+          <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeUrl">{$lang.notice_url}</span>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="label"><a href="javascript:showNotice('noticeKey');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.notice_style}"></a>{$lang.wx_menu_click_key}:</td>
+        <td>
+          <input type="text" name="event_key" value="{$wx_menu_info.event_key}" size="40" /> <br />
+          <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeKey">{$lang.notice_key}</span>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="label">{$lang.sort_order}:</td>
+        <td>
+          <input type="text" name='sort_order' {if $wx_menu_info.pri} value='{$wx_menu_info.menu_sort}'{else} value="0"{/if} size="15" />
+        </td>
+      </tr>
+      </div>
+      <tr>
+        <td class="label">{$lang.wx_menu_desc}:</td>
+        <td>
+          <textarea name='menu_desc' rows="6" cols="48">{$wx_menu_info.menu_desc}</textarea>
+        </td>
+      </tr>
+      </table>
+      <div class="button-div">
+        <input type="submit" value="{$lang.button_submit}" />
+        <input type="reset" value="{$lang.button_reset}" />
+      </div>
+    <input type="hidden" name="act" value="{$form_act}" />
+    <input type="hidden" name="menu_id" value="{$wx_menu_info.menu_id}" />
+    <input type="hidden" name="old_menu_name" value="{$wx_menu_info.menu_name}" />
+    <input type="hidden" name="is_leaf"    value="{$wx_menu_info.is_leaf}" />
+  </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+<script language="JavaScript">
+<!--
+document.forms['theForm'].elements['menu_name'].focus();
+/**
+ * 检查表单输入的数据
+ */
+function validate()
+{
+  validator = new Validator("theForm");
+  validator.required("menu_name", wx_menu_name_empty);
+  if (parseInt(document.forms['theForm'].elements['sort_order'].value) >10 || parseInt(document.forms['theForm'].elements['sort_order'].value) < 0)
+  {
+    validator.addErrorMsg('{$lang.sort_order_error}');
+  }
+  return validator.passed();
+}
+onload = function()
+{
+  // 开始检查订单
+  startCheckOrder();
+}
+
+//-->
+</script>
+{/literal}
+{include file="pagefooter.htm"}

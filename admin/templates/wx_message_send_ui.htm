@@ -1,0 +1,84 @@
+<!-- $Id: sms_send_ui.htm 16697 2009-09-24 03:57:47Z liuhui $ -->
+{include file="pageheader.htm"}
+
+<div class="main-div" id="sms-send">
+<form method="POST" action="wx_message.php?act=send_wx_msg" name="wx_msg-send-form" onsubmit="return validate();">
+<table > 
+  <!--     
+    <tr>
+      <td class="label">{$lang.openids}:</td>
+      <td><input name="send_ids" type="text" size="35" />
+          {$lang.openids_notice}
+      </td>
+    </tr> 
+  -->
+  <tr>
+    <td class="label">{$lang.user_group}:</td>
+    <td><select name="send_group">
+        <option value='-1'>{$lang.please_select}</option>
+          {html_options options=$send_group }
+        </select></td>
+  </tr>
+
+  <tr>
+    <td class="label">{$lang.msg_type}:</td>
+    <td>
+      <select name="msg_type">
+        <option value='0'>{$lang.msg_type_txt}</option>
+        <option value='1'>{$lang.msg_type_image}</option>
+        <option value='2'>{$lang.msg_type_voice}</option>
+        <option value='3'>{$lang.msg_type_video}</option> 
+        <option value='3'>{$lang.msg_type_article}</option>                
+      </select>
+    </td>
+  </tr>
+
+  <!--   媒体库 -->
+  <tr>
+    <td class="label">{$lang.media_id}:</td>
+    <td><select name="media_id">
+        <option value='-1'>{$lang.select_media}</option>
+         <!--  {html_options options=$send_group } -->
+        </select></td>
+  </tr>
+
+  <tr>
+    <td class="label">{$lang.msg}:</td>
+    <td><textarea name="msg_txt" rows="6" cols="32"></textarea>{$lang.require_field} {$lang.msg_notice}</td>
+  </tr>
+  
+  <tr>
+    <td colspan="2" align="center">
+      <input type="submit" name="submit" value="{$lang.button_submit}" class="button" />
+      <input type="reset" value="{$lang.button_reset}" class="button" />
+    </td>
+  </tr>
+</table>
+</form>
+</div>
+
+<script type="text/javascript" language="JavaScript">
+<!--
+{literal}
+function  validate() {
+  var f = document['wx_msg-send-form'];
+  // var open_ids  = f.elements['send_ids'].value;
+  var groups_id = f.elements['send_group'].value;
+
+  var msg_txt   = f.elements['msg_txt'].value;
+
+  if(msg_txt == '')
+	{
+		alert(send_empty_error);
+    f.elements['msg_txt'].focus();
+		return false;
+	}
+	else
+	{
+	  return true;
+	}
+}
+{/literal}
+//-->
+</script>
+{include file="pagefooter.htm"}

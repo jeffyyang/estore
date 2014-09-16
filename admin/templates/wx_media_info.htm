@@ -1,0 +1,79 @@
+<!-- $Id: card_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader.htm"}
+<div class="main-div">
+<form method="post" action="wx_media.php" name="theForm" enctype="multipart/form-data" onsubmit="return validate()">
+<table cellspacing="1" cellpadding="3" width="100%">
+  <tr>
+    <td class="label">{$lang.media_name}</td>
+    <td><input type="text" name="media_name" maxlength="60" size = "30" value="{$card.card_name|escape}" />{$lang.require_field}</td>
+  </tr>
+  <tr>
+    <td class="label"><a href="javascript:showNotice('notice_media_type');" title="{$lang.form_notice}">
+        <img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.media_type}
+    </td>
+    <td>      
+      <select name="media_type">
+        <option value='image'>{$lang.media_type_image}</option>
+        <option value='voice'>{$lang.media_type_voice}</option>
+        <option value='video'>{$lang.media_type_video}</option> 
+        <option value='thumb'>{$lang.media_type_thumb}</option>                
+      </select>
+    <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="notice_media_type">{$lang.notice_media_type}</span>
+    </td>
+  </tr>
+  <tr>
+    <td class="label"><a href="javascript:showNotice('notice_media_formats');" title="{$lang.form_notice}">
+        <img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.formats}</td>
+    <td><input type="text" name="formats" maxlength="60" size="30" value="{$medium.formats}" />
+    <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="notice_media_formats">{$lang.notice_media_formats}</span>
+    </td>
+  </tr>
+  <tr>
+    <td class="label">{if $medium.media_url neq ""}<a href="javascript:showNotice('warn_media_file');" title="{$lang.form_notice}">
+        <img src="images/warning_small.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{/if}{$lang.media_file}</td>
+    <td><input type="file" name="media_file"  size="45">{if $medium.media_url neq ""}<input type="button" value="{$lang.drop_media_file}" onclick="if (confirm('{$lang.confirm_drop_media_file}'))location.href='wx_media.php?act=drop_media_file&id={$medium.media_id}'">{/if}
+    <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="warn_media_file">{$lang.warn_media_file}</span>{$lang.require_field}
+    </td>
+  </tr>
+  <tr>
+    <td class="label">{$lang.media_desc}</td>
+    <td><textarea  name="media_desc" cols="60" rows="4">{$medium.media_desc|escape}</textarea></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>
+      <input type="submit" class="button" value="{$lang.button_submit}" />
+      <input type="reset" class="button" value="{$lang.button_reset}" />
+      <input type="hidden" name="act" value="{$form_action}" />
+      <input type="hidden" name="id" value="{$medium.media_id}" />
+      <input type="hidden" name="old_media_name" value="{$medium.media_name}" />
+      <input type="hidden" name="old_media_url"  value="{$medium.media_url}">
+    </td>
+  </tr>
+</table>
+</form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+<script language="JavaScript">
+<!--
+document.forms['theForm'].elements['media_name'].focus();
+/**
+ * 检查表单输入的数据
+ */
+function validate()
+{
+    validator = new Validator("theForm");
+    validator.required("media_name",  no_media_name);
+    // validator.isNumber("free_money", cardmoney_un_num, 1);
+    return validator.passed();
+}
+onload = function()
+{
+    // 开始检查订单
+    startCheckOrder();
+}
+//-->
+</script>
+{/literal}
+{include file="pagefooter.htm"}

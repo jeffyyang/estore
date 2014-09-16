@@ -1,0 +1,59 @@
+<!-- $Id: category_list.htm 17019 2010-01-29 10:10:34Z liuhui $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,listtable.js"}
+
+<form method="post" action="" name="listForm">
+<!-- start ad position list -->
+<div class="list-div" id="listDiv">
+{/if}
+
+<table width="100%" cellspacing="1" cellpadding="2" id="list-table">
+  <tr>
+    <th>{$lang.wx_keyword_id}</th>
+    <th>{$lang.wx_keyword_keywords}</th>
+    <th>{$lang.wx_keyword_content_type}</th>
+    <th>{$lang.wx_keyword_content_article_id}</th>
+    <th>{$lang.wx_keyword_content}</th>
+    <th>{$lang.wx_keyword_status}</th>
+    <th>{$lang.wx_keyword_create_time}</th>
+    <th>{$lang.handler}</th>
+  </tr>
+  { foreach from=$keyword_list item=keyword}
+  <tr align="center" id="{$keyword.keyword_id}">
+    <td align="left" class="first-cell" >
+      <span><a href="wx_keyword.php?act=list&wx_keyword_id={$keyword.keyword_id}">{$keyword.keyword_id}</a></span>
+    </td>
+    <td width="5%">{$keyword.keywords}</td>
+    <td width="10%">{if $keyword.msg_type eq 'text' } 纯文本消息 {else}  图文消息 {/if} </td>
+    <td width="5%">{if $keyword.article_id > 0 } {$keyword.article_id} {/if} </td>
+    <td width="30%">{$keyword.content}</td>
+    <td width="10%">{if $keyword.status == 1 } 已生效 {else}  未生效 {/if}</td>
+    <td width="15%">{$keyword.create_time|date_format:"%Y-%m-%d %H:%M:%S"}</td>
+    <td width="24%" align="center">
+      <a href="wx_keyword.php?act=edit&amp;keyword_id={$keyword.keyword_id}">{$lang.edit}</a> |
+      <a href="javascript:;" onclick="listTable.remove({$keyword.keyword_id},'{$lang.drop_confirm}')" title="{$lang.remove}">{$lang.remove}</a>
+    </td>
+  </tr>
+  {foreachelse}
+  <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
+  {/foreach}
+</table>
+{if $full_page}
+</div>
+</form>
+
+{literal}
+<script language="JavaScript">
+<!--
+onload = function()
+{
+  // 开始检查订单
+  startCheckOrder();
+}
+//-->
+</script>
+{/literal}
+
+{include file="pagefooter.htm"}
+{/if}
