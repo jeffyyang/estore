@@ -10,14 +10,15 @@
     function cloud_api(result)
     {
       //alert(result.content);
-      if(result.content=='0')
+/*      if(result.content=='0')
       {
         document.getElementById("cloud_list").style.display ='none';
       }
       else
        {
          document.getElementById("cloud_list").innerHTML =result.content;
-      }
+      }*/
+      document.getElementById("cloud_list").style.display ='none';
     } 
    function cloud_close(id)
     {
@@ -209,17 +210,17 @@
     <td>{$sys_info.max_filesize}</td>
   </tr>
   <tr>
-    <td>{$lang.ecs_version}</td>
-    <td>{$ecs_version} RELEASE {$ecs_release}</td>
+    <td>{$lang.ec_charset}</td>
+    <td>{$ecs_charset}</td>
     <td>{$lang.install_date}</td>
     <td>{$install_date}</td>
   </tr>
-  <tr>
-    <td>{$lang.ec_charset}</td>
-    <td>{$ecs_charset}</td>
+<!--   <tr>
+    <td>{$lang.ecs_version}</td>
+    <td>{$ecs_version} RELEASE {$ecs_release}</td>    
     <td></td>
     <td></td>
-  </tr>
+  </tr> -->
 </table>
 </div>
 {literal}
