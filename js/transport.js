@@ -409,7 +409,7 @@ var Transport =
         }
         catch (ex)
         {
-          throw this.filename + "/parseResult() error: can't parse to JSON.\n\n" + xhr.responseText;
+          throw this.filename + "/parseResult() error: can't parse to JSON. \n \n " + xhr.responseText;
         }
         break;
       case "XML" :

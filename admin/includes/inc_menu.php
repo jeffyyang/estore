@@ -18,6 +18,10 @@ if (!defined('IN_ECS'))
     die('Hacking attempt');
 }
 
+
+$modules['01_shop']['03_shopcate_list']             = 'shopcate.php?act=list';      // 商户分类列表
+$modules['01_shop']['suppliers_list']         		= 'suppliers.php?act=list';     // 商户列表
+
 $modules['02_cat_and_goods']['01_goods_list']       = 'goods.php?act=list';         // 商品列表
 $modules['02_cat_and_goods']['02_goods_add']        = 'goods.php?act=add';          // 添加商品
 $modules['02_cat_and_goods']['03_category_list']    = 'category.php?act=list';
@@ -101,7 +105,7 @@ $modules['10_priv_admin']['admin_logs']             = 'admin_logs.php?act=list';
 $modules['10_priv_admin']['admin_list']             = 'privilege.php?act=list';
 $modules['10_priv_admin']['admin_role']             = 'role.php?act=list';
 $modules['10_priv_admin']['agency_list']            = 'agency.php?act=list';    // 办事处
-$modules['10_priv_admin']['suppliers_list']         = 'suppliers.php?act=list'; // 供货商
+// $modules['10_priv_admin']['suppliers_list']         = 'suppliers.php?act=list'; // 供货商
 
 // 系统管理
 // $modules['11_system']['01_shop_config']             = 'shop_config.php?act=list_edit';

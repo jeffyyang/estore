@@ -129,6 +129,7 @@ $_LANG['gram'] = '克';
 $_LANG['kilogram'] = '千克';
 
 /* 菜单分类部分 */
+$_LANG['01_shop'] = '商户管理';
 $_LANG['02_cat_and_goods'] = '商品管理';
 $_LANG['03_promotion'] = '促销管理';
 $_LANG['04_order'] = '订单管理';
@@ -145,6 +146,10 @@ $_LANG['14_sms'] = '短信管理';
 $_LANG['15_rec'] = '推荐管理';
 $_LANG['16_email_manage'] = '邮件群发管理';
 $_LANG['17_wxmp'] = '微信平台管理';
+
+/*商户管理*/
+$_LANG['03_shopcate_list'] = '商户分类列表';
+$_LANG['suppliers_list'] = '商户列表';
 
 /* 商品管理 */
 $_LANG['01_goods_list'] = '商品列表';
@@ -252,7 +257,7 @@ $_LANG['admin_add_role'] = '添加角色';
 $_LANG['admin_edit_role'] = '修改角色';
 $_LANG['admin_logs'] = '管理员日志';
 $_LANG['agency_list'] = '办事处列表';
-$_LANG['suppliers_list'] = '商户列表';
+
 
 /* 系统设置 */
 $_LANG['01_shop_config'] = '商店设置';
