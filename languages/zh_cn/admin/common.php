@@ -252,7 +252,7 @@ $_LANG['admin_add_role'] = '添加角色';
 $_LANG['admin_edit_role'] = '修改角色';
 $_LANG['admin_logs'] = '管理员日志';
 $_LANG['agency_list'] = '办事处列表';
-$_LANG['suppliers_list'] = '供货商列表';
+$_LANG['suppliers_list'] = '商户列表';
 
 /* 系统设置 */
 $_LANG['01_shop_config'] = '商店设置';

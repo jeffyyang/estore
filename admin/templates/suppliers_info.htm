@@ -8,9 +8,80 @@
     <td class="label">{$lang.label_suppliers_name}</td>
     <td><input type="text" name="suppliers_name" maxlength="60" value="{$suppliers.suppliers_name}" />{$lang.require_field}</td>
   </tr>
+     {if $agencies_exists eq 1}
+      <tr>
+        <td class="label">{$lang.label_suppliers_agency_name}</td>
+        <td>
+          <select name="agency_id" id="agency_id">
+            <option value="0">{$lang.agencies_no}</option>
+            {html_options options=$agencies_list_name selected=$suppliers.agency_id}
+          </select>
+        </td>
+      </tr>
+     {/if}  
+  <tr>
+    <td class="label">{$lang.label_suppliers_posters}</td>
+    <td>
+      <!-- 商户相册 -->
+      <table width="90%" id="gallery-table" style="display:block" align="center">
+        <!-- 相册列表 -->
+        <tr>
+          <td>
+            {foreach from=$img_list item=img key=i}
+            <div id="gallery_{$img.img_id}" style="float:left; text-align:center; border: 1px solid #DADADA; margin: 4px; padding:2px;">
+              <a href="javascript:;" onclick="if (confirm('{$lang.drop_img_confirm}')) dropImg('{$img.img_id}')">[-]</a><br />
+              <a href="goods.php?act=show_image&img_url={$img.img_url}" target="_blank">
+              <img src="../{if $img.thumb_url}{$img.thumb_url}{else}{$img.img_url}{/if}" {if $thumb_width neq 0}width="{$thumb_width}"{/if} {if $thumb_height neq 0}height="{$thumb_height}"{/if} border="0" />
+              </a><br />
+              <input type="text" value="{$img.img_desc|escape}" size="15" name="old_img_desc[{$img.img_id}]" />
+            </div>
+            {/foreach}
+          </td>
+        </tr>
+        <tr><td>&nbsp;</td></tr>
+        <!-- 添加图片 -->
+        <tr>
+          <td>
+            <a href="javascript:;" onclick="addImg(this)">[+]</a>
+            {$lang.img_desc} <input type="text" name="img_desc[]" size="20" />
+            {$lang.img_url} <input type="file" name="img_url[]" />
+            <input type="text" size="40" value="{$lang.img_file}" style="color:#aaa;" onfocus="if (this.value == '{$lang.img_file}'){this.value='http://';this.style.color='#000';}" name="img_file[]"/>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td class="label">{$lang.label_suppliers_comm_rank}</td>
+    <td><input type="text" name="comm_rank" maxlength="60" value="{$suppliers.suppliers_comm_rank}" />{$lang.require_field}</td>
+  </tr>
+  <tr>
+    <td class="label">{$lang.label_suppliers_envi_rank}</td>
+    <td><input type="text" name="envi_rank" maxlength="60" value="{$suppliers.suppliers_envi_rank}" />{$lang.require_field}</td>
+  </tr>
+  <tr>
+    <td class="label">{$lang.label_suppliers_serv_rank}</td>
+    <td><input type="text" name="serv_rank" maxlength="60" value="{$suppliers.suppliers_serv_rank}" />{$lang.require_field}</td>
+  </tr> 
+  <tr>
+    <td class="label">{$lang.label_suppliers_shop_price}</td>
+    <td><input type="text" name="serv_rank" maxlength="60" value="{$suppliers.suppliers_shop_price}" />{$lang.require_field}</td>
+  </tr> 
+  <tr>
+    <td class="label">{$lang.label_suppliers_phone}</td>
+    <td><input type="text" name="serv_rank" maxlength="60" value="{$suppliers.suppliers_phone}" />{$lang.require_field}</td>
+  </tr>   
+  <tr>
+    <td class="label">{$lang.label_suppliers_mobile}</td>
+    <td><input type="text" name="serv_rank" maxlength="60" value="{$suppliers.suppliers_mobile}" />{$lang.require_field}</td>
+  </tr>    
+  <tr>
+    <td class="label">{$lang.label_suppliers_address}</td>
+    <td><textarea  name="suppliers_desc" cols="60" rows="3"  >{$suppliers.suppliers_address}</textarea></td>
+  </tr>      
   <tr>
     <td class="label">{$lang.label_suppliers_desc}</td>
-    <td><textarea  name="suppliers_desc" cols="60" rows="4"  >{$suppliers.suppliers_desc}</textarea></td>
+    <td><textarea  name="suppliers_desc" cols="60" rows="6"  >{$suppliers.suppliers_desc}</textarea></td>
   </tr>
   <tr>
     <td class="label">
@@ -55,6 +126,47 @@ function validate()
     validator.required("suppliers_name",  no_suppliers_name);
     return validator.passed();
 }
+
+  /**
+   * 添加海报图片
+   */
+  function addImg(obj)
+  {
+      var src  = obj.parentNode.parentNode;
+      var idx  = rowindex(src);
+      var tbl  = document.getElementById('gallery-table');
+      var row  = tbl.insertRow(idx + 1);
+      var cell = row.insertCell(-1);
+      cell.innerHTML = src.cells[0].innerHTML.replace(/(.*)(addImg)(.*)(\[)(\+)/i, "$1removeImg$3$4-");
+  }
+
+  /**
+   * 删除海报图片
+   */
+  function removeImg(obj)
+  {
+      var row = rowindex(obj.parentNode.parentNode);
+      var tbl = document.getElementById('gallery-table');
+
+      tbl.deleteRow(row);
+  }
+
+  /**
+   * 删除图片
+   */
+  function dropImg(imgId)
+  {
+    Ajax.call('goods.php?is_ajax=1&act=drop_image', "img_id="+imgId, dropImgResponse, "GET", "JSON");
+  }
+
+  function dropImgResponse(result)
+  {
+      if (result.error == 0)
+      {
+          document.getElementById('gallery_' + result.content).style.display = 'none';
+      }
+  }
+
 //-->
 </script>
 {/literal}

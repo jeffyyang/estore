@@ -304,6 +304,18 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
                 AND action_list <> 'all'";
         $suppliers['admin_list'] = $db->getAll($sql);
 
+ 
+        /* 代理机构名称 */
+        $agencies_list_name = agencies_list_name();
+        $agencies_exists = 1;
+        if (empty($agencies_list_name))
+        {
+            $agencies_exists = 0;
+        }
+        $smarty->assign('agencies_exists', $agencies_exists);
+        $smarty->assign('agencies_list_name', $agencies_list_name);
+        unset($agencies_list_name, $agencies_exists);
+
         $smarty->assign('ur_here', $_LANG['add_suppliers']);
         $smarty->assign('action_link', array('href' => 'suppliers.php?act=list', 'text' => $_LANG['suppliers_list']));
 
@@ -453,6 +465,43 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
         sys_msg($_LANG['edit_suppliers_ok'], 0, $links);
     }
 
+}
+
+/**
+ * 获得指定商品的相册
+ *
+ * @access  public
+ * @param   integer     $supplier_id
+ * @return  array
+ */
+function get_supplier_gallery($supplier_id)
+{
+    $sql = 'SELECT img_id, img_url, thumb_url, img_desc' .
+        ' FROM ' . $GLOBALS['ecs']->table('ecs_supplier_gallery') .
+        " WHERE supplier_id = '$supplier_id' LIMIT " . $GLOBALS['_CFG']['supplier_gallery_number'];
+    $row = $GLOBALS['db']->getAll($sql);
+    /* 格式化相册图片路径 */
+    foreach($row as $key => $gallery_img)
+    {
+        $row[$key]['img_url'] = get_image_path($goods_id, $gallery_img['img_url'], false, 'gallery');
+        $row[$key]['thumb_url'] = get_image_path($goods_id, $gallery_img['thumb_url'], true, 'gallery');
+    }
+    return $row;
+}
+
+/**
+ * 代理机构列表
+ *
+ * @access  public
+ * @return  array
+ */
+function agencies_list_name()
+{
+    $sql = 'SELECT agency_id, agency_name' .
+        ' FROM ' . $GLOBALS['ecs']->table('agency') .
+        " ORDER BY agency_id ASC ";
+    $row = $GLOBALS['db']->getAll($sql);
+    return $row;
 }
 
 /**

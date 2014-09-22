@@ -592,6 +592,7 @@ function load_config()
         $arr['goods_name_length']    = intval($arr['goods_name_length']);
         $arr['top10_time']           = intval($arr['top10_time']);
         $arr['goods_gallery_number'] = intval($arr['goods_gallery_number']) ? intval($arr['goods_gallery_number']) : 5;
+        // $arr['supplier_gallery_number'] = intval($arr['supplier_gallery_number']) ? intval($arr['supplier_gallery_number']) : 5;
         $arr['no_picture']           = !empty($arr['no_picture']) ? str_replace('../', './', $arr['no_picture']) : 'images/no_picture.gif'; // 修改默认商品图片的路径
         $arr['qq']                   = !empty($arr['qq']) ? $arr['qq'] : '';
         $arr['ww']                   = !empty($arr['ww']) ? $arr['ww'] : '';

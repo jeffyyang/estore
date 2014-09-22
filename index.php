@@ -40,6 +40,7 @@ if(($ua == '' || preg_match($uachar, $ua))&& !strpos(strtolower($_SERVER['REQUES
 /*------------------------------------------------------ */
 //-- Shopex系统地址转换
 /*------------------------------------------------------ */
+
 if (!empty($_GET['gOo']))
 {
     if (!empty($_GET['gcat']))
