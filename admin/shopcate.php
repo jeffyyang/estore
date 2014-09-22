@@ -34,7 +34,7 @@ else
 if ($_REQUEST['act'] == 'list')
 {
     /* 获取分类列表 */
-    $cat_list = cat_list(0, 0, false);
+    $cat_list = shop_cat_list(0, 0, false);
 
     /* 模板赋值 */
     $smarty->assign('ur_here',      $_LANG['03_category_list']);
@@ -53,7 +53,7 @@ if ($_REQUEST['act'] == 'list')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'query')
 {
-    $cat_list = cat_list(0, 0, false);
+    $cat_list = shop_cat_list(0, 0, false);
     $smarty->assign('cat_info',     $cat_list);
 
     make_json_result($smarty->fetch('shopcate_list.htm'));
@@ -64,7 +64,7 @@ elseif ($_REQUEST['act'] == 'query')
 if ($_REQUEST['act'] == 'add')
 {
     /* 权限检查 */
-    admin_priv('cat_manage');
+    admin_priv('shop_manage');
 
 
 
@@ -75,7 +75,7 @@ if ($_REQUEST['act'] == 'add')
     $smarty->assign('goods_type_list',  goods_type_list(0)); // 取得商品类型
     $smarty->assign('attr_list',        get_attr_list()); // 取得商品属性
 
-    $smarty->assign('cat_select',   cat_list(0, 0, true));
+    $smarty->assign('cat_select',   shop_cat_list(0, 0, true));
     $smarty->assign('form_act',     'insert');
     $smarty->assign('cat_info',     array('is_show' => 1));
 
@@ -211,7 +211,7 @@ if ($_REQUEST['act'] == 'edit')
 
     $smarty->assign('cat_info',    $cat_info);
     $smarty->assign('form_act',    'update');
-    $smarty->assign('cat_select',  cat_list(0, $cat_info['parent_id'], true));
+    $smarty->assign('cat_select',  shop_cat_list(0, $cat_info['parent_id'], true));
     $smarty->assign('goods_type_list',  goods_type_list(0)); // 取得商品类型
 
     /* 显示页面 */
@@ -280,7 +280,7 @@ if ($_REQUEST['act'] == 'update')
     }
 
     /* 判断上级目录是否合法 */
-    $children = array_keys(cat_list($cat_id, 0, false));     // 获得当前分类的所有下级分类
+    $children = array_keys(shop_cat_list($cat_id, 0, false));     // 获得当前分类的所有下级分类
     if (in_array($cat['parent_id'], $children))
     {
         /* 选定的父类是当前分类或当前分类的下级分类 */
@@ -360,7 +360,7 @@ if ($_REQUEST['act'] == 'move')
     $smarty->assign('ur_here',     $_LANG['move_goods']);
     $smarty->assign('action_link', array('href' => 'shopcate.php?act=list', 'text' => $_LANG['03_category_list']));
 
-    $smarty->assign('cat_select', cat_list(0, $cat_id, true));
+    $smarty->assign('cat_select', shop_cat_list(0, $cat_id, true));
     $smarty->assign('form_act',   'move_cat');
 
     /* 显示页面 */
