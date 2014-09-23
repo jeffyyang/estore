@@ -1,15 +1,15 @@
 <?php
 // database host
-$db_host   = "localhost:3306";
-// $db_host   = "59.60.30.99:3306";
+#$db_host   = "localhost:3306";
+$db_host   = "59.60.30.99:3306";
 // database name
-// $db_name   = "ecshop2";
-$db_name   = "ecshop";
+$db_name   = "ecshop2";
+
 // database username
-$db_user   = "ecshop";
+$db_user   = "sangoh5";
 
 // database password
-$db_pass   = "jlinfo123";
+$db_pass   = "zlgame123";
 
 // table prefix
 $prefix    = "ecs_";
@@ -38,5 +38,5 @@ define('AUTH_KEY', 'this is a key');
 
 define('OLD_AUTH_KEY', '');
 
-define('API_TIME', '2014-09-23 02:17:39');
+define('API_TIME', '2014-09-22 09:19:15');
 ?>
