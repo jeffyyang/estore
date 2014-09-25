@@ -71,7 +71,7 @@ if ($_REQUEST['act'] == 'list' || $_REQUEST['act'] == 'trash')
     /* 显示商品列表页面 */
     assign_query_info();
     $htm_file = ($_REQUEST['act'] == 'list') ?
-        'goods_list.htm' : (($_REQUEST['act'] == 'trash') ? 'goods_trash.htm' : 'group_list.htm');
+        'suppliers_goods_list.htm' : (($_REQUEST['act'] == 'trash') ? 'goods_trash.htm' : 'suppliers_goods_list.htm');
     $smarty->display($htm_file);
 }
 

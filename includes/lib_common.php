@@ -608,7 +608,7 @@ function shop_cat_list($cat_id = 0, $selected = 0, $re_type = true, $level = 0, 
             //如果数组过大，不采用静态缓存方式
             if (count($res) <= 1000)
             {
-                write_static_cache('cat_pid_releate', $res);
+                write_static_cache('shop_cat_pid_releate', $res);
             }
         }
         else
@@ -724,7 +724,7 @@ function shop_cat_options($spec_cat_id, $arr)
     {
         $level = $last_cat_id = 0;
         $options = $cat_id_array = $level_array = array();
-        $data = read_static_cache('cat_option_static');
+        $data = read_static_cache('shop_cat_option_static');
         if ($data === false)
         {
             while (!empty($arr))
@@ -812,7 +812,7 @@ function shop_cat_options($spec_cat_id, $arr)
             //如果数组过大，不采用静态缓存方式
             if (count($options) <= 2000)
             {
-                write_static_cache('cat_option_static', $options);
+                write_static_cache('shop_cat_option_static', $options);
             }
         }
         else

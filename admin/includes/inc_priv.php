@@ -19,10 +19,10 @@ if (!defined('IN_ECS'))
 }
 
 //  商户管理权限
-    $purview['suppliers_list']       = 'shop_manage'; // 供货商
+    $purview['suppliers_list']       = 'shop_manage';    // 供货商
     $purview['01_goods_list']        = array('goods_manage', 'remove_back');
     $purview['02_goods_add']         = 'goods_manage';
-    $purview['03_shopcate_list']     = array('shop_manage', 'shop_manage');   //分类添加、分类转移和删除
+    $purview['03_shopcate_list']     = 'shop_manage';   //分类添加、分类转移和删除
     $purview['05_comment_manage']    = 'comment_priv';
     $purview['06_goods_brand_list']  = 'brand_manage';
 
@@ -44,6 +44,7 @@ if (!defined('IN_ECS'))
     $purview['51_virtual_card_add']  = 'virualcard';
     $purview['52_virtual_card_change'] = 'virualcard';
     $purview['goods_auto']           = 'goods_auto';
+    $purview['53_suppliers_goods']   = array('goods_manage', 'suppliers_goods');
 
 //促销管理权限
     $purview['02_snatch_list']       = 'snatch_manage';
@@ -83,8 +84,8 @@ if (!defined('IN_ECS'))
 
 //商店设置权限
     $purview['01_shop_config']       = 'shop_config';
-    $purview['shop_authorized']       = 'shop_authorized';
-    $purview['shp_webcollect']            = 'webcollect_manage';
+    $purview['shop_authorized']      = 'shop_authorized';
+    $purview['shp_webcollect']       = 'webcollect_manage';
     $purview['02_payment_list']      = 'payment';
     $purview['03_shipping_list']     = array('ship_manage','shiparea_manage');
     $purview['04_mail_settings']     = 'shop_config';

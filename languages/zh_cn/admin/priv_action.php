@@ -42,7 +42,7 @@ $_LANG['picture_batch'] = '图片批量处理';
 $_LANG['goods_export'] = '商品批量导出';
 $_LANG['goods_batch'] = '商品批量上传/修改';
 $_LANG['gen_goods_script'] = '生成商品代码';
-$_LANG['suppliers_goods'] = '供货商商品管理';
+$_LANG['suppliers_goods'] = '商户商品管理';
 
 //文章管理部分的权限
 $_LANG['article_cat'] = '文章分类管理';

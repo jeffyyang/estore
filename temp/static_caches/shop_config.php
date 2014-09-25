@@ -1,12 +1,12 @@
 <?php
 $data = array (
-  'shop_name' => '旷盛动漫商店',
-  'shop_title' => '旷盛动漫商店',
-  'shop_desc' => '旷盛动漫商店',
-  'shop_keywords' => '动漫 旷盛',
+  'shop_name' => '龙龙游戏商店',
+  'shop_title' => '龙龙游戏商店',
+  'shop_desc' => '龙龙游戏商店',
+  'shop_keywords' => '龙龙游戏商店',
   'shop_country' => '1',
-  'shop_province' => '2',
-  'shop_city' => '52',
+  'shop_province' => '15',
+  'shop_city' => '212',
   'shop_address' => '',
   'qq' => '',
   'ww' => '',

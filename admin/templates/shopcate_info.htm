@@ -2,7 +2,7 @@
 {include file="pageheader.htm"}
 <!-- start add new category form -->
 <div class="main-div">
-  <form action="category.php" method="post" name="theForm" enctype="multipart/form-data" onsubmit="return validate()">
+  <form action="shopcate.php" method="post" name="theForm" enctype="multipart/form-data" onsubmit="return validate()">
   <table width="100%" id="general-table">
       <tr>
         <td class="label">{$lang.cat_name}:</td>
@@ -19,27 +19,27 @@
           </select>
         </td>
       </tr>
-
-      <tr id="measure_unit">
-        <td class="label">{$lang.measure_unit}:</td>
-        <td>
-          <input type="text" name='measure_unit' value='{$cat_info.measure_unit}' size="12" />
-        </td>
-      </tr>
-      <tr>
-        <td class="label">{$lang.sort_order}:</td>
-        <td>
-          <input type="text" name='sort_order' {if $cat_info.sort_order}value='{$cat_info.sort_order}'{else} value="50"{/if} size="15" />
-        </td>
-      </tr>
-
       <tr>
         <td class="label">{$lang.is_show}:</td>
         <td>
           <input type="radio" name="is_show" value="1" {if $cat_info.is_show neq 0} checked="true"{/if}/> {$lang.yes}
           <input type="radio" name="is_show" value="0" {if $cat_info.is_show eq 0} checked="true"{/if} /> {$lang.no}
         </td>
+      </tr> 
+      <tr>
+        <td class="label">{$lang.sort_order}:</td>
+        <td>
+          <input type="text" name='sort_order' {if $cat_info.sort_order}value='{$cat_info.sort_order}'{else} value="50"{/if} size="15" />
+        </td>
+      </tr>           
+
+<!--  <tr id="measure_unit">
+        <td class="label">{$lang.measure_unit}:</td>
+        <td>
+          <input type="text" name='measure_unit' value='{$cat_info.measure_unit}' size="12" />
+        </td>
       </tr>
+
       <tr>
         <td class="label">{$lang.show_in_nav}:</td>
         <td>
@@ -117,7 +117,7 @@
 
           <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeFilterAttr">{$lang.filter_attr_notic}</span>
         </td>
-      </tr>
+      </tr> 
       <tr>
         <td class="label"><a href="javascript:showNotice('noticeGrade');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.notice_style}"></a>{$lang.grade}:</td>
         <td>
@@ -132,6 +132,7 @@
           <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeGoodsSN">{$lang.notice_style}</span>
         </td>
       </tr>
+      -->
       <tr>
         <td class="label">{$lang.keywords}:</td>
         <td><input type="text" name="keywords" value='{$cat_info.keywords}' size="50">

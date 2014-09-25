@@ -29,7 +29,7 @@ else
 }
 
 /*------------------------------------------------------ */
-//-- 商品分类列表
+//-- 商户分类列表
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'list')
 {
@@ -37,8 +37,8 @@ if ($_REQUEST['act'] == 'list')
     $cat_list = shop_cat_list(0, 0, false);
 
     /* 模板赋值 */
-    $smarty->assign('ur_here',      $_LANG['03_category_list']);
-    $smarty->assign('action_link',  array('href' => 'shopcate.php?act=add', 'text' => $_LANG['04_category_add']));
+    $smarty->assign('ur_here',      $_LANG['03_shopcate_list']);
+    $smarty->assign('action_link',  array('href' => 'shopcate.php?act=add', 'text' => $_LANG['03_shopcate_add']));
     $smarty->assign('full_page',    1);
 
     $smarty->assign('cat_info',     $cat_list);
@@ -59,7 +59,7 @@ elseif ($_REQUEST['act'] == 'query')
     make_json_result($smarty->fetch('shopcate_list.htm'));
 }
 /*------------------------------------------------------ */
-//-- 添加商品分类
+//-- 添加商户分类
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'add')
 {
@@ -67,13 +67,12 @@ if ($_REQUEST['act'] == 'add')
     admin_priv('shop_manage');
 
 
-
     /* 模板赋值 */
-    $smarty->assign('ur_here',      $_LANG['04_category_add']);
-    $smarty->assign('action_link',  array('href' => 'shopcate.php?act=list', 'text' => $_LANG['03_category_list']));
+    $smarty->assign('ur_here',      $_LANG['03_shopcate_add']);
+    $smarty->assign('action_link',  array('href' => 'shopcate.php?act=list', 'text' => $_LANG['03_shopcate_list']));
 
-    $smarty->assign('goods_type_list',  goods_type_list(0)); // 取得商品类型
-    $smarty->assign('attr_list',        get_attr_list()); // 取得商品属性
+    // $smarty->assign('goods_type_list',  goods_type_list(0)); // 取得商品类型
+    // $smarty->assign('attr_list',        get_attr_list()); // 取得商品属性
 
     $smarty->assign('cat_select',   shop_cat_list(0, 0, true));
     $smarty->assign('form_act',     'insert');
@@ -92,7 +91,7 @@ if ($_REQUEST['act'] == 'add')
 if ($_REQUEST['act'] == 'insert')
 {
     /* 权限检查 */
-    admin_priv('cat_manage');
+    admin_priv('shop_cat_manage');
 
     /* 初始化变量 */
     $cat['cat_id']       = !empty($_POST['cat_id'])       ? intval($_POST['cat_id'])     : 0;
@@ -128,19 +127,19 @@ if ($_REQUEST['act'] == 'insert')
     if ($db->autoExecute($ecs->table('shop_cate'), $cat) !== false)
     {
         $cat_id = $db->insert_id();
-        if($cat['show_in_nav'] == 1)
-        {
-            $vieworder = $db->getOne("SELECT max(vieworder) FROM ". $ecs->table('nav') . " WHERE type = 'middle'");
-            $vieworder += 2;
-            //显示在自定义导航栏中
-            $sql = "INSERT INTO " . $ecs->table('nav') .
-                " (name,ctype,cid,ifshow,vieworder,opennew,url,type)".
-                " VALUES('" . $cat['cat_name'] . "', 'c', '".$db->insert_id()."','1','$vieworder','0', '" . build_uri('category', array('cid'=> $cat_id), $cat['cat_name']) . "','middle')";
-            $db->query($sql);
-        }
-        insert_cat_recommend($cat['cat_recommend'], $cat_id);
+        // if($cat['show_in_nav'] == 1)
+        // {
+        //     $vieworder = $db->getOne("SELECT max(vieworder) FROM ". $ecs->table('nav') . " WHERE type = 'middle'");
+        //     $vieworder += 2;
+        //     //显示在自定义导航栏中
+        //     $sql = "INSERT INTO " . $ecs->table('nav') .
+        //         " (name,ctype,cid,ifshow,vieworder,opennew,url,type)".
+        //         " VALUES('" . $cat['cat_name'] . "', 'c', '".$db->insert_id()."','1','$vieworder','0', '" . build_uri('category', array('cid'=> $cat_id), $cat['cat_name']) . "','middle')";
+        //     $db->query($sql);
+        // }
+        // insert_cat_recommend($cat['cat_recommend'], $cat_id);
 
-        admin_log($_POST['cat_name'], 'add', 'category');   // 记录管理员操作
+        admin_log($_POST['cat_name'], 'add', 'shopcate');   // 记录管理员操作
         clear_cache_files();    // 清除缓存
 
         /*添加链接*/
@@ -195,7 +194,7 @@ if ($_REQUEST['act'] == 'edit')
     $smarty->assign('attr_list',        $attr_list); // 取得商品属性
     $smarty->assign('attr_cat_id',      $attr_cat_id);
     $smarty->assign('ur_here',     $_LANG['category_edit']);
-    $smarty->assign('action_link', array('text' => $_LANG['03_category_list'], 'href' => 'shopcate.php?act=list'));
+    $smarty->assign('action_link', array('text' => $_LANG['03_shopcate_list'], 'href' => 'shopcate.php?act=list'));
 
     //分类是否存在首页推荐
     $res = $db->getAll("SELECT recommend_type FROM " . $ecs->table("cat_recommend") . " WHERE cat_id=" . $cat_id);
@@ -250,7 +249,7 @@ elseif($_REQUEST['act'] == 'add_category')
 if ($_REQUEST['act'] == 'update')
 {
     /* 权限检查 */
-    admin_priv('cat_manage');
+    admin_priv('shop_cat_manage');
 
     /* 初始化变量 */
     $cat_id              = !empty($_POST['cat_id'])       ? intval($_POST['cat_id'])     : 0;
@@ -357,7 +356,7 @@ if ($_REQUEST['act'] == 'move')
     $cat_id = !empty($_REQUEST['cat_id']) ? intval($_REQUEST['cat_id']) : 0;
 
     /* 模板赋值 */
-    $smarty->assign('ur_here',     $_LANG['move_goods']);
+    $smarty->assign('ur_here',     $_LANG['move_shop']);
     $smarty->assign('action_link', array('href' => 'shopcate.php?act=list', 'text' => $_LANG['03_category_list']));
 
     $smarty->assign('cat_select', shop_cat_list(0, $cat_id, true));
@@ -365,7 +364,7 @@ if ($_REQUEST['act'] == 'move')
 
     /* 显示页面 */
     assign_query_info();
-    $smarty->display('category_move.htm');
+    $smarty->display('shopcate_move.htm');
 }
 
 /*------------------------------------------------------ */
@@ -387,7 +386,7 @@ if ($_REQUEST['act'] == 'move_cat')
     }
 
     /* 更新商品分类 */
-    $sql = "UPDATE " .$ecs->table('goods'). " SET cat_id = '$target_cat_id' ".
+    $sql = "UPDATE " .$ecs->table('suppliers'). " SET cat_id = '$target_cat_id' ".
            "WHERE cat_id = '$cat_id'";
     if ($db->query($sql))
     {
@@ -548,7 +547,7 @@ if ($_REQUEST['act'] == 'toggle_is_show')
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'remove')
 {
-    check_authz_json('cat_manage');
+    check_authz_json('shop_cat_manage');
 
     /* 初始化分类ID并取得分类名称 */
     $cat_id   = intval($_GET['id']);
@@ -604,7 +603,7 @@ if ($_REQUEST['act'] == 'remove')
 //}
 
 /**
- * 获得商品分类的所有信息
+ * 获得商户分类的所有信息
  *
  * @param   integer     $cat_id     指定的分类ID
  *

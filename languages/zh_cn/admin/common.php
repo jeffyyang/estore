@@ -148,7 +148,8 @@ $_LANG['16_email_manage'] = '邮件群发管理';
 $_LANG['17_wxmp'] = '微信平台管理';
 
 /*商户管理*/
-$_LANG['03_shopcate_list'] = '商户分类列表';
+$_LANG['03_shopcate_list'] = '商户分类';
+$_LANG['03_shopcate_add'] = '添加商户分类';
 $_LANG['suppliers_list'] = '商户列表';
 
 /* 商品管理 */
@@ -170,7 +171,7 @@ $_LANG['16_goods_script'] = '生成商品代码';
 $_LANG['17_tag_manage'] = '标签管理';
 $_LANG['18_product_list'] = '货品列表';
 $_LANG['52_attribute_add'] = '编辑属性';
-$_LANG['53_suppliers_goods'] = '供货商商品管理';
+$_LANG['53_suppliers_goods'] = '商户商品管理';
 
 $_LANG['14_goods_export'] = '商品批量导出';
 

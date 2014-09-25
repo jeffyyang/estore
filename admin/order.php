@@ -60,6 +60,7 @@ elseif ($_REQUEST['act'] == 'list')
     /* 检查权限 */
     admin_priv('order_view');
 
+    print_r($_SESSION);
     /* 模板赋值 */
     $smarty->assign('ur_here', $_LANG['02_order_list']);
     $smarty->assign('action_link', array('href' => 'order.php?act=order_query', 'text' => $_LANG['03_order_query']));

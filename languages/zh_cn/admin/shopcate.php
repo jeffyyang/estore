@@ -26,6 +26,7 @@ $_LANG['measure_unit'] = '数量单位';
 $_LANG['delete_info'] = '删除选中';
 $_LANG['category_edit'] = '编辑商户分类';
 $_LANG['move_goods'] = '转移商品';
+$_LANG['move_shop'] = '转移商户';
 $_LANG['cat_top'] = '顶级分类';
 $_LANG['show_in_nav'] = '是否显示在导航栏';
 $_LANG['cat_style'] = '分类的样式表文件';
@@ -68,7 +69,7 @@ $_LANG['select_target_cat'] = '选择目标分类';
 $_LANG['source_cat'] = '从此分类';
 $_LANG['target_cat'] = '转移到';
 $_LANG['start_move_cat'] = '开始转移';
-$_LANG['cat_move_notic'] = '在添加商品或者在商品管理中,如果需要对商品的分类进行变更,那么你可以通过此功能,正确管理你的商户分类。';
+$_LANG['cat_move_notic'] = '在添加商户或者在商户管理中,如果需要对商户的分类进行变更,那么你可以通过此功能,正确管理你的商户分类。';
 
 $_LANG['cat_move_empty'] = '你没有正确选择商户分类!';
 

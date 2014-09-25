@@ -211,6 +211,7 @@ elseif ($_REQUEST['act'] == 'edit')
         $priv_arr[$priv["parent_id"]]["priv"][$priv["action_code"]] = $priv;
     }
 
+
     // 将同一组的权限使用 "," 连接起来，供JS全选
     foreach ($priv_arr AS $action_id => $action_group)
     {
@@ -221,7 +222,6 @@ elseif ($_REQUEST['act'] == 'edit')
             $priv_arr[$action_id]['priv'][$key]['cando'] = (strpos($priv_str, $val['action_code']) !== false || $priv_str == 'all') ? 1 : 0;
         }
     }
-
 
     /* 模板赋值 */
 
