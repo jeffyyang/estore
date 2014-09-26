@@ -319,7 +319,7 @@ function validate()
       }
 
       var params = 'place=' + place.value;
-      Ajax.call('brand.php?is_ajax=1&act=add_brand', params, addPlaceResponse, 'GET', 'JSON');
+      Ajax.call('place.php?is_ajax=1&act=add_place', params, addPlaceResponse, 'GET', 'JSON');
   }
 
   function addPlaceResponse(result)
