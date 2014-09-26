@@ -45,7 +45,9 @@ $_LANG['label_suppliers_desc'] = '商户描述：';
 $_LANG['rapid_add_brand'] = '添加品牌';
 $_LANG['rapid_add_cat'] = '添加分类';
 $_LANG['rapid_add_brand'] = '添加品牌';
+$_LANG['rapid_add_place'] = '添加商圈';
 $_LANG['category_manage'] = '类别管理';
+$_LANG['place_manage'] = '商圈管理';
 
 $_LANG['label_region'] = '区域：';
 $_LANG['label_country'] = '国家：';

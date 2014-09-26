@@ -180,6 +180,31 @@ function get_regions($type = 0, $parent = 0)
 }
 
 /**
+ * 获得指定国家的所有区域列表
+ *
+ * @access      public
+ * @param       int     type      地区类型
+ * @param       int     parent    父节点 
+ * @return      array 品牌列表 id => name
+ */
+
+function get_regions_list($type = 0, $parent = 0)
+{
+    $sql = 'SELECT region_id, region_name FROM ' . $GLOBALS['ecs']->table('region') .
+            " WHERE region_type = '$type' AND parent_id = '$parent'";
+
+    $res = $GLOBALS['db']->GetAll($sql);
+
+    $regions_list = array();
+    foreach ($res AS $row)
+    {
+        $regions_list[$row['region_id']] = addslashes($row['region_name']);
+    }
+    return $regions_list;
+}
+
+
+/**
  * 获得配送区域中指定的配送方式的配送费用的计算参数
  *
  * @access  public

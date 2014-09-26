@@ -10,7 +10,7 @@
  * 使用；不允许对程序代码以任何形式任何目的的再发布。
  * ============================================================================
  * $Author: liubo $
- * $Id: brand.php 17217 2011-01-19 06:29:08Z liubo $
+ * $Id: place.php 17217 2011-01-19 06:29:08Z liubo $
 */
 
 define('IN_ECS', true);
@@ -19,10 +19,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 include_once(ROOT_PATH . 'includes/cls_image.php');
 $image = new cls_image($_CFG['bgcolor']);
 
-$exc = new exchange($ecs->table("brand"), $db, 'brand_id', 'brand_name');
+$exc = new exchange($ecs->table("place"), $db, 'place_id', 'place_name');
 
 /*------------------------------------------------------ */
-//-- 品牌列表
+//-- 商圈列表
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'list')
 {
@@ -42,12 +42,12 @@ if ($_REQUEST['act'] == 'list')
 }
 
 /*------------------------------------------------------ */
-//-- 添加品牌
+//-- 添加商圈
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'add')
 {
     /* 权限判断 */
-    admin_priv('brand_manage');
+    admin_priv('place_manage');
 
     $smarty->assign('ur_here',     $_LANG['07_brand_add']);
     $smarty->assign('action_link', array('text' => $_LANG['06_goods_brand_list'], 'href' => 'brand.php?act=list'));
@@ -202,23 +202,24 @@ elseif ($_REQUEST['act'] == 'edit_brand_name')
     }
 }
 
-elseif($_REQUEST['act'] == 'add_brand')
+elseif($_REQUEST['act'] == 'add_place')
 {
-    $brand = empty($_REQUEST['brand']) ? '' : json_str_iconv(trim($_REQUEST['brand']));
+    $place = empty($_REQUEST['place']) ? '' : json_str_iconv(trim($_REQUEST['place']));
+    $district = empty($_REQUEST['district']) ? '' : json_str_iconv(trim($_REQUEST['district']));
 
-    if(brand_exists($brand))
+    if(place_exists($place))
     {
-        make_json_error($_LANG['brand_name_exist']);
+        make_json_error($_LANG['place_name_exist']);
     }
     else
     {
-        $sql = "INSERT INTO " . $ecs->table('brand') . "(brand_name)" .
-               "VALUES ( '$brand')";
+        $sql = "INSERT INTO " . $ecs->table('place') . "(region_id, place_name)" .
+               "VALUES ('$district','$place')";
 
         $db->query($sql);
-        $brand_id = $db->insert_id();
+        $place_id = $db->insert_id();
 
-        $arr = array("id"=>$brand_id, "brand"=>$brand);
+        $arr = array("id"=>$place_id, "place"=>$place);
 
         make_json_result($arr);
     }

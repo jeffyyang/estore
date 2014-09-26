@@ -126,7 +126,7 @@
             <a href="javascript:void(0)" title="{$lang.rapid_add_place}" onclick="rapidPlaceAdd()" class="special" >{$lang.rapid_add_place}</a>
             <span id="place_add" style="display:none;">
             <input class="text" size="15" name="addedPlaceName" />
-             <a href="javascript:void(0)" onclick="addBrand()" class="special" >{$lang.button_submit}</a>
+             <a href="javascript:void(0)" onclick="addPlace()" class="special" >{$lang.button_submit}</a>
              <a href="javascript:void(0)" onclick="return goPlacePage()" title="{$lang.place_manage}" class="special" >{$lang.place_manage}</a>
              <a href="javascript:void(0)" onclick="hidePlaceDiv()" title="{$lang.hide}" class="special" ><<</a>
              </span>
@@ -311,15 +311,19 @@ function validate()
   }
   function addPlace()
   {
-      var brand = document.forms['theForm'].elements['addedPlaceName'];
-      if(brand.value.replace(/^\s+|\s+$/g, '') == '')
+      var place = document.forms['theForm'].elements['addedPlaceName'];
+      var district = document.forms['theForm'].elements['district'];
+
+      if(place.value.replace(/^\s+|\s+$/g, '') == '')
       {
           alert(brand_cat_not_null);
           return;
       }
 
-      var params = 'place=' + place.value;
-      Ajax.call('brand.php?is_ajax=1&act=add_brand', params, addPlaceResponse, 'GET', 'JSON');
+
+      var params = 'district=' + district.value + '&place=' + place.value;
+ 
+      Ajax.call('place.php?is_ajax=1&act=add_place', params, addPlaceResponse, 'GET', 'JSON');
   }
 
   function addPlaceResponse(result)

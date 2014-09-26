@@ -59,6 +59,7 @@ region.changed = function(obj, type, selName)
 {
   var parent = obj.options[obj.selectedIndex].value;
 
+
   region.loadRegions(parent, type, selName);
 }
 
@@ -96,6 +97,7 @@ region.response = function(result, text_result)
 
 region.getFileName = function()
 {
+
   if (region.isAdmin)
   {
     return "../region.php";

@@ -104,13 +104,15 @@
   <tr>
     <td class="label"><?php echo $this->_var['lang']['label_region']; ?></td>
     <td>
-<!--           <span class="label"><?php echo $this->_var['lang']['label_province']; ?></span>
+          <!-- 省份      
+          <span class="label"><?php echo $this->_var['lang']['label_province']; ?></span>
           <select name="province" id="selProvinces" onChange="region.changed(this, 2, 'selCities')" >
             <option value=""><?php echo $this->_var['lang']['select_please']; ?></option>
             <?php echo $this->html_options(array('options'=>$this->_var['province_list'],'selected'=>$this->_var['suppliers']['brand_id'])); ?>
-          </select> -->
+          </select> 
+          -->
           <span class="label"><?php echo $this->_var['lang']['label_city']; ?></span>
-          <select name="city" id="selCities" onChange="region.changed(this, 3, 'selDistricts')" >
+          <select name="city" id="selCities" onChange="region.isAdmin = true;region.changed(this, 3, 'selDistricts')" >
             <option value=""><?php echo $this->_var['lang']['select_please']; ?></option>
             <?php echo $this->html_options(array('options'=>$this->_var['city_list'],'selected'=>$this->_var['suppliers']['region_cities'])); ?>
           </select>
@@ -121,7 +123,17 @@
           <span class="label"><?php echo $this->_var['lang']['label_place']; ?></span>
           <select name="place" id="selPlace" >
             <option value=""><?php echo $this->_var['lang']['select_please']; ?></option>
-          </select>         
+          </select>
+          <?php if ($this->_var['is_add']): ?>
+            <a href="javascript:void(0)" title="<?php echo $this->_var['lang']['rapid_add_place']; ?>" onclick="rapidPlaceAdd()" class="special" ><?php echo $this->_var['lang']['rapid_add_place']; ?></a>
+            <span id="place_add" style="display:none;">
+            <input class="text" size="15" name="addedPlaceName" />
+             <a href="javascript:void(0)" onclick="addPlace()" class="special" ><?php echo $this->_var['lang']['button_submit']; ?></a>
+             <a href="javascript:void(0)" onclick="return goPlacePage()" title="<?php echo $this->_var['lang']['place_manage']; ?>" class="special" ><?php echo $this->_var['lang']['place_manage']; ?></a>
+             <a href="javascript:void(0)" onclick="hidePlaceDiv()" title="<?php echo $this->_var['lang']['hide']; ?>" class="special" ><<</a>
+             </span>
+           <?php endif; ?>
+           <?php echo $this->_var['lang']['require_field']; ?>            
     </td>
   </tr>
   <tr>
@@ -265,6 +277,92 @@ function validate()
 
       return;
   }
+
+  /**
+   * 商圈管理
+   */
+  function rapidPlaceAdd(conObj)
+  {
+      var brand_div = document.getElementById("place_add");
+
+      if(brand_div.style.display != '')
+      {
+          var brand =document.forms['theForm'].elements['addedPlaceName'];
+          brand.value = '';
+          brand_div.style.display = '';
+      }
+  }
+
+  function hidePlaceDiv()
+  {
+      var brand_add_div = document.getElementById("place_add");
+      if(brand_add_div.style.display != 'none')
+      {
+          brand_add_div.style.display = 'none';
+      }
+  }
+
+  function goPlacePage()
+  {
+      if(confirm(go_brand_page))
+      {
+          window.location.href='place.php?act=add';
+      }
+      else
+      {
+          return;
+      }
+  }
+  function addPlace()
+  {
+      var place = document.forms['theForm'].elements['addedPlaceName'];
+      var district = document.forms['theForm'].elements['district'];
+
+      if(place.value.replace(/^\s+|\s+$/g, '') == '')
+      {
+          alert(brand_cat_not_null);
+          return;
+      }
+
+
+      var params = 'district=' + district.value + '&place=' + place.value;
+      alert(params);
+      
+      Ajax.call('place.php?is_ajax=1&act=add_place', params, addPlaceResponse, 'GET', 'JSON');
+  }
+
+  function addPlaceResponse(result)
+  {
+      if (result.error == '1' && result.message != '')
+      {
+          alert(result.message);
+          return;
+      }
+
+      var brand_div = document.getElementById("place_add");
+      brand_div.style.display = 'none';
+
+      var response = result.content;
+
+      var selCat = document.forms['theForm'].elements['place_id'];
+      var opt = document.createElement("OPTION");
+      opt.value = response.id;
+      opt.selected = true;
+      opt.text = response.brand;
+
+      if (Browser.isIE)
+      {
+          selCat.add(opt);
+      }
+      else
+      {
+          selCat.appendChild(opt);
+      }
+
+      return;
+  }
+  /*快速管理商圈*/
+
 
   function rapidCatAdd()
   {

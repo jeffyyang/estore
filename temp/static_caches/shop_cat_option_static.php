@@ -1,6 +1,6 @@
 <?php
 $data = array (
-  0 => 
+  18 => 
   array (
     'cat_id' => '18',
     'cat_name' => '美食',
@@ -12,21 +12,11 @@ $data = array (
     'sort_order' => '1',
     'has_children' => '2',
     'goods_num' => 0,
+    'level' => 0,
+    'id' => '18',
+    'name' => '美食',
   ),
-  1 => 
-  array (
-    'cat_id' => '21',
-    'cat_name' => '亲子',
-    'measure_unit' => '',
-    'parent_id' => '0',
-    'is_show' => '1',
-    'show_in_nav' => '0',
-    'grade' => '0',
-    'sort_order' => '3',
-    'has_children' => '1',
-    'goods_num' => 0,
-  ),
-  2 => 
+  19 => 
   array (
     'cat_id' => '19',
     'cat_name' => '西餐',
@@ -38,8 +28,11 @@ $data = array (
     'sort_order' => '50',
     'has_children' => '0',
     'goods_num' => 0,
+    'level' => 1,
+    'id' => '19',
+    'name' => '西餐',
   ),
-  3 => 
+  20 => 
   array (
     'cat_id' => '20',
     'cat_name' => '川菜',
@@ -51,8 +44,27 @@ $data = array (
     'sort_order' => '50',
     'has_children' => '0',
     'goods_num' => 0,
+    'level' => 1,
+    'id' => '20',
+    'name' => '川菜',
   ),
-  4 => 
+  21 => 
+  array (
+    'cat_id' => '21',
+    'cat_name' => '亲子',
+    'measure_unit' => '',
+    'parent_id' => '0',
+    'is_show' => '1',
+    'show_in_nav' => '0',
+    'grade' => '0',
+    'sort_order' => '3',
+    'has_children' => '1',
+    'goods_num' => 0,
+    'level' => 0,
+    'id' => '21',
+    'name' => '亲子',
+  ),
+  22 => 
   array (
     'cat_id' => '22',
     'cat_name' => '幼儿英语',
@@ -64,6 +76,9 @@ $data = array (
     'sort_order' => '50',
     'has_children' => '0',
     'goods_num' => 0,
+    'level' => 1,
+    'id' => '22',
+    'name' => '幼儿英语',
   ),
 );
 ?>

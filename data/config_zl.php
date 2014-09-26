@@ -1,12 +1,12 @@
 <?php
 // database host
 #$db_host   = "localhost:3306";
-$db_host   = "59.60.30.99:3306";
+$db_host   = "61.154.127.132:3306";
 // database name
-$db_name   = "ecshop2";
+$db_name   = "wxshop";
 
 // database username
-$db_user   = "sangoh5";
+$db_user   = "wxshop";
 
 // database password
 $db_pass   = "zlgame123";
