@@ -337,7 +337,7 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
         // $smarty->assign('province_list', $province_list);
 
         // 吉林
-        $city_list = get_regions(2,15);
+        $city_list = get_regions_list(2,15);
         $smarty->assign('city_list', $city_list);
 
         $smarty->assign('ur_here', $_LANG['add_suppliers']);
