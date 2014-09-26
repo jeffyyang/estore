@@ -321,9 +321,13 @@ function validate()
           return;
       }
 
+<<<<<<< HEAD
 
       var params = 'district=' + district.value + '&place=' + place.value;
  
+=======
+      var params = 'place=' + place.value;
+>>>>>>> 896458f36007865d3f3e7cb8ca448d3e76cd58a8
       Ajax.call('place.php?is_ajax=1&act=add_place', params, addPlaceResponse, 'GET', 'JSON');
   }
 
