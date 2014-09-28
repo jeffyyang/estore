@@ -17,6 +17,7 @@ define('IN_ECS', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
 include_once(ROOT_PATH . 'includes/cls_image.php');
+require(ROOT_PATH . 'includes/cls_json.php');
 $image = new cls_image($_CFG['bgcolor']);
 
 $exc = new exchange($ecs->table("place"), $db, 'place_id', 'place_name');
@@ -26,19 +27,19 @@ $exc = new exchange($ecs->table("place"), $db, 'place_id', 'place_name');
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'list')
 {
-    $smarty->assign('ur_here',      $_LANG['06_goods_brand_list']);
-    $smarty->assign('action_link',  array('text' => $_LANG['07_brand_add'], 'href' => 'brand.php?act=add'));
+    $smarty->assign('ur_here',      $_LANG['19_place_list']);
+    $smarty->assign('action_link',  array('text' => $_LANG['20_place_add'], 'href' => 'place.php?act=add'));
     $smarty->assign('full_page',    1);
 
-    $brand_list = get_brandlist();
+    $place_list = get_place_list();
 
-    $smarty->assign('brand_list',   $brand_list['brand']);
+    $smarty->assign('place_list',   $place_list['place']);
     $smarty->assign('filter',       $brand_list['filter']);
     $smarty->assign('record_count', $brand_list['record_count']);
     $smarty->assign('page_count',   $brand_list['page_count']);
 
     assign_query_info();
-    $smarty->display('brand_list.htm');
+    $smarty->display('place_list.htm');
 }
 
 /*------------------------------------------------------ */
@@ -49,18 +50,18 @@ elseif ($_REQUEST['act'] == 'add')
     /* 权限判断 */
     admin_priv('place_manage');
 
-    $smarty->assign('ur_here',     $_LANG['07_brand_add']);
-    $smarty->assign('action_link', array('text' => $_LANG['06_goods_brand_list'], 'href' => 'brand.php?act=list'));
+    $smarty->assign('ur_here',     $_LANG['20_place_add']);
+    $smarty->assign('action_link', array('text' => $_LANG['19_place_list'], 'href' => 'place.php?act=list'));
     $smarty->assign('form_action', 'insert');
 
     assign_query_info();
-    $smarty->assign('brand', array('sort_order'=>50, 'is_show'=>1));
-    $smarty->display('brand_info.htm');
+    $smarty->assign('place', array('sort_order'=>50, 'is_show'=>1));
+    $smarty->display('place_info.htm');
 }
 elseif ($_REQUEST['act'] == 'insert')
 {
     /*检查品牌名是否重复*/
-    admin_priv('brand_manage');
+    admin_priv('place_manage');
 
     $is_show = isset($_REQUEST['is_show']) ? intval($_REQUEST['is_show']) : 0;
 
@@ -89,96 +90,26 @@ elseif ($_REQUEST['act'] == 'insert')
            "VALUES ('$_POST[brand_name]', '$site_url', '$_POST[brand_desc]', '$img_name', '$is_show', '$_POST[sort_order]')";
     $db->query($sql);
 
-    admin_log($_POST['brand_name'],'add','brand');
+    admin_log($_POST['brand_name'],'add','place');
 
     /* 清除缓存 */
     clear_cache_files();
 
     $link[0]['text'] = $_LANG['continue_add'];
-    $link[0]['href'] = 'brand.php?act=add';
+    $link[0]['href'] = 'place.php?act=add';
 
     $link[1]['text'] = $_LANG['back_list'];
-    $link[1]['href'] = 'brand.php?act=list';
+    $link[1]['href'] = 'place.php?act=list';
 
-    sys_msg($_LANG['brandadd_succed'], 0, $link);
+    sys_msg($_LANG['placeadd_succed'], 0, $link);
 }
 
 /*------------------------------------------------------ */
-//-- 编辑品牌
+//-- 编辑商圈名称
 /*------------------------------------------------------ */
-elseif ($_REQUEST['act'] == 'edit')
+elseif ($_REQUEST['act'] == 'edit_place_name')
 {
-    /* 权限判断 */
-    admin_priv('brand_manage');
-    $sql = "SELECT brand_id, brand_name, site_url, brand_logo, brand_desc, brand_logo, is_show, sort_order ".
-            "FROM " .$ecs->table('brand'). " WHERE brand_id='$_REQUEST[id]'";
-    $brand = $db->GetRow($sql);
-
-    $smarty->assign('ur_here',     $_LANG['brand_edit']);
-    $smarty->assign('action_link', array('text' => $_LANG['06_goods_brand_list'], 'href' => 'brand.php?act=list&' . list_link_postfix()));
-    $smarty->assign('brand',       $brand);
-    $smarty->assign('form_action', 'updata');
-
-    assign_query_info();
-    $smarty->display('brand_info.htm');
-}
-elseif ($_REQUEST['act'] == 'updata')
-{
-    admin_priv('brand_manage');
-    if ($_POST['brand_name'] != $_POST['old_brandname'])
-    {
-        /*检查品牌名是否相同*/
-        $is_only = $exc->is_only('brand_name', $_POST['brand_name'], $_POST['id']);
-
-        if (!$is_only)
-        {
-            sys_msg(sprintf($_LANG['brandname_exist'], stripslashes($_POST['brand_name'])), 1);
-        }
-    }
-
-    /*对描述处理*/
-    if (!empty($_POST['brand_desc']))
-    {
-        $_POST['brand_desc'] = $_POST['brand_desc'];
-    }
-
-    $is_show = isset($_REQUEST['is_show']) ? intval($_REQUEST['is_show']) : 0;
-     /*处理URL*/
-    $site_url = sanitize_url( $_POST['site_url'] );
-
-    /* 处理图片 */
-    $img_name = basename($image->upload_image($_FILES['brand_logo'],'brandlogo'));
-    $param = "brand_name = '$_POST[brand_name]',  site_url='$site_url', brand_desc='$_POST[brand_desc]', is_show='$is_show', sort_order='$_POST[sort_order]' ";
-    if (!empty($img_name))
-    {
-        //有图片上传
-        $param .= " ,brand_logo = '$img_name' ";
-    }
-
-    if ($exc->edit($param,  $_POST['id']))
-    {
-        /* 清除缓存 */
-        clear_cache_files();
-
-        admin_log($_POST['brand_name'], 'edit', 'brand');
-
-        $link[0]['text'] = $_LANG['back_list'];
-        $link[0]['href'] = 'brand.php?act=list&' . list_link_postfix();
-        $note = vsprintf($_LANG['brandedit_succed'], $_POST['brand_name']);
-        sys_msg($note, 0, $link);
-    }
-    else
-    {
-        die($db->error());
-    }
-}
-
-/*------------------------------------------------------ */
-//-- 编辑品牌名称
-/*------------------------------------------------------ */
-elseif ($_REQUEST['act'] == 'edit_brand_name')
-{
-    check_authz_json('brand_manage');
+    check_authz_json('place_manage');
 
     $id     = intval($_POST['id']);
     $name   = json_str_iconv(trim($_POST['val']));
@@ -186,13 +117,13 @@ elseif ($_REQUEST['act'] == 'edit_brand_name')
     /* 检查名称是否重复 */
     if ($exc->num("brand_name",$name, $id) != 0)
     {
-        make_json_error(sprintf($_LANG['brandname_exist'], $name));
+        make_json_error(sprintf($_LANG['placename_exist'], $name));
     }
     else
     {
-        if ($exc->edit("brand_name = '$name'", $id))
+        if ($exc->edit("place_name = '$name'", $id))
         {
-            admin_log($name,'edit','brand');
+            admin_log($name,'edit','place');
             make_json_result(stripslashes($name));
         }
         else
@@ -207,15 +138,15 @@ elseif($_REQUEST['act'] == 'add_place')
     $place = empty($_REQUEST['place']) ? '' : json_str_iconv(trim($_REQUEST['place']));
     $district = empty($_REQUEST['district']) ? '' : json_str_iconv(trim($_REQUEST['district']));
 
-    if(place_exists($place))
+    if(place_exists($district,$place))
     {
-        make_json_error($_LANG['place_name_exist']);
+        make_json_error($_LANG['placename_exist']);
     }
     else
     {
         $sql = "INSERT INTO " . $ecs->table('place') . "(region_id, place_name)" .
-               "VALUES ('$district','$place')";
-
+               "VALUES ('$district', '$place')";
+   
         $db->query($sql);
         $place_id = $db->insert_id();
 
@@ -225,11 +156,26 @@ elseif($_REQUEST['act'] == 'add_place')
     }
 }
 /*------------------------------------------------------ */
+//-- 获取县区商圈的下拉列表
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'get_place_options')
+{
+    // check_authz_json('place_manage');
+
+    $parent = !empty($_REQUEST['parent']) ? intval($_REQUEST['parent']) : 0;
+    $arr['places'] = get_places($parent);
+    $arr['target']  = !empty($_REQUEST['target']) ? stripslashes(trim($_REQUEST['target'])) : '';
+    $arr['target']  = htmlspecialchars($arr['target']);
+
+    $json = new JSON;
+    echo $json->encode($arr);
+}
+/*------------------------------------------------------ */
 //-- 编辑排序序号
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'edit_sort_order')
 {
-    check_authz_json('brand_manage');
+    check_authz_json('place_manage');
 
     $id     = intval($_POST['id']);
     $order  = intval($_POST['val']);
@@ -252,7 +198,7 @@ elseif ($_REQUEST['act'] == 'edit_sort_order')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'toggle_show')
 {
-    check_authz_json('brand_manage');
+    check_authz_json('place_manage');
 
     $id     = intval($_POST['id']);
     $val    = intval($_POST['val']);
@@ -267,7 +213,7 @@ elseif ($_REQUEST['act'] == 'toggle_show')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'remove')
 {
-    check_authz_json('brand_manage');
+    check_authz_json('place_manage');
 
     $id = intval($_GET['id']);
 
@@ -291,28 +237,6 @@ elseif ($_REQUEST['act'] == 'remove')
     exit;
 }
 
-/*------------------------------------------------------ */
-//-- 删除品牌图片
-/*------------------------------------------------------ */
-elseif ($_REQUEST['act'] == 'drop_logo')
-{
-    /* 权限判断 */
-    admin_priv('brand_manage');
-    $brand_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-
-    /* 取得logo名称 */
-    $sql = "SELECT brand_logo FROM " .$ecs->table('brand'). " WHERE brand_id = '$brand_id'";
-    $logo_name = $db->getOne($sql);
-
-    if (!empty($logo_name))
-    {
-        @unlink(ROOT_PATH . DATA_DIR . '/brandlogo/' .$logo_name);
-        $sql = "UPDATE " .$ecs->table('brand'). " SET brand_logo = '' WHERE brand_id = '$brand_id'";
-        $db->query($sql);
-    }
-    $link= array(array('text' => $_LANG['brand_edit_lnk'], 'href' => 'brand.php?act=edit&id=' . $brand_id), array('text' => $_LANG['brand_list_lnk'], 'href' => 'brand.php?act=list'));
-    sys_msg($_LANG['drop_brand_logo_success'], 0, $link);
-}
 
 /*------------------------------------------------------ */
 //-- 排序、分页、查询
@@ -329,13 +253,44 @@ elseif ($_REQUEST['act'] == 'query')
         array('filter' => $brand_list['filter'], 'page_count' => $brand_list['page_count']));
 }
 
+/*------------------------------------------------------ */
+//-- PRIVATE FUNCTIONS
+/*------------------------------------------------------ */
 /**
- * 获取品牌列表
+ * 检查商圈名是否已经存在
+ *
+ * @param   string     $place    商圈名
+ * @return  boolean
+ */
+function place_exists($district, $place)
+{
+    $sql = "SELECT COUNT(*) FROM " .$GLOBALS['ecs']->table('place').
+           " WHERE  region_id = '$district' AND place_name = '$place' ";
+    return ($GLOBALS['db']->getOne($sql) > 0) ? true : false;
+}
+
+/**
+ * 获得指定区县的所有商圈
+ *
+ * @access      public
+ * @param       int     region    区县编号
+ * @return      array
+ */
+function get_places($parent = 0)
+{
+    $sql = 'SELECT place_id, place_name FROM ' . $GLOBALS['ecs']->table('place') .
+            " WHERE region_id = '$parent'";
+    return $GLOBALS['db']->GetAll($sql);
+}
+
+
+/**
+ * 获取商圈列表
  *
  * @access  public
  * @return  array
  */
-function get_brandlist()
+function get_place_list()
 {
     $result = get_filter();
     if ($result === false)
@@ -344,13 +299,13 @@ function get_brandlist()
         $filter = array();
 
         /* 记录总数以及页数 */
-        if (isset($_POST['brand_name']))
+        if (isset($_POST['place_name']))
         {
-            $sql = "SELECT COUNT(*) FROM ".$GLOBALS['ecs']->table('brand') .' WHERE brand_name = \''.$_POST['brand_name'].'\'';
+            $sql = "SELECT COUNT(*) FROM ".$GLOBALS['ecs']->table('place') .' WHERE place_name = \''.$_POST['place_name'].'\'';
         }
         else
         {
-            $sql = "SELECT COUNT(*) FROM ".$GLOBALS['ecs']->table('brand');
+            $sql = "SELECT COUNT(*) FROM ".$GLOBALS['ecs']->table('place');
         }
 
         $filter['record_count'] = $GLOBALS['db']->getOne($sql);
@@ -358,21 +313,21 @@ function get_brandlist()
         $filter = page_and_size($filter);
 
         /* 查询记录 */
-        if (isset($_POST['brand_name']))
+        if (isset($_POST['place_name']))
         {
             if(strtoupper(EC_CHARSET) == 'GBK')
             {
-                $keyword = iconv("UTF-8", "gb2312", $_POST['brand_name']);
+                $keyword = iconv("UTF-8", "gb2312", $_POST['place_name']);
             }
             else
             {
-                $keyword = $_POST['brand_name'];
+                $keyword = $_POST['place_name'];
             }
-            $sql = "SELECT * FROM ".$GLOBALS['ecs']->table('brand')." WHERE brand_name like '%{$keyword}%' ORDER BY sort_order ASC";
+            $sql = "SELECT * FROM ".$GLOBALS['ecs']->table('place')." WHERE place_name like '%{$keyword}%' ORDER BY place_id ASC";
         }
         else
         {
-            $sql = "SELECT * FROM ".$GLOBALS['ecs']->table('brand')." ORDER BY sort_order ASC";
+            $sql = "SELECT * FROM ".$GLOBALS['ecs']->table('place')." ORDER BY place_id ASC";
         }
 
         set_filter($filter, $sql);
@@ -387,17 +342,17 @@ function get_brandlist()
     $arr = array();
     while ($rows = $GLOBALS['db']->fetchRow($res))
     {
-        $brand_logo = empty($rows['brand_logo']) ? '' :
-            '<a href="../' . DATA_DIR . '/brandlogo/'.$rows['brand_logo'].'" target="_brank"><img src="images/picflag.gif" width="16" height="16" border="0" alt='.$GLOBALS['_LANG']['brand_logo'].' /></a>';
-        $site_url   = empty($rows['site_url']) ? 'N/A' : '<a href="'.$rows['site_url'].'" target="_brank">'.$rows['site_url'].'</a>';
+        // $brand_logo = empty($rows['brand_logo']) ? '' :
+        //     '<a href="../' . DATA_DIR . '/brandlogo/'.$rows['brand_logo'].'" target="_brank"><img src="images/picflag.gif" width="16" height="16" border="0" alt='.$GLOBALS['_LANG']['brand_logo'].' /></a>';
+        // $site_url   = empty($rows['site_url']) ? 'N/A' : '<a href="'.$rows['site_url'].'" target="_brank">'.$rows['site_url'].'</a>';
 
-        $rows['brand_logo'] = $brand_logo;
-        $rows['site_url']   = $site_url;
-
+        // $rows['brand_logo'] = $brand_logo;
+        // $rows['site_url']   = $site_url;
         $arr[] = $rows;
     }
 
-    return array('brand' => $arr, 'filter' => $filter, 'page_count' => $filter['page_count'], 'record_count' => $filter['record_count']);
+    return array('places' => $arr, 'filter' => $filter, 'page_count' => $filter['page_count'], 'record_count' => $filter['record_count']);
 }
+
 
 ?>

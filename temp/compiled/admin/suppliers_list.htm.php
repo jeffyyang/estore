@@ -13,6 +13,8 @@
       <th> <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" />
           <a href="javascript:listTable.sort('suppliers_id'); "><?php echo $this->_var['lang']['record_id']; ?></a><?php echo $this->_var['sort_suppliers_id']; ?> </th>
       <th><a href="javascript:listTable.sort('suppliers_name'); "><?php echo $this->_var['lang']['suppliers_name']; ?></a><?php echo $this->_var['sort_suppliers_name']; ?></th>
+      <th><?php echo $this->_var['lang']['suppliers_comm_rank']; ?></th>
+      <th><?php echo $this->_var['lang']['suppliers_phone']; ?></th>
       <th><?php echo $this->_var['lang']['suppliers_desc']; ?></th>
       <th><?php echo $this->_var['lang']['suppliers_check']; ?></th>
       <th><?php echo $this->_var['lang']['handler']; ?></th>
@@ -24,7 +26,10 @@
       <td><input type="checkbox" name="checkboxes[]" value="<?php echo $this->_var['suppliers']['suppliers_id']; ?>" />
         <?php echo $this->_var['suppliers']['suppliers_id']; ?></td>
       <td class="first-cell">
-        <span onclick="javascript:listTable.edit(this, 'edit_suppliers_name', <?php echo $this->_var['suppliers']['suppliers_id']; ?>)"><?php echo htmlspecialchars($this->_var['suppliers']['suppliers_name']); ?>      </span></td>
+        <span onclick="javascript:listTable.edit(this, 'edit_suppliers_name', <?php echo $this->_var['suppliers']['suppliers_id']; ?>)"><?php echo htmlspecialchars($this->_var['suppliers']['suppliers_name']); ?>      </span>
+      </td>
+      <td><?php echo $this->_var['suppliers']['comment_rank']; ?></td>
+      <td><?php echo $this->_var['suppliers']['office_phone']; ?></td>
       <td><?php echo nl2br($this->_var['suppliers']['suppliers_desc']); ?></td>
 			<td align="center"><img src="images/<?php if ($this->_var['suppliers']['is_check'] == 1): ?>yes<?php else: ?>no<?php endif; ?>.gif" onclick="listTable.toggle(this, 'is_check', <?php echo $this->_var['suppliers']['suppliers_id']; ?>)" style="cursor:pointer;"/></td>
       <td align="center">

@@ -75,7 +75,7 @@
   </tr>
   <tr>
     <td class="label"><?php echo $this->_var['lang']['label_suppliers_comm_rank']; ?></td>
-    <td><input type="text" name="comm_rank" maxlength="60" value="<?php echo $this->_var['suppliers']['suppliers_comm_rank']; ?>" /><?php echo $this->_var['lang']['require_field']; ?></td>
+    <td><input type="text" name="comm_rank" maxlength="60" value="<?php echo $this->_var['suppliers']['comment_rank']; ?>" /><?php echo $this->_var['lang']['require_field']; ?></td>
   </tr>
 <!--   <tr>
     <td class="label"><?php echo $this->_var['lang']['label_suppliers_envi_rank']; ?></td>
@@ -87,19 +87,19 @@
   </tr>  -->
   <tr>
     <td class="label"><?php echo $this->_var['lang']['label_suppliers_shop_price']; ?></td>
-    <td><input type="text" name="serv_rank" maxlength="60" value="<?php echo $this->_var['suppliers']['suppliers_shop_price']; ?>" /><?php echo $this->_var['lang']['require_field']; ?></td>
+    <td><input type="text" name="serv_rank" maxlength="60" value="<?php echo $this->_var['suppliers']['shop_price']; ?>" /><?php echo $this->_var['lang']['require_field']; ?></td>
   </tr> 
   <tr>
     <td class="label"><?php echo $this->_var['lang']['label_suppliers_phone']; ?></td>
-    <td><input type="text" name="office_phone" maxlength="60" value="<?php echo $this->_var['suppliers']['suppliers_phone']; ?>" /><?php echo $this->_var['lang']['require_field']; ?></td>
+    <td><input type="text" name="office_phone" maxlength="60" value="<?php echo $this->_var['suppliers']['office_phone']; ?>" /><?php echo $this->_var['lang']['require_field']; ?></td>
   </tr>   
   <tr>
     <td class="label"><?php echo $this->_var['lang']['label_suppliers_mobile']; ?></td>
-    <td><input type="text" name="mobile_phone" maxlength="60" value="<?php echo $this->_var['suppliers']['suppliers_mobile']; ?>" /><?php echo $this->_var['lang']['require_field']; ?></td>
+    <td><input type="text" name="mobile_phone" maxlength="60" value="<?php echo $this->_var['suppliers']['mobile_phone']; ?>" /><?php echo $this->_var['lang']['require_field']; ?></td>
   </tr>    
   <tr>
     <td class="label"><?php echo $this->_var['lang']['label_suppliers_address']; ?></td>
-    <td><textarea  name="suppliers_address" cols="60" rows="3"  ><?php echo $this->_var['suppliers']['suppliers_address']; ?></textarea></td>
+    <td><textarea  name="suppliers_address" cols="60" rows="3"  ><?php echo $this->_var['suppliers']['address']; ?></textarea></td>
   </tr>
   <tr>
     <td class="label"><?php echo $this->_var['lang']['label_region']; ?></td>
@@ -112,16 +112,16 @@
           </select> 
           -->
           <span class="label"><?php echo $this->_var['lang']['label_city']; ?></span>
-          <select name="city" id="selCities" onChange="region.isAdmin = true;region.changed(this, 3, 'selDistricts')" >
+          <select name="city" id="selCities" onChange="region.isAdmin= true;region.changed(this, 3, 'selDistricts');" >
             <option value=""><?php echo $this->_var['lang']['select_please']; ?></option>
             <?php echo $this->html_options(array('options'=>$this->_var['city_list'],'selected'=>$this->_var['suppliers']['region_cities'])); ?>
           </select>
           <span class="label"><?php echo $this->_var['lang']['label_district']; ?></span>
-          <select name="district" id="selDistricts" >
+          <select name="district" id="selDistricts" onChange="changedDistrict(this,'selPlaces');">
             <option value=""><?php echo $this->_var['lang']['select_please']; ?></option>
           </select>
           <span class="label"><?php echo $this->_var['lang']['label_place']; ?></span>
-          <select name="place" id="selPlace" >
+          <select name="place" id="selPlaces" >
             <option value=""><?php echo $this->_var['lang']['select_please']; ?></option>
           </select>
           <?php if ($this->_var['is_add']): ?>
@@ -278,6 +278,55 @@ function validate()
       return;
   }
 
+/* *
+ * 处理县区下拉列表改变的函数
+ *
+ * @obj     object  下拉列表
+ * @selName string  目标列表框的名称
+ */
+function changedDistrict(obj, selName)
+{
+  var parent = obj.options[obj.selectedIndex].value;
+  loadPlaces(parent, selName);
+}
+
+function loadPlaces(parent, target)
+{
+
+  Ajax.call('./place.php', 'act=get_place_options&target=' + target + "&parent=" + parent, placeResponse, "GET", "JSON");
+
+}
+
+function placeResponse(result, text_result)
+{
+  var sel = document.getElementById(result.target);
+
+  sel.length = 1;
+  sel.selectedIndex = 0;
+  sel.style.display = (result.places.length == 0 && ! region.isAdmin) ? "none" : '';
+
+  if (document.all)
+  {
+    sel.fireEvent("onchange");
+  }
+  else
+  {
+    var evt = document.createEvent("HTMLEvents");
+    evt.initEvent('change', true, true);
+    sel.dispatchEvent(evt);
+  }
+
+  if (result.places)
+  {
+    for (i = 0; i < result.places.length; i ++ )
+    {
+      var opt = document.createElement("OPTION");
+      opt.value = result.places[i].place_id;
+      opt.text  = result.places[i].place_name;
+      sel.options.add(opt);
+    }
+  }
+}
   /**
    * 商圈管理
    */
@@ -304,19 +353,22 @@ function validate()
 
   function goPlacePage()
   {
-      if(confirm(go_brand_page))
-      {
-          window.location.href='place.php?act=add';
-      }
-      else
-      {
-          return;
-      }
+
+      window.location.href='place.php?act=list';
+      // if(confirm(go_brand_page))
+      // {
+      //     window.location.href='place.php?act=list';
+      // }
+      // else
+      // {
+      //     return;
+      // }
   }
   function addPlace()
   {
       var place = document.forms['theForm'].elements['addedPlaceName'];
       var district = document.forms['theForm'].elements['district'];
+      
 
       if(place.value.replace(/^\s+|\s+$/g, '') == '')
       {
@@ -324,10 +376,8 @@ function validate()
           return;
       }
 
-
       var params = 'district=' + district.value + '&place=' + place.value;
-      alert(params);
-      
+
       Ajax.call('place.php?is_ajax=1&act=add_place', params, addPlaceResponse, 'GET', 'JSON');
   }
 
@@ -339,24 +389,24 @@ function validate()
           return;
       }
 
-      var brand_div = document.getElementById("place_add");
-      brand_div.style.display = 'none';
+      var place_div = document.getElementById("place_add");
+      place_div.style.display = 'none';
 
       var response = result.content;
 
-      var selCat = document.forms['theForm'].elements['place_id'];
+      var selPlc = document.forms['theForm'].elements['place'];
       var opt = document.createElement("OPTION");
       opt.value = response.id;
       opt.selected = true;
-      opt.text = response.brand;
+      opt.text = response.place;
 
       if (Browser.isIE)
       {
-          selCat.add(opt);
+          selPlc.add(opt);
       }
       else
       {
-          selCat.appendChild(opt);
+          selPlc.appendChild(opt);
       }
 
       return;
@@ -511,7 +561,6 @@ function validate()
           document.getElementById('gallery_' + result.content).style.display = 'none';
       }
   }
-
 
 //-->
 </script>

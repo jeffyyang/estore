@@ -172,7 +172,8 @@ $_LANG['17_tag_manage'] = '标签管理';
 $_LANG['18_product_list'] = '货品列表';
 $_LANG['52_attribute_add'] = '编辑属性';
 $_LANG['53_suppliers_goods'] = '商户商品管理';
-
+$_LANG['19_place_list'] = '商圈列表';
+$_LANG['20_place_add'] = '添加商圈';
 $_LANG['14_goods_export'] = '商品批量导出';
 
 $_LANG['50_virtual_card_list'] = '虚拟商品列表';

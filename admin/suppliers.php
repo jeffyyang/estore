@@ -364,6 +364,37 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
             sys_msg('suppliers does not exist');
         }
 
+        /* 代理机构名称 */
+        $agencies_list_name = agencies_list_name();
+        $agencies_exists = 1;
+        if (empty($agencies_list_name))
+        {
+            $agencies_exists = 0;
+        }
+
+        /*连锁品牌店铺*/
+        $brand_list = get_brand_list();
+        $brands_exists = 1;
+        if (empty($brand_list))
+        {
+            $brands_exists = 0;
+        }
+        
+        $smarty->assign('is_add', true);
+        $smarty->assign('brands_exists', $brands_exists);
+        $smarty->assign('brand_list', $brand_list);
+        unset($brand_list, $brands_exists);
+
+        $smarty->assign('cat_list', shop_cat_list(0, $suppliers['cat_id']));
+
+        /* 取得地区 */
+        // $province_list = get_regions(1,1);
+        // $smarty->assign('province_list', $province_list);
+
+        // 吉林
+        $city_list = get_regions_list(2,15);
+        $smarty->assign('city_list', $city_list);
+
         /* 取得所有管理员，*/
         /* 标注哪些是该供货商的('this')，哪些是空闲的('free')，哪些是别的供货商的('other') */
         /* 排除是办事处的管理员 */
@@ -409,16 +440,13 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
         $suppliers['office_phone']      = !empty($_POST['office_phone'])        ? trim($_POST['office_phone'])      : '';
         $suppliers['mobile_phone']      = !empty($_POST['mobile_phone'])        ? trim($_POST['mobile_phone'])      : '';
         $suppliers['comment_rank']      = !empty($_POST['comment_rank'])        ? intval($_POST['comment_rank'])    : 3;
+        $suppliers['region_cities']     = !empty($_POST['city'])                ? intval($_POST['city'])            : 0;
+        $suppliers['region_districts']  = !empty($_POST['district'])            ? intval($_POST['district'])        : 0;     
+        $suppliers['place_id']          = !empty($_POST['place'])               ? intval($_POST['place'])           : 0;         
         $suppliers['map_lat']           = !empty($_POST['map_lat'])             ? intval($_POST['map_lat'])         : 0;
         $suppliers['map_lng']           = !empty($_POST['map_lat'])             ? intval($_POST['map_lat'])         : 0;
         $suppliers['address']           = !empty($_POST['suppliers_address'])   ? trim($_POST['suppliers_address']) : '';
         $suppliers['suppliers_desc']    = !empty($_POST['suppliers_desc'])      ? trim($_POST['suppliers_desc'])    : '';
-
-        // /* 提交值 */
-        // $suppliers = array('suppliers_name'   => trim($_POST['suppliers_name']),
-        //                    'suppliers_desc'   => trim($_POST['suppliers_desc']),
-        //                    'parent_id'        => 0
-        //                    );
 
         /* 判断名称是否重复 */
         $sql = "SELECT suppliers_id
@@ -586,7 +614,7 @@ function suppliers_list()
         $filter['page_count']     = $filter['record_count'] > 0 ? ceil($filter['record_count'] / $filter['page_size']) : 1;
 
         /* 查询 */
-        $sql = "SELECT suppliers_id, suppliers_name, suppliers_desc, is_check
+        $sql = "SELECT suppliers_id, suppliers_name, cat_id, region_cities, comment_rank, office_phone, suppliers_desc, is_check
                 FROM " . $GLOBALS['ecs']->table("suppliers") . "
                 $where
                 ORDER BY " . $filter['sort_by'] . " " . $filter['sort_order']. "

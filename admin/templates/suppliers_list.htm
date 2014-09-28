@@ -13,6 +13,8 @@
       <th> <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" />
           <a href="javascript:listTable.sort('suppliers_id'); ">{$lang.record_id}</a>{$sort_suppliers_id} </th>
       <th><a href="javascript:listTable.sort('suppliers_name'); ">{$lang.suppliers_name}</a>{$sort_suppliers_name}</th>
+      <th>{$lang.suppliers_comm_rank}</th>
+      <th>{$lang.suppliers_phone}</th>
       <th>{$lang.suppliers_desc}</th>
       <th>{$lang.suppliers_check}</th>
       <th>{$lang.handler}</th>
@@ -22,7 +24,10 @@
       <td><input type="checkbox" name="checkboxes[]" value="{$suppliers.suppliers_id}" />
         {$suppliers.suppliers_id}</td>
       <td class="first-cell">
-        <span onclick="javascript:listTable.edit(this, 'edit_suppliers_name', {$suppliers.suppliers_id})">{$suppliers.suppliers_name|escape:html}      </span></td>
+        <span onclick="javascript:listTable.edit(this, 'edit_suppliers_name', {$suppliers.suppliers_id})">{$suppliers.suppliers_name|escape:html}      </span>
+      </td>
+      <td>{$suppliers.comment_rank}</td>
+      <td>{$suppliers.office_phone}</td>
       <td>{$suppliers.suppliers_desc|nl2br}</td>
 			<td align="center"><img src="images/{if $suppliers.is_check eq 1}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'is_check', {$suppliers.suppliers_id})" style="cursor:pointer;"/></td>
       <td align="center">

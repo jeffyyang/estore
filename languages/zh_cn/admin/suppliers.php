@@ -23,6 +23,7 @@ $_LANG['suppliers_name'] = '商户名称';
 $_LANG['suppliers_comm_rank'] = '综合评价';
 $_LANG['suppliers_envi_rank'] = '环境评价';
 $_LANG['suppliers_serv_rank'] = '服务评价';
+$_LANG['suppliers_phone'] = '门店电话';
 $_LANG['suppliers_address'] = '门店地址';
 $_LANG['suppliers_desc'] = '商户描述';
 $_LANG['suppliers_check'] = '状态';
