@@ -10,7 +10,7 @@ $data = array (
     'show_in_nav' => '0',
     'grade' => '0',
     'sort_order' => '1',
-    'has_children' => '5',
+    'has_children' => '6',
     'goods_num' => '1',
   ),
   1 => 
@@ -132,6 +132,19 @@ $data = array (
   ),
   10 => 
   array (
+    'cat_id' => '36',
+    'cat_name' => '日本料理',
+    'measure_unit' => '',
+    'parent_id' => '18',
+    'is_show' => '1',
+    'show_in_nav' => '0',
+    'grade' => '0',
+    'sort_order' => '50',
+    'has_children' => '0',
+    'goods_num' => 0,
+  ),
+  11 => 
+  array (
     'cat_id' => '29',
     'cat_name' => '面食',
     'measure_unit' => '',
@@ -143,7 +156,7 @@ $data = array (
     'has_children' => '0',
     'goods_num' => 0,
   ),
-  11 => 
+  12 => 
   array (
     'cat_id' => '34',
     'cat_name' => '四星级',
@@ -156,7 +169,7 @@ $data = array (
     'has_children' => '0',
     'goods_num' => 0,
   ),
-  12 => 
+  13 => 
   array (
     'cat_id' => '33',
     'cat_name' => '五星级',
@@ -169,7 +182,7 @@ $data = array (
     'has_children' => '0',
     'goods_num' => 0,
   ),
-  13 => 
+  14 => 
   array (
     'cat_id' => '35',
     'cat_name' => '快捷酒店',
@@ -182,7 +195,7 @@ $data = array (
     'has_children' => '0',
     'goods_num' => 0,
   ),
-  14 => 
+  15 => 
   array (
     'cat_id' => '30',
     'cat_name' => '美甲',
@@ -195,7 +208,7 @@ $data = array (
     'has_children' => '0',
     'goods_num' => 0,
   ),
-  15 => 
+  16 => 
   array (
     'cat_id' => '31',
     'cat_name' => '美容美发',

@@ -10,7 +10,7 @@ $data = array (
     'show_in_nav' => '0',
     'grade' => '0',
     'sort_order' => '1',
-    'has_children' => '5',
+    'has_children' => '6',
     'goods_num' => '1',
     'level' => 0,
     'id' => '18',
@@ -79,6 +79,22 @@ $data = array (
     'level' => 1,
     'id' => '26',
     'name' => '西餐',
+  ),
+  36 => 
+  array (
+    'cat_id' => '36',
+    'cat_name' => '日本料理',
+    'measure_unit' => '',
+    'parent_id' => '18',
+    'is_show' => '1',
+    'show_in_nav' => '0',
+    'grade' => '0',
+    'sort_order' => '50',
+    'has_children' => '0',
+    'goods_num' => 0,
+    'level' => 1,
+    'id' => '36',
+    'name' => '日本料理',
   ),
   29 => 
   array (

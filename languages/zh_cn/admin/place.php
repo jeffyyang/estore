@@ -14,6 +14,9 @@
 */
 
 $_LANG['place_name'] = '商圈名称';
+$_LANG['province'] = '省份';
+$_LANG['city'] = '城市';
+$_LANG['district'] = '区/县';
 $_LANG['site_url'] = '商圈网址';
 $_LANG['place_desc'] = '商圈描述';
 $_LANG['place_logo'] = '商圈LOGO';

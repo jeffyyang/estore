@@ -1,7 +1,7 @@
 <!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
 <?php echo $this->fetch('pageheader.htm'); ?>
 <?php echo $this->smarty_insert_scripts(array('files'=>'validator.js,../js/transport.js,../js/region.js')); ?>
-<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&key=262BZ-6OFHJ-25UFG-FD2KP-C6MNZ-QCBCO"></script>
+<!-- <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&key=262BZ-6OFHJ-25UFG-FD2KP-C6MNZ-QCBCO"></script> -->
 <div class="main-div">
 <form method="post" action="suppliers.php" name="theForm" enctype="multipart/form-data" onsubmit="return validate()">
 <table cellspacing="1" cellpadding="3" width="100%">
@@ -10,16 +10,16 @@
     <td><input type="text" name="suppliers_name" maxlength="60" value="<?php echo $this->_var['suppliers']['suppliers_name']; ?>" /><?php echo $this->_var['lang']['require_field']; ?></td>
   </tr>
   <tr>
-    <td class="label"><?php echo $this->_var['lang']['label_suppliers_brand']; ?></td>
-    <td><select name="brand_id" onchange="hideBrandDiv()" ><option value="0"><?php echo $this->_var['lang']['select_please']; ?><?php echo $this->html_options(array('options'=>$this->_var['brand_list'],'selected'=>$this->_var['suppliers']['brand_id'])); ?>
+    <td class="label"><?php echo $this->_var['lang']['label_suppliers_shop']; ?></td>
+    <td><select name="shop_id" onchange="hideShopDiv()" ><option value="0"><?php echo $this->_var['lang']['select_please']; ?><?php echo $this->html_options(array('options'=>$this->_var['shop_list'],'selected'=>$this->_var['suppliers']['shop_id'])); ?>
     </select>
       <?php if ($this->_var['is_add']): ?>
-      <a href="javascript:void(0)" title="<?php echo $this->_var['lang']['rapid_add_brand']; ?>" onclick="rapidBrandAdd()" class="special" ><?php echo $this->_var['lang']['rapid_add_brand']; ?></a>
-      <span id="brand_add" style="display:none;">
-      <input class="text" size="15" name="addedBrandName" />
-       <a href="javascript:void(0)" onclick="addBrand()" class="special" ><?php echo $this->_var['lang']['button_submit']; ?></a>
-       <a href="javascript:void(0)" onclick="return goBrandPage()" title="<?php echo $this->_var['lang']['brand_manage']; ?>" class="special" ><?php echo $this->_var['lang']['brand_manage']; ?></a>
-       <a href="javascript:void(0)" onclick="hideBrandDiv()" title="<?php echo $this->_var['lang']['hide']; ?>" class="special" ><<</a>
+      <a href="javascript:void(0)" title="<?php echo $this->_var['lang']['rapid_add_shop']; ?>" onclick="rapidShopAdd()" class="special" ><?php echo $this->_var['lang']['rapid_add_shop']; ?></a>
+      <span id="shop_add" style="display:none;">
+      <input class="text" size="15" name="addedShopName" />
+       <a href="javascript:void(0)" onclick="addShop()" class="special" ><?php echo $this->_var['lang']['button_submit']; ?></a>
+       <a href="javascript:void(0)" onclick="return goShopPage();" title="<?php echo $this->_var['lang']['shop_manage']; ?>" class="special" ><?php echo $this->_var['lang']['shop_manage']; ?></a>
+       <a href="javascript:void(0)" onclick="hideShopDiv()" title="<?php echo $this->_var['lang']['hide']; ?>" class="special" ><<</a>
        </span>
        <?php endif; ?>
     </td>
@@ -74,20 +74,8 @@
     </td>
   </tr>
   <tr>
-    <td class="label"><?php echo $this->_var['lang']['label_suppliers_comm_rank']; ?></td>
-    <td><input type="text" name="comm_rank" maxlength="60" value="<?php echo $this->_var['suppliers']['comment_rank']; ?>" /><?php echo $this->_var['lang']['require_field']; ?></td>
-  </tr>
-<!--   <tr>
-    <td class="label"><?php echo $this->_var['lang']['label_suppliers_envi_rank']; ?></td>
-    <td><input type="text" name="envi_rank" maxlength="60" value="<?php echo $this->_var['suppliers']['suppliers_envi_rank']; ?>" /><?php echo $this->_var['lang']['require_field']; ?></td>
-  </tr>
-  <tr>
-    <td class="label"><?php echo $this->_var['lang']['label_suppliers_serv_rank']; ?></td>
-    <td><input type="text" name="serv_rank" maxlength="60" value="<?php echo $this->_var['suppliers']['suppliers_serv_rank']; ?>" /><?php echo $this->_var['lang']['require_field']; ?></td>
-  </tr>  -->
-  <tr>
     <td class="label"><?php echo $this->_var['lang']['label_suppliers_shop_price']; ?></td>
-    <td><input type="text" name="serv_rank" maxlength="60" value="<?php echo $this->_var['suppliers']['shop_price']; ?>" /><?php echo $this->_var['lang']['require_field']; ?></td>
+    <td><input type="text" name="shop_price" maxlength="60" value="<?php echo $this->_var['suppliers']['shop_price']; ?>" /><?php echo $this->_var['lang']['require_field']; ?></td>
   </tr> 
   <tr>
     <td class="label"><?php echo $this->_var['lang']['label_suppliers_phone']; ?></td>
@@ -96,11 +84,11 @@
   <tr>
     <td class="label"><?php echo $this->_var['lang']['label_suppliers_mobile']; ?></td>
     <td><input type="text" name="mobile_phone" maxlength="60" value="<?php echo $this->_var['suppliers']['mobile_phone']; ?>" /><?php echo $this->_var['lang']['require_field']; ?></td>
-  </tr>    
-  <tr>
-    <td class="label"><?php echo $this->_var['lang']['label_suppliers_address']; ?></td>
-    <td><textarea  name="suppliers_address" cols="60" rows="3"  ><?php echo $this->_var['suppliers']['address']; ?></textarea></td>
   </tr>
+  <tr>
+    <td class="label"><?php echo $this->_var['lang']['label_suppliers_opening_hours']; ?></td>
+    <td><input type="text" name="opening_hours" maxlength="60" size ="45" value="<?php echo $this->_var['suppliers']['opening_hours']; ?>" /><?php echo $this->_var['lang']['require_field']; ?></td>
+  </tr>  
   <tr>
     <td class="label"><?php echo $this->_var['lang']['label_region']; ?></td>
     <td>
@@ -109,7 +97,7 @@
           <select name="province" id="selProvinces" onChange="region.changed(this, 2, 'selCities')" >
             <option value=""><?php echo $this->_var['lang']['select_please']; ?></option>
             <?php echo $this->html_options(array('options'=>$this->_var['province_list'],'selected'=>$this->_var['suppliers']['brand_id'])); ?>
-          </select> 
+          </select>
           -->
           <span class="label"><?php echo $this->_var['lang']['label_city']; ?></span>
           <select name="city" id="selCities" onChange="region.isAdmin= true;region.changed(this, 3, 'selDistricts');" >
@@ -135,10 +123,19 @@
            <?php endif; ?>
            <?php echo $this->_var['lang']['require_field']; ?>            
     </td>
+  </tr>      
+  <tr>
+    <td class="label"><?php echo $this->_var['lang']['label_suppliers_address']; ?></td>
+    <td><input type="text" name="suppliers_address" maxlength="120" size="60" value="<?php echo $this->_var['suppliers']['address']; ?>" /><?php echo $this->_var['lang']['require_field']; ?></td>
+<!--     <td><textarea  name="suppliers_address" cols="60" rows="3"  ><?php echo $this->_var['suppliers']['address']; ?></textarea></td> -->
   </tr>
   <tr>
+    <td class="label"><?php echo $this->_var['lang']['label_suppliers_traffic_info']; ?></td>
+    <td><textarea  name="traffic_info" cols="60" rows="3"  ><?php echo $this->_var['suppliers']['traffic_info']; ?></textarea></td>
+  </tr>  
+  <tr>
     <td class="label"><?php echo $this->_var['lang']['label_suppliers_location']; ?></td>
-    <td><div id="container" style="width:500px; height:300px"></div></td>
+    <td><a href="javascript:void(0)" onclick="geolocation_cityname();" class="special" ></br><?php echo $this->_var['lang']['start_marker']; ?></a><div id="container" style="width:420px; height:300px"></div></td>
   </tr>        
   <tr>
     <td class="label"><?php echo $this->_var['lang']['label_suppliers_desc']; ?></td>
@@ -165,6 +162,8 @@
       <input type="hidden" name="act" value="<?php echo $this->_var['form_action']; ?>" />
       <input type="hidden" name="id" value="<?php echo $this->_var['suppliers']['suppliers_id']; ?>" />
       <input type="hidden" name="agency_id" value="<?php echo $this->_var['suppliers']['agency_id']; ?>" />
+      <input type="hidden" id="h_map_lat" name="map_lat" value="<?php echo $this->_var['suppliers']['map_lat']; ?>" />
+      <input type="hidden" id="h_map_lng" name="map_lng" value="<?php echo $this->_var['suppliers']['map_lng']; ?>" />      
     </td>
   </tr>
 </table>
@@ -178,16 +177,63 @@ document.forms['theForm'].elements['suppliers_name'].focus();
 
 onload = function()
 {
-  init();
+  loadScript();
   // 开始检查订单
   startCheckOrder();
 }
 
-var init = function() {
-    var map = new qq.maps.Map(document.getElementById('container'));
-    var myLatLng = new qq.maps.LatLng(39.916527,116.397128);
-    map.panTo(myLatLng);
+var citylocation,map,marker = null;
+var markerStatus = false;
+
+function init() {
+  var myLatlng = new qq.maps.LatLng(39.916527,116.397128);
+  var myOptions = {
+    zoom: 13,
+    center: myLatlng,
+    mapTypeId: qq.maps.MapTypeId.ROADMAP
+  }
+  var map = new qq.maps.Map(document.getElementById("container"), myOptions);
+
+  qq.maps.event.addListener(map, 'click', function(event) {
+      if(markerStatus){
+        document.getElementById("h_map_lat").value = event.latLng.getLat();
+        document.getElementById("h_map_lng").value = event.latLng.getLng();
+      }
+  });
+
+  citylocation = new qq.maps.CityService({
+      complete : function(results){
+          map.setCenter(results.detail.latLng);
+          city.style.display = 'inline';
+          city.innerHTML = '所在位置: ' + results.detail.name;
+          if (marker != null) {
+              marker.setMap(null);
+          }
+          marker = new qq.maps.Marker({
+              map: map,
+              position: results.detail.latLng
+          });
+      }
+  });
 }
+  
+function geolocation_cityname() {
+    var selCities = document.getElementById("selCities");
+    var index = selCities.selectedIndex; // 选中索引
+    var cityname = selCities.options[index].text; // 选中文本
+    citylocation.searchCityByName(cityname);
+    markerStatus = true;
+}
+
+function loadScript() {
+  var script = document.createElement("script");
+  script.type = "text/javascript";
+  script.src = "http://map.qq.com/api/js?v=2.exp&callback=init";
+  document.body.appendChild(script);
+}
+  
+// window.onload = loadScript;
+
 
 /**
  * 检查表单输入的数据
@@ -200,54 +246,54 @@ function validate()
 }
 
   /**
-   * 连锁品牌管理
+   * 商户管理
    */
-  function rapidBrandAdd(conObj)
+  function rapidShopAdd(conObj)
   {
-      var brand_div = document.getElementById("brand_add");
+      var shop_div = document.getElementById("shop_add");
 
-      if(brand_div.style.display != '')
+      if(shop_div.style.display != '')
       {
-          var brand =document.forms['theForm'].elements['addedBrandName'];
-          brand.value = '';
-          brand_div.style.display = '';
+          var shop =document.forms['theForm'].elements['addedShopName'];
+          shop.value = '';
+          shop_div.style.display = '';
       }
   }
 
-  function hideBrandDiv()
+  function hideShopDiv()
   {
-      var brand_add_div = document.getElementById("brand_add");
-      if(brand_add_div.style.display != 'none')
+      var shop_add_div = document.getElementById("shop_add");
+      if(shop_add_div.style.display != 'none')
       {
-          brand_add_div.style.display = 'none';
+          shop_add_div.style.display = 'none';
       }
   }
 
-  function goBrandPage()
+  function goShopPage()
   {
-      if(confirm(go_brand_page))
+      if(confirm(go_shop_page))
       {
-          window.location.href='brand.php?act=add';
+          window.location.href='shop.php?act=add';
       }
       else
       {
           return;
       }
   }
-  function addBrand()
+  function addShop()
   {
-      var brand = document.forms['theForm'].elements['addedBrandName'];
-      if(brand.value.replace(/^\s+|\s+$/g, '') == '')
+      var shop = document.forms['theForm'].elements['addedShopName'];
+      if(shop.value.replace(/^\s+|\s+$/g, '') == '')
       {
-          alert(brand_cat_not_null);
+          alert(shop_name_not_null);
           return;
       }
 
-      var params = 'brand=' + brand.value;
-      Ajax.call('brand.php?is_ajax=1&act=add_brand', params, addBrandResponse, 'GET', 'JSON');
+      var params = 'shop=' + shop.value;
+      Ajax.call('shop.php?is_ajax=1&act=add_shop', params, addShopResponse, 'GET', 'JSON');
   }
 
-  function addBrandResponse(result)
+  function addShopResponse(result)
   {
       if (result.error == '1' && result.message != '')
       {
@@ -255,12 +301,12 @@ function validate()
           return;
       }
 
-      var brand_div = document.getElementById("brand_add");
-      brand_div.style.display = 'none';
+      var shop_div = document.getElementById("shop_add");
+      shop_div.style.display = 'none';
 
       var response = result.content;
 
-      var selCat = document.forms['theForm'].elements['brand_id'];
+      var selShop = document.forms['theForm'].elements['shop_id'];
       var opt = document.createElement("OPTION");
       opt.value = response.id;
       opt.selected = true;
@@ -268,11 +314,11 @@ function validate()
 
       if (Browser.isIE)
       {
-          selCat.add(opt);
+          selShop.add(opt);
       }
       else
       {
-          selCat.appendChild(opt);
+          selShop.appendChild(opt);
       }
 
       return;
@@ -353,16 +399,14 @@ function placeResponse(result, text_result)
 
   function goPlacePage()
   {
-
-      window.location.href='place.php?act=list';
-      // if(confirm(go_brand_page))
-      // {
-      //     window.location.href='place.php?act=list';
-      // }
-      // else
-      // {
-      //     return;
-      // }
+      if(confirm(go_place_page))
+      {
+        window.location.href='place.php?act=list';
+      }
+      else
+      {
+          return;
+      }
   }
   function addPlace()
   {
@@ -372,7 +416,7 @@ function placeResponse(result, text_result)
 
       if(place.value.replace(/^\s+|\s+$/g, '') == '')
       {
-          alert(brand_cat_not_null);
+          alert(place_name_not_null);
           return;
       }
 
@@ -432,7 +476,7 @@ function placeResponse(result, text_result)
       var cat = document.forms['theForm'].elements['addedCategoryName'];
       if(cat.value.replace(/^\s+|\s+$/g, '') == '')
       {
-          alert(category_cat_not_null);
+          alert(shopcate_name_not_null);
           return;
       }
 
@@ -512,9 +556,9 @@ function placeResponse(result, text_result)
 
     function goCatPage()
     {
-        if(confirm(go_category_page))
+        if(confirm(go_shopcate_page))
         {
-            window.location.href='category.php?act=add';
+            window.location.href='shopcate.php?act=add';
         }
         else
         {

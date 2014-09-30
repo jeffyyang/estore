@@ -19,12 +19,12 @@ if (!defined('IN_ECS'))
 }
 
 //  商户管理权限
-    $purview['suppliers_list']       = 'shop_manage';    // 供货商
+    $purview['shop_list']            = 'shop_manage';    // 商户
+    $purview['suppliers_list']       = 'shop_manage';    // 门店   admin和 商户管理员
+    $purview['03_shopcate_list']     = 'shopcate_manage';    //分类添加、分类转移和删除    
     $purview['01_goods_list']        = array('goods_manage', 'remove_back');
     $purview['02_goods_add']         = 'goods_manage';
-    $purview['03_shopcate_list']     = 'shop_manage';   //分类添加、分类转移和删除
     $purview['05_comment_manage']    = 'comment_priv';
-    $purview['06_goods_brand_list']  = 'brand_manage';
 
 //商品管理权限
     $purview['01_goods_list']        = array('goods_manage', 'remove_back');

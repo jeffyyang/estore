@@ -37,8 +37,8 @@ if ($_REQUEST['act'] == 'list')
     $cat_list = shop_cat_list(0, 0, false);
 
     /* 模板赋值 */
-    $smarty->assign('ur_here',      $_LANG['03_shopcate_list']);
-    $smarty->assign('action_link',  array('href' => 'shopcate.php?act=add', 'text' => $_LANG['03_shopcate_add']));
+    $smarty->assign('ur_here',      $_LANG['shopcate_list']);
+    $smarty->assign('action_link',  array('href' => 'shopcate.php?act=add', 'text' => $_LANG['shopcate_add']));
     $smarty->assign('full_page',    1);
 
     $smarty->assign('cat_info',     $cat_list);
@@ -68,8 +68,8 @@ if ($_REQUEST['act'] == 'add')
 
 
     /* 模板赋值 */
-    $smarty->assign('ur_here',      $_LANG['03_shopcate_add']);
-    $smarty->assign('action_link',  array('href' => 'shopcate.php?act=list', 'text' => $_LANG['03_shopcate_list']));
+    $smarty->assign('ur_here',      $_LANG['shopcate_add']);
+    $smarty->assign('action_link',  array('href' => 'shopcate.php?act=list', 'text' => $_LANG['shopcate_list']));
 
     // $smarty->assign('goods_type_list',  goods_type_list(0)); // 取得商品类型
     // $smarty->assign('attr_list',        get_attr_list()); // 取得商品属性
@@ -194,7 +194,7 @@ if ($_REQUEST['act'] == 'edit')
     $smarty->assign('attr_list',        $attr_list); // 取得商品属性
     $smarty->assign('attr_cat_id',      $attr_cat_id);
     $smarty->assign('ur_here',     $_LANG['category_edit']);
-    $smarty->assign('action_link', array('text' => $_LANG['03_shopcate_list'], 'href' => 'shopcate.php?act=list'));
+    $smarty->assign('action_link', array('text' => $_LANG['shopcate_list'], 'href' => 'shopcate.php?act=list'));
 
     //分类是否存在首页推荐
     $res = $db->getAll("SELECT recommend_type FROM " . $ecs->table("cat_recommend") . " WHERE cat_id=" . $cat_id);

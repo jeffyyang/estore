@@ -12,26 +12,24 @@
 
   <table cellpadding="3" cellspacing="1">
     <tr>
-      <th>{$lang.brand_name}</th>
-      <th>{$lang.site_url}</th>
-      <th>{$lang.brand_desc}</th>
-      <th>{$lang.sort_order}</th>
+      <th>{$lang.place_name}</th>
+      <th>{$lang.city}</th>
+      <th>{$lang.district}</th>
       <th>{$lang.is_show}</th>
       <th>{$lang.handler}</th>
     </tr>
-    {foreach from=$brand_list item=brand}
+    {foreach from=$place_list item=place}
     <tr>
       <td class="first-cell">
-        <span style="float:right">{$brand.brand_logo}</span>
-        <span onclick="javascript:listTable.edit(this, 'edit_brand_name', {$brand.brand_id})">{$brand.brand_name|escape:html}</span>
+        <!-- <span style="float:right">{$place.brand_logo}</span> -->
+        <span onclick="javascript:listTable.edit(this, 'edit_place_name', {$place.place_id})">{$place.place_name|escape:html}</span>
       </td>
-      <td>{$brand.site_url}</td>
-      <td align="left">{$brand.brand_desc|truncate:36}</td>
-      <td align="right"><span onclick="javascript:listTable.edit(this, 'edit_sort_order', {$brand.brand_id})">{$brand.sort_order}</span></td>
-      <td align="center"><img src="images/{if $brand.is_show}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'toggle_show', {$brand.brand_id})" /></td>
+      <td>{$place.region_id}</td>
+      <td>{$place.region_id}</td>
+      <td align="center"><img src="images/{if $brand.is_show}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'toggle_show', {$place.place_id})" /></td>
       <td align="center">
-        <a href="brand.php?act=edit&id={$brand.brand_id}" title="{$lang.edit}">{$lang.edit}</a> |
-        <a href="javascript:;" onclick="listTable.remove({$brand.brand_id}, '{$lang.drop_confirm}')" title="{$lang.edit}">{$lang.remove}</a> 
+        <!-- <a href="place.php?act=edit&id={$place.place_id}" title="{$lang.edit}">{$lang.edit}</a> | -->
+        <a href="javascript:;" onclick="listTable.remove({$place.place_id}, '{$lang.drop_confirm}')" title="{$lang.edit}">{$lang.remove}</a> 
       </td>
     </tr>
     {foreachelse}

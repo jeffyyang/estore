@@ -33,7 +33,7 @@ if ($_REQUEST['act'] == 'list')
 
     $place_list = get_place_list();
 
-    $smarty->assign('place_list',   $place_list['place']);
+    $smarty->assign('place_list',   $place_list['places']);
     $smarty->assign('filter',       $brand_list['filter']);
     $smarty->assign('record_count', $brand_list['record_count']);
     $smarty->assign('page_count',   $brand_list['page_count']);
@@ -218,20 +218,20 @@ elseif ($_REQUEST['act'] == 'remove')
     $id = intval($_GET['id']);
 
     /* 删除该品牌的图标 */
-    $sql = "SELECT brand_logo FROM " .$ecs->table('brand'). " WHERE brand_id = '$id'";
+/*    $sql = "SELECT brand_logo FROM " .$ecs->table('brand'). " WHERE brand_id = '$id'";
     $logo_name = $db->getOne($sql);
     if (!empty($logo_name))
     {
         @unlink(ROOT_PATH . DATA_DIR . '/brandlogo/' .$logo_name);
     }
 
-    $exc->drop($id);
+    $exc->drop($id);*/
 
     /* 更新商品的品牌编号 */
-    $sql = "UPDATE " .$ecs->table('goods'). " SET brand_id=0 WHERE brand_id='$id'";
+    $sql = "UPDATE " .$ecs->table('suppliers'). " SET place_id=0 WHERE place_id='$id'";
     $db->query($sql);
 
-    $url = 'brand.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
+    $url = 'place.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
     ecs_header("Location: $url\n");
     exit;
@@ -243,13 +243,13 @@ elseif ($_REQUEST['act'] == 'remove')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'query')
 {
-    $brand_list = get_brandlist();
-    $smarty->assign('brand_list',   $brand_list['brand']);
+    $place_list = get_place_list();
+    $smarty->assign('place_list',   $place_list['places']);
     $smarty->assign('filter',       $brand_list['filter']);
     $smarty->assign('record_count', $brand_list['record_count']);
     $smarty->assign('page_count',   $brand_list['page_count']);
 
-    make_json_result($smarty->fetch('brand_list.htm'), '',
+    make_json_result($smarty->fetch('place_list.htm'), '',
         array('filter' => $brand_list['filter'], 'page_count' => $brand_list['page_count']));
 }
 
@@ -270,7 +270,7 @@ function place_exists($district, $place)
 }
 
 /**
- * 获得指定区县的所有商圈
+ * 获得指定区县的所有商圈下拉表
  *
  * @access      public
  * @param       int     region    区县编号

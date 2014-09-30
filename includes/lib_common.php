@@ -995,6 +995,24 @@ function get_brand_list()
     return $brand_list;
 }
 
+
+/**
+ * 取得商户列表
+ * @return array 商户列表 id => name
+ */
+function get_shop_list()
+{
+    $sql = 'SELECT shop_id, shop_name FROM ' . $GLOBALS['ecs']->table('shop') . ' ORDER BY sort_order';
+    $res = $GLOBALS['db']->getAll($sql);
+
+    $shop_list = array();
+    foreach ($res AS $row)
+    {
+        $shop_list[$row['shop_id']] = addslashes($row['shop_name']);
+    }
+
+    return $shop_list;
+}
 /**
  * 获得某个分类下
  *
