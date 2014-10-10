@@ -32,6 +32,7 @@
       <td align="right"><span onclick="javascript:listTable.edit(this, 'edit_sort_order', <?php echo $this->_var['shop']['shop_id']; ?>)"><?php echo $this->_var['shop']['sort_order']; ?></span></td>
       <td align="center"><img src="images/<?php if ($this->_var['shop']['is_show']): ?>yes<?php else: ?>no<?php endif; ?>.gif" onclick="listTable.toggle(this, 'toggle_show', <?php echo $this->_var['shop']['shop_id']; ?>)" /></td>
       <td align="center">
+        <a href="suppliers.php?act=list" title="<?php echo $this->_var['lang']['suppliers_manage']; ?>"><?php echo $this->_var['lang']['suppliers_manage']; ?></a> |
         <a href="shop.php?act=edit&id=<?php echo $this->_var['shop']['shop_id']; ?>" title="<?php echo $this->_var['lang']['edit']; ?>"><?php echo $this->_var['lang']['edit']; ?></a> |
         <a href="javascript:;" onclick="listTable.remove(<?php echo $this->_var['shop']['shop_id']; ?>, '<?php echo $this->_var['lang']['drop_confirm']; ?>')" title="<?php echo $this->_var['lang']['edit']; ?>"><?php echo $this->_var['lang']['remove']; ?></a> 
       </td>

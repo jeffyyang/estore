@@ -21,14 +21,14 @@ $image = new cls_image($_CFG['bgcolor']);
 
 define('SUPPLIERS_ACTION_LIST', 'delivery_view,back_view');
 /*------------------------------------------------------ */
-//-- 供货商列表
+//-- 门店列表
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'list')
 {
      /* 检查权限 */
     admin_priv('suppliers_manage');
 
-    print_r($_SESSION);
+    // print_r($_SESSION);
 
     $cat_id = empty($_REQUEST['cat_id']) ? 0 : intval($_REQUEST['cat_id']);
 
@@ -182,7 +182,7 @@ elseif ($_REQUEST['act'] == 'remove')
 }
 
 /*------------------------------------------------------ */
-//-- 修改供货商状态
+//-- 修改门店状态
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'is_check')
 {

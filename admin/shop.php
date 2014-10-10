@@ -49,6 +49,11 @@ elseif ($_REQUEST['act'] == 'add')
     /* 权限判断 */
     admin_priv('shop_manage');
 
+    $smarty->assign('is_add', true);
+
+    $shop = array();
+    $smarty->assign('cat_list', shop_cat_list(0, $shop['cat_id']));
+
     $smarty->assign('ur_here',     $_LANG['shop_add']);
     $smarty->assign('action_link', array('text' => $_LANG['shop_list'], 'href' => 'shop.php?act=list'));
     $smarty->assign('form_action', 'insert');
@@ -72,44 +77,45 @@ elseif ($_REQUEST['act'] == 'insert')
     }
 
     /*对描述处理*/
-    if (!empty($_POST['br_desc']))
+    if (!empty($_POST['shop_desc']))
     {
-        $_POST['brand_desc'] = $_POST['brand_desc'];
+        $_POST['shop_desc'] = $_POST['shop_desc'];
     }
 
      /*处理图片*/
-    $logo_img_name = basename($image->upload_image($_FILES['brand_logo'],'brandlogo'));
+    $logo_img_name = basename($image->upload_image($_FILES['shop_logo'],'shopimg'));
 
      /*处理图片*/
-    $id_img_name = basename($image->upload_image($_FILES['brand_logo'],'brandlogo'));
+    $id_img_name = basename($image->upload_image($_FILES['id_img'],'shopimg'));
 
      /*处理图片*/
-    $lic_img_name = basename($image->upload_image($_FILES['brand_logo'],'brandlogo'));
+    $lic_img_name = basename($image->upload_image($_FILES['lic_img'],'shopimg'));
+
 
      /*处理URL*/
     $site_url = sanitize_url( $_POST['site_url'] );
 
     /*插入数据*/
 
-    $sql = "INSERT INTO ".$ecs->table('shop')."(brand_name, site_url, brand_desc, brand_logo, is_show, sort_order) ".
-           "VALUES ('$_POST[brand_name]', '$site_url', '$_POST[brand_desc]', '$img_name', '$is_show', '$_POST[sort_order]')";
+    $sql = "INSERT INTO ".$ecs->table('shop')."(cat_id, shop_name, site_url, shop_desc, shop_logo, lic_snapshot, id_snapshot, is_show, sort_order) ".
+           "VALUES ('$_POST[cat_id]','$_POST[shop_name]', '$site_url', '$_POST[shop_desc]', '$logo_img_name', '$id_img_name', '$lic_img_name', '$is_show', '$_POST[sort_order]')";
     $db->query($sql);
 
     admin_log($_POST['shop_name'],'add','shop');
 
     /** 插入管理员信息 **/
-    $sql = "INSERT INTO ".$ecs->table('shop')."(brand_name, site_url, brand_desc, brand_logo, is_show, sort_order) ".
-           "VALUES ('$_POST[brand_name]', '$site_url', '$_POST[brand_desc]', '$img_name', '$is_show', '$_POST[sort_order]')";
-    $db->query($sql);
+    // $sql = "INSERT INTO ".$ecs->table('shop')."(brand_name, site_url, brand_desc, brand_logo, is_show, sort_order) ".
+    //        "VALUES ('$_POST[brand_name]', '$site_url', '$_POST[brand_desc]', '$img_name', '$is_show', '$_POST[sort_order]')";
+    // $db->query($sql);
 
-    admin_log($_POST['shop_name'],'add','shop');
+    // admin_log($_POST['shop_name'],'add','shop');
 
     /** 插入门店信息 **/
-    $sql = "INSERT INTO ".$ecs->table('shop')."(brand_name, site_url, brand_desc, brand_logo, is_show, sort_order) ".
-           "VALUES ('$_POST[brand_name]', '$site_url', '$_POST[brand_desc]', '$img_name', '$is_show', '$_POST[sort_order]')";
-    $db->query($sql);
+    // $sql = "INSERT INTO ".$ecs->table('shop')."(brand_name, site_url, brand_desc, brand_logo, is_show, sort_order) ".
+    //        "VALUES ('$_POST[brand_name]', '$site_url', '$_POST[brand_desc]', '$img_name', '$is_show', '$_POST[sort_order]')";
+    // $db->query($sql);
 
-    admin_log($_POST['shop_name'],'add','shop');    
+    // admin_log($_POST['shop_name'],'add','shop');    
 
 
     /* 清除缓存 */
@@ -130,37 +136,37 @@ elseif ($_REQUEST['act'] == 'insert')
 elseif ($_REQUEST['act'] == 'edit')
 {
     /* 权限判断 */
-    admin_priv('brand_manage');
-    $sql = "SELECT brand_id, brand_name, site_url, brand_logo, brand_desc, brand_logo, is_show, sort_order ".
-            "FROM " .$ecs->table('brand'). " WHERE brand_id='$_REQUEST[id]'";
-    $brand = $db->GetRow($sql);
+    admin_priv('shop_manage');
+    $sql = "SELECT shop_id, shop_name, cat_id, site_url, shop_logo, id_snapshot, lic_snapshot, shop_desc, is_show, sort_order ".
+            "FROM " .$ecs->table('shop'). " WHERE shop_id='$_REQUEST[id]'";
+    $shop = $db->GetRow($sql);
 
     $smarty->assign('ur_here',     $_LANG['brand_edit']);
-    $smarty->assign('action_link', array('text' => $_LANG['06_goods_brand_list'], 'href' => 'brand.php?act=list&' . list_link_postfix()));
-    $smarty->assign('brand',       $brand);
+    $smarty->assign('action_link', array('text' => $_LANG['shop_list'], 'href' => 'shop.php?act=list&' . list_link_postfix()));
+    $smarty->assign('shop',       $shop);
     $smarty->assign('form_action', 'updata');
 
     assign_query_info();
-    $smarty->display('brand_info.htm');
+    $smarty->display('shop_info.htm');
 }
 elseif ($_REQUEST['act'] == 'updata')
 {
-    admin_priv('brand_manage');
-    if ($_POST['brand_name'] != $_POST['old_brandname'])
+    admin_priv('shop_manage');
+    if ($_POST['shop_name'] != $_POST['old_shopname'])
     {
         /*检查品牌名是否相同*/
-        $is_only = $exc->is_only('brand_name', $_POST['brand_name'], $_POST['id']);
+        $is_only = $exc->is_only('shop_name', $_POST['shop_name'], $_POST['id']);
 
         if (!$is_only)
         {
-            sys_msg(sprintf($_LANG['brandname_exist'], stripslashes($_POST['brand_name'])), 1);
+            sys_msg(sprintf($_LANG['shopname_exist'], stripslashes($_POST['shop_name'])), 1);
         }
     }
 
     /*对描述处理*/
-    if (!empty($_POST['brand_desc']))
+    if (!empty($_POST['shop_desc']))
     {
-        $_POST['brand_desc'] = $_POST['brand_desc'];
+        $_POST['shop_desc'] = $_POST['shop_desc'];
     }
 
     $is_show = isset($_REQUEST['is_show']) ? intval($_REQUEST['is_show']) : 0;
@@ -181,10 +187,10 @@ elseif ($_REQUEST['act'] == 'updata')
         /* 清除缓存 */
         clear_cache_files();
 
-        admin_log($_POST['brand_name'], 'edit', 'brand');
+        admin_log($_POST['shop_name'], 'edit', 'shop');
 
         $link[0]['text'] = $_LANG['back_list'];
-        $link[0]['href'] = 'brand.php?act=list&' . list_link_postfix();
+        $link[0]['href'] = 'shop.php?act=list&' . list_link_postfix();
         $note = vsprintf($_LANG['brandedit_succed'], $_POST['brand_name']);
         sys_msg($note, 0, $link);
     }
@@ -195,25 +201,25 @@ elseif ($_REQUEST['act'] == 'updata')
 }
 
 /*------------------------------------------------------ */
-//-- 编辑品牌名称
+//-- 编辑商户名称
 /*------------------------------------------------------ */
-elseif ($_REQUEST['act'] == 'edit_brand_name')
+elseif ($_REQUEST['act'] == 'edit_shop_name')
 {
-    check_authz_json('brand_manage');
+    check_authz_json('shop_manage');
 
     $id     = intval($_POST['id']);
     $name   = json_str_iconv(trim($_POST['val']));
 
     /* 检查名称是否重复 */
-    if ($exc->num("brand_name",$name, $id) != 0)
+    if ($exc->num("shop_name",$name, $id) != 0)
     {
-        make_json_error(sprintf($_LANG['brandname_exist'], $name));
+        make_json_error(sprintf($_LANG['shopname_exist'], $name));
     }
     else
     {
-        if ($exc->edit("brand_name = '$name'", $id))
+        if ($exc->edit("shop_name = '$name'", $id))
         {
-            admin_log($name,'edit','brand');
+            admin_log($name,'edit','shop');
             make_json_result(stripslashes($name));
         }
         else
@@ -223,33 +229,12 @@ elseif ($_REQUEST['act'] == 'edit_brand_name')
     }
 }
 
-elseif($_REQUEST['act'] == 'add_brand')
-{
-    $brand = empty($_REQUEST['brand']) ? '' : json_str_iconv(trim($_REQUEST['brand']));
-
-    if(brand_exists($brand))
-    {
-        make_json_error($_LANG['brand_name_exist']);
-    }
-    else
-    {
-        $sql = "INSERT INTO " . $ecs->table('brand') . "(brand_name)" .
-               "VALUES ( '$brand')";
-
-        $db->query($sql);
-        $brand_id = $db->insert_id();
-
-        $arr = array("id"=>$brand_id, "brand"=>$brand);
-
-        make_json_result($arr);
-    }
-}
 /*------------------------------------------------------ */
 //-- 编辑排序序号
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'edit_sort_order')
 {
-    check_authz_json('brand_manage');
+    check_authz_json('shop_manage');
 
     $id     = intval($_POST['id']);
     $order  = intval($_POST['val']);
@@ -263,7 +248,7 @@ elseif ($_REQUEST['act'] == 'edit_sort_order')
     }
     else
     {
-        make_json_error(sprintf($_LANG['brandedit_fail'], $name));
+        make_json_error(sprintf($_LANG['shopedit_fail'], $name));
     }
 }
 
@@ -283,15 +268,15 @@ elseif ($_REQUEST['act'] == 'toggle_show')
 }
 
 /*------------------------------------------------------ */
-//-- 删除品牌
+//-- 删除商户信息
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'remove')
 {
-    check_authz_json('brand_manage');
+    check_authz_json('shop_manage');
 
     $id = intval($_GET['id']);
 
-    /* 删除该品牌的图标 */
+    /* 删除商户的图标 */
     $sql = "SELECT brand_logo FROM " .$ecs->table('brand'). " WHERE brand_id = '$id'";
     $logo_name = $db->getOne($sql);
     if (!empty($logo_name))
@@ -317,23 +302,68 @@ elseif ($_REQUEST['act'] == 'remove')
 elseif ($_REQUEST['act'] == 'drop_logo')
 {
     /* 权限判断 */
-    admin_priv('brand_manage');
-    $brand_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+    admin_priv('shop_manage');
+    $shop_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
     /* 取得logo名称 */
-    $sql = "SELECT brand_logo FROM " .$ecs->table('brand'). " WHERE brand_id = '$brand_id'";
+    $sql = "SELECT shop_logo FROM " .$ecs->table('shop'). " WHERE shop_id = '$shop_id'";
     $logo_name = $db->getOne($sql);
 
     if (!empty($logo_name))
     {
-        @unlink(ROOT_PATH . DATA_DIR . '/brandlogo/' .$logo_name);
-        $sql = "UPDATE " .$ecs->table('brand'). " SET brand_logo = '' WHERE brand_id = '$brand_id'";
+        @unlink(ROOT_PATH . DATA_DIR . '/shopimg/' .$logo_name);
+        $sql = "UPDATE " .$ecs->table('shop'). " SET shop_logo = '' WHERE shop_id = '$shop_id'";
         $db->query($sql);
     }
-    $link= array(array('text' => $_LANG['brand_edit_lnk'], 'href' => 'brand.php?act=edit&id=' . $brand_id), array('text' => $_LANG['brand_list_lnk'], 'href' => 'brand.php?act=list'));
-    sys_msg($_LANG['drop_brand_logo_success'], 0, $link);
+    $link= array(array('text' => $_LANG['shop_edit_lnk'], 'href' => 'shop.php?act=edit&id=' . $shop_id), array('text' => $_LANG['shop_list_lnk'], 'href' => 'shop.php?act=list'));
+    sys_msg($_LANG['drop_shop_logo_success'], 0, $link);
 }
 
+/*------------------------------------------------------ */
+//-- 删除营业执照图片
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'drop_licimg')
+{
+    /* 权限判断 */
+    admin_priv('shop_manage');
+    $brand_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+    /* 取得logo名称 */
+    $sql = "SELECT lic_snapshot FROM " .$ecs->table('shop'). " WHERE shop_id = '$shop_id'";
+    $img_name = $db->getOne($sql);
+
+    if (!empty($img_name))
+    {
+        @unlink(ROOT_PATH . DATA_DIR . '/shopimg/' .$logo_name);
+        $sql = "UPDATE " .$ecs->table('shop'). " SET lic_snapshot = '' WHERE shop_id = '$shop_id'";
+        $db->query($sql);
+    }
+    $link= array(array('text' => $_LANG['shop_edit_lnk'], 'href' => 'shop.php?act=edit&id=' . $shop_id), array('text' => $_LANG['shop_list_lnk'], 'href' => 'shop.php?act=list'));
+    sys_msg($_LANG['drop_lic_img_success'], 0, $link);
+}
+
+/*------------------------------------------------------ */
+//-- 删除法人身份证图片
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'drop_idimg')
+{
+    /* 权限判断 */
+    admin_priv('shop_manage');
+    $shop_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+    /* 取得logo名称 */
+    $sql = "SELECT id_snapshot FROM " .$ecs->table('shop'). " WHERE shop_id = '$shop_id'";
+    $img_name = $db->getOne($sql);
+
+    if (!empty($img_name))
+    {
+        @unlink(ROOT_PATH . DATA_DIR . '/shopimg/' .$img_name);
+        $sql = "UPDATE " .$ecs->table('shop'). " SET id_snapshot = '' WHERE shop_id = '$shop_id'";
+        $db->query($sql);
+    }
+    $link= array(array('text' => $_LANG['shop_edit_lnk'], 'href' => 'shop.php?act=edit&id=' . $shop_id), array('text' => $_LANG['shop_list_lnk'], 'href' => 'shop.php?act=list'));
+    sys_msg($_LANG['drop_id_img_success'], 0, $link);
+}
 /*------------------------------------------------------ */
 //-- 排序、分页、查询
 /*------------------------------------------------------ */
@@ -388,7 +418,7 @@ function get_shoplist()
             {
                 $keyword = $_POST['shop_name'];
             }
-            $sql = "SELECT * FROM ".$GLOBALS['ecs']->table('shop')." WHERE brand_name like '%{$keyword}%' ORDER BY sort_order ASC";
+            $sql = "SELECT * FROM ".$GLOBALS['ecs']->table('shop')." WHERE shop_name like '%{$keyword}%' ORDER BY sort_order ASC";
         }
         else
         {
@@ -408,7 +438,7 @@ function get_shoplist()
     while ($rows = $GLOBALS['db']->fetchRow($res))
     {
         $shop_logo = empty($rows['shop_logo']) ? '' :
-            '<a href="../' . DATA_DIR . '/shoplogo/'.$rows['shop_logo'].'" target="_brank"><img src="images/picflag.gif" width="16" height="16" border="0" alt='.$GLOBALS['_LANG']['shop_logo'].' /></a>';
+            '<a href="../' . DATA_DIR . '/shopimg/'.$rows['shop_logo'].'" target="_brank"><img src="images/picflag.gif" width="16" height="16" border="0" alt='.$GLOBALS['_LANG']['shop_logo'].' /></a>';
         $site_url   = empty($rows['site_url']) ? 'N/A' : '<a href="'.$rows['site_url'].'" target="_brank">'.$rows['site_url'].'</a>';
 
         $rows['shop_logo'] = $shop_logo;

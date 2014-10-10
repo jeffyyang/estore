@@ -15,14 +15,33 @@
 
 $_LANG['shop_name'] = '商户名称';
 $_LANG['site_url'] = '商户网址';
+
 $_LANG['shop_desc'] = '商户描述';
 $_LANG['shop_logo'] = '商户LOGO';
 $_LANG['sort_order'] = '排序';
-$_LANG['is_show'] = '是否显示';
+$_LANG['is_show'] = '审核状态';
 $_LANG['add_time'] = '申请日期';
-$_LANG['drop_brand_logo'] = '删除图标';
+
+$_LANG['rapid_add_cat'] = '添加类别';
+$_LANG['category_manage'] = '类别管理';
+
+$_LANG['suppliers_manage'] = '门店管理';
+
+$_LANG['drop_shop_logo'] = '删除图标';
 $_LANG['confirm_drop_logo'] = '你确认要删除该图标吗？';
-$_LANG['drop_brand_logo_success'] = '删除商户logo成功';
+$_LANG['drop_shop_logo_success'] = '删除商户logo成功';
+
+$_LANG['drop_lic_img'] = '删除图片';
+$_LANG['confirm_drop_licimg'] = '你确认要删除该图片吗？';
+$_LANG['drop_lic_img_success'] = '删除图片成功';
+
+$_LANG['drop_id_img'] = '删除图片';
+$_LANG['confirm_drop_idimg'] = '你确认要删除该图片吗？';
+$_LANG['drop_id_img_success'] = '删除图片成功';
+
+$_LANG['label_shop_category'] = '类别';
+$_LANG['label_id_img'] = '法人身份证';
+$_LANG['label_lic_img'] = '营业执照';
 
 $_LANG['shop_edit_lnk'] = '重新编辑该商户';
 $_LANG['shop_list_lnk'] = '返回列表页面';
@@ -32,12 +51,12 @@ $_LANG['up_shoplogo'] = '请上传图片，做为商户的LOGO！';
 $_LANG['warn_shoplogo'] = '你已经上传过图片。再次上传时将覆盖原图片！';
 
 /*帮助信息*/
-$_LANG['up_id_snapshot'] = '请上传法人身份证照片！';
-$_LANG['warn_id_snapshot'] = '你已经上传过图片。再次上传时将覆盖原图片！';
+$_LANG['up_id_img'] = '请上传法人身份证照片！';
+$_LANG['warn_id_img'] = '你已经上传过图片。再次上传时将覆盖原图片！';
 
 /*帮助信息*/
-$_LANG['up_lic_snapshot'] = '请上传营业执照正副本的照片！';
-$_LANG['warn_lic_snapshot'] = '你已经上传过图片。再次上传时将覆盖原图片！';
+$_LANG['up_lic_img'] = '请上传营业执照正副本的照片！';
+$_LANG['warn_lic_img'] = '你已经上传过图片。再次上传时将覆盖原图片！';
 
 /*提示信息*/
 $_LANG['shop_edit'] = '编辑商户记录';
