@@ -82,7 +82,7 @@
 <!--{/if}-->
 <!--#登录界面 end-->
 
-<!--*会员注册界面 start-->
+<!--*商户注册界面 start-->
     <!--{if $action eq 'register'}-->
     <!-- {if $shop_reg_closed eq 1} -->
     <div class="usBox">
@@ -200,7 +200,7 @@
 </div>
 <!--{/if}-->
 <!--{/if}-->
-<!--#会员注册界面 end-->
+<!--#商户注册界面 end-->
 
 <!--*找回密码界面 -->
     <!--{if $action eq 'get_password'} -->

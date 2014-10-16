@@ -24,8 +24,10 @@
 <!--版权 start-->
 <div id="footer">
  <div class="text">
+ <!--
  {$copyright}<br />
  {$shop_address} {$shop_postcode}
+ -->
  <!-- 客服电话{if $service_phone} -->
       Tel: {$service_phone}
  <!-- 结束客服电话{/if} -->

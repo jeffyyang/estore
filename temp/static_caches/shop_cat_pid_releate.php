@@ -197,8 +197,8 @@ $data = array (
   ),
   15 => 
   array (
-    'cat_id' => '30',
-    'cat_name' => '美甲',
+    'cat_id' => '31',
+    'cat_name' => '美容美发',
     'measure_unit' => '',
     'parent_id' => '23',
     'is_show' => '1',
@@ -210,8 +210,8 @@ $data = array (
   ),
   16 => 
   array (
-    'cat_id' => '31',
-    'cat_name' => '美容美发',
+    'cat_id' => '30',
+    'cat_name' => '美甲',
     'measure_unit' => '',
     'parent_id' => '23',
     'is_show' => '1',

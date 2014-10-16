@@ -465,7 +465,6 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
     /* 检查权限 */
     admin_priv('suppliers_manage');
 
-
     if ($_REQUEST['act'] == 'insert')
     {
 

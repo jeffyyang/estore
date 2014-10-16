@@ -192,22 +192,6 @@ $data = array (
     'id' => '23',
     'name' => '丽人',
   ),
-  30 => 
-  array (
-    'cat_id' => '30',
-    'cat_name' => '美甲',
-    'measure_unit' => '',
-    'parent_id' => '23',
-    'is_show' => '1',
-    'show_in_nav' => '0',
-    'grade' => '0',
-    'sort_order' => '50',
-    'has_children' => '0',
-    'goods_num' => 0,
-    'level' => 1,
-    'id' => '30',
-    'name' => '美甲',
-  ),
   31 => 
   array (
     'cat_id' => '31',
@@ -223,6 +207,22 @@ $data = array (
     'level' => 1,
     'id' => '31',
     'name' => '美容美发',
+  ),
+  30 => 
+  array (
+    'cat_id' => '30',
+    'cat_name' => '美甲',
+    'measure_unit' => '',
+    'parent_id' => '23',
+    'is_show' => '1',
+    'show_in_nav' => '0',
+    'grade' => '0',
+    'sort_order' => '50',
+    'has_children' => '0',
+    'goods_num' => 0,
+    'level' => 1,
+    'id' => '30',
+    'name' => '美甲',
   ),
   25 => 
   array (

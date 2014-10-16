@@ -20,7 +20,7 @@ if (!defined('IN_ECS'))
 
 
 $modules['01_shop']['shopcate_list']                = 'shopcate.php?act=list';         // 商户分类列表
-$modules['01_shop']['shop_list'] 					= 'shop.php?act=list';             // 商户列表
+$modules['01_shop']['shop_list'] 					= 'shops.php?act=list';             // 商户列表
 $modules['01_shop']['suppliers_list']         		= 'suppliers.php?act=list';        // 门店列表
 
 $modules['02_cat_and_goods']['01_goods_list']       = 'goods.php?act=list';         // 商品列表
