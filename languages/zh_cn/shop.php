@@ -14,6 +14,7 @@
 */
 
 
+$_LANG['shop_center'] = '商户中心';
 
 $_LANG['require_login'] = '非法入口。<br />必须登录才能完成操作。';
 
@@ -38,65 +39,12 @@ $_LANG['label_track_packages'] = '跟踪包裹';
 $_LANG['label_transform_points'] = '积分兑换';
 $_LANG['label_logout'] = '退出';
 
-/* 会员余额(预付款) */
-$_LANG['add_surplus_log'] = '查看帐户明细';
-$_LANG['view_application'] = '查看申请记录';
-$_LANG['surplus_pro_type'] = '类型';
-$_LANG['repay_money'] = '提现金额';
-$_LANG['money'] = '金额';
-$_LANG['surplus_type_0'] = '充值';
-$_LANG['surplus_type_1'] = '提现';
-$_LANG['deposit_money'] = '充值金额';
-$_LANG['process_notic'] = '会员备注';
-$_LANG['admin_notic'] = '管理员备注';
-$_LANG['submit_request'] = '提交申请';
-$_LANG['process_time'] = '操作时间';
-$_LANG['use_time'] = '使用时间';
-$_LANG['is_paid'] = '状态';
-$_LANG['is_confirm'] = '已完成';
-$_LANG['un_confirm'] = '未确认';
-$_LANG['pay'] = '付款';
-$_LANG['is_cancel'] = '取消';
-$_LANG['account_inc'] = '增加';
-$_LANG['account_dec'] = '减少';
-$_LANG['change_desc'] = '备注';
-$_LANG['surplus_amount'] = '您的充值金额为：';
-$_LANG['payment_name'] = '您选择的支付方式为：';
-$_LANG['payment_fee'] = '支付手续费用为：';
-$_LANG['payment_desc'] = '支付方式描述：';
-$_LANG['current_surplus'] = '您当前的可用资金为：';
-$_LANG['unit_yuan'] = '元';
-$_LANG['for_free'] = '赠品免费';
-$_LANG['surplus_amount_error'] = '您要申请提现的金额超过了您现有的余额，此操作将不可进行！';
-$_LANG['surplus_appl_submit'] = '您的提现申请已成功提交，请等待管理员的审核！';
-$_LANG['process_false'] = '此次操作失败，请返回重试！';
-$_LANG['confirm_remove_account'] = '您确定要删除此条记录吗？';
-$_LANG['back_page_up'] = '返回上一页';
-$_LANG['back_account_log'] = '返回帐户明细列表';
-$_LANG['amount_gt_zero'] = '请在“金额”栏输入大于0的数字';
-$_LANG['select_payment_pls'] = '请选择支付方式';
-
 //JS语言项
 $_LANG['account_js']['surplus_amount_empty'] = '请输入您要操作的金额数量！';
 $_LANG['account_js']['surplus_amount_error'] = '您输入的金额数量格式不正确！';
 $_LANG['account_js']['process_desc'] = '请输入您此次操作的备注信息！';
 $_LANG['account_js']['payment_empty'] = '请选择支付方式！';
 
-/* 缺货登记 */
-$_LANG['oos_booking'] = '缺货登记';
-$_LANG['booking_goods_name'] = '订购商品名';
-$_LANG['booking_amount'] = '订购数量';
-$_LANG['booking_time'] = '登记时间';
-$_LANG['process_desc'] = '处理备注';
-$_LANG['describe'] = '订购描述';
-$_LANG['contact_username'] = '联系人';
-$_LANG['contact_phone'] = '联系电话';
-$_LANG['submit_booking_goods'] = '提交缺货登记';
-$_LANG['booking_success'] = '您的商品订购已经成功提交！';
-$_LANG['booking_rec_exist'] = '此商品您已经进行过缺货登记了！';
-$_LANG['back_booking_list'] = '返回缺货登记列表';
-$_LANG['not_dispose'] = '未处理';
-$_LANG['no_goods_id'] = '请指定商品ID';
 
 //JS语言项
 $_LANG['booking_js']['booking_amount_empty'] = '请输入您要订购的商品数量！';
@@ -147,11 +95,6 @@ $_LANG['profile_js']['confirm_password_empty'] = '请输入您的确认密码！
 $_LANG['profile_js']['both_password_error'] = '您现两次输入的密码不一致！';
 $_LANG['profile_js']['msg_blank'] = '不能为空';
 $_LANG['profile_js']['no_select_question'] = '- 您没有完成密码提示问题的操作';
-
-/* 支付方式 */
-$_LANG['pay_name'] = '名称';
-$_LANG['pay_desc'] = '描述';
-$_LANG['pay_fee'] = '手续费';
 
 /* 收货地址 */
 $_LANG['consignee_name'] = '收货人姓名';
@@ -420,7 +363,7 @@ $_LANG['username_exist'] = '用户名 %s 已经存在';
 $_LANG['username_not_allow'] = '用户名 %s 不允许注册';
 $_LANG['confirm_register'] = '确认注册';
 
-$_LANG['agreement'] = "我已看过并接受《<a href=\"article.php?cat_id=-1\" style=\"color:blue\" target=\"_blank\">用户协议</a>》";
+$_LANG['agreement'] = "我已看过并接受《<a href=\"article.php?cat_id=-1\" style=\"color:blue\" target=\"_blank\">商户协议</a>》";
 
 $_LANG['email_empty'] = 'email为空';
 $_LANG['email_invalid'] = '%s 不是合法的email地址';
