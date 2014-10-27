@@ -40,6 +40,30 @@
     </td>
   </tr>
   <tr>
+    <td class="label">{$lang.label_suppliers_logo_img}</td>
+    <td>
+      <input type="file" name="logo_img" size="35" />
+      {if $suppliers.logo_img}
+        <a href="suppliers.php?act=show_image&img_url={$suppliers.logo_img}" target="_blank"><img src="images/yes.gif" border="0" /></a>
+      {else}
+        <img src="images/no.gif" />
+      {/if}
+    </td>
+  </tr>
+  <tr id="auto_thumb_1">
+    <td class="label"> {$lang.label_suppliers_logo_thumb}</td>
+    <td id="auto_thumb_3">
+      <input type="file" name="logo_thumb" size="35" />
+      {if $suppliers.logo_thumb}
+        <a href="suppliers.php?act=show_image&img_url={$suppliers.logo_thumb}" target="_blank"><img src="images/yes.gif" border="0" /></a>
+      {else}
+        <img src="images/no.gif" />
+      {/if}
+      {if $gd > 0}
+      <br /><label for="auto_thumb"><input type="checkbox" id="auto_thumb" name="auto_thumb" checked="true" value="1" onclick="handleAutoThumb(this.checked)" />{$lang.auto_thumb}</label>{/if}
+    </td>
+  </tr>    
+  <tr>
     <td class="label">{$lang.label_suppliers_posters}</td>
     <td>
       <!-- 商户相册 -->
