@@ -34,6 +34,8 @@ $_LANG['label_suppliers_name'] = '门店名称：';
 $_LANG['label_suppliers_agency'] = '归属机构：';
 $_LANG['label_suppliers_shop'] = '商户：';
 $_LANG['label_suppliers_category'] = '门店类别：';
+$_LANG['label_suppliers_logo_img'] = '门店图标：';
+$_LANG['label_suppliers_logo_thumb'] = '图标缩略图：';
 $_LANG['label_suppliers_posters'] = '宣传海报：';
 $_LANG['label_suppliers_comm_rank'] = '综合评价：';
 $_LANG['label_suppliers_envi_rank'] = '环境评价：';
@@ -53,6 +55,7 @@ $_LANG['shop_manage'] = '商户管理';
 $_LANG['category_manage'] = '类别管理';
 $_LANG['place_manage'] = '商圈管理';
 $_LANG['start_marker'] = '标记位置';
+$_LANG['auto_thumb'] = '自动缩略图：';
 
 $_LANG['label_region'] = '区域：';
 $_LANG['label_country'] = '国家：';

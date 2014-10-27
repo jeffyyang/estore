@@ -26,7 +26,7 @@ define('SUPPLIERS_ACTION_LIST', 'delivery_view,back_view');
 if ($_REQUEST['act'] == 'list')
 {
      /* 检查权限 */
-    admin_priv('suppliers_manage');
+    admin_priv('shop_manage');
 
     // print_r($_SESSION);
 
@@ -57,7 +57,7 @@ if ($_REQUEST['act'] == 'list')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'query')
 {
-    check_authz_json('suppliers_manage');
+    check_authz_json('shop_manage');
 
     $result = suppliers_list();
 
@@ -79,7 +79,7 @@ elseif ($_REQUEST['act'] == 'query')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'edit_suppliers_name')
 {
-    check_authz_json('suppliers_manage');
+    check_authz_json('shop_manage');
 
     $id     = intval($_POST['id']);
     $name   = json_str_iconv(trim($_POST['val']));
@@ -120,7 +120,7 @@ elseif ($_REQUEST['act'] == 'edit_suppliers_name')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'remove')
 {
-    check_authz_json('suppliers_manage');
+    check_authz_json('shop_manage');
 
     $id = intval($_REQUEST['id']);
     $sql = "SELECT *
@@ -186,7 +186,7 @@ elseif ($_REQUEST['act'] == 'remove')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'is_check')
 {
-    check_authz_json('suppliers_manage');
+    check_authz_json('shop_manage');
 
     $id = intval($_REQUEST['id']);
     $sql = "SELECT suppliers_id, is_check
@@ -218,7 +218,7 @@ elseif ($_REQUEST['act'] == 'batch')
     else
     {
         /* 检查权限 */
-        admin_priv('suppliers_manage');
+        admin_priv('shop_manage');
 
         $ids = $_POST['checkboxes'];
 
@@ -293,7 +293,7 @@ elseif ($_REQUEST['act'] == 'batch')
 elseif (in_array($_REQUEST['act'], array('add', 'edit')))
 {
     /* 检查权限 */
-    admin_priv('suppliers_manage');
+    admin_priv('shop_manage');
 
     if ($_REQUEST['act'] == 'add')
     {
@@ -344,7 +344,7 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
 
         $smarty->assign('ur_here', $_LANG['add_suppliers']);
         $smarty->assign('action_link', array('href' => 'suppliers.php?act=list', 'text' => $_LANG['suppliers_list']));
-
+        $smarty->assign('gd', gd_version());
         $smarty->assign('form_action', 'insert');
         $smarty->assign('suppliers', $suppliers);
 
@@ -397,21 +397,9 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
         $city_list = get_regions_list(2,15);
         $smarty->assign('city_list', $city_list);
 
-
-
-
-        /* 商品图片路径 */
-        if (isset($GLOBALS['shop_id']) && ($GLOBALS['shop_id'] > 10) && !empty($goods['original_img']))
-        {
-            $suppliers['goods_img'] = get_image_path($_REQUEST['supplier_id'], $suppliers['goods_img']);
-            $suppliers['goods_thumb'] = get_image_path($_REQUEST['supplier_id'], $suppliers['goods_thumb'], true);
-        }
-
         /* 图片列表 */
         $sql = "SELECT * FROM " . $ecs->table('supplier_gallery') . " WHERE supplier_id = '$id'";
         $img_list = $db->getAll($sql);
-
-        print_r($img_list);
 
         /* 格式化相册图片路径 */
         if (isset($GLOBALS['shop_id']) && ($GLOBALS['shop_id'] > 0))
@@ -463,7 +451,7 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
 elseif (in_array($_REQUEST['act'], array('insert', 'update')))
 {
     /* 检查权限 */
-    admin_priv('suppliers_manage');
+    admin_priv('shop_manage');
 
     if ($_REQUEST['act'] == 'insert')
     {
@@ -493,6 +481,11 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
         {
             sys_msg($_LANG['suppliers_name_exist']);
         }
+
+        /*处理图片*/
+        $logo_img_name = basename($image->upload_image($_FILES['logo_img'],'supplierimg'));
+        $suppliers['logo_img'] = $logo_img_name;
+
 
         $db->autoExecute($ecs->table('suppliers'), $suppliers, 'INSERT');
         $suppliers['suppliers_id'] = $db->insert_id();
@@ -573,6 +566,31 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
     }
 
 }
+/*------------------------------------------------------ */
+//-- 显示图片
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'show_image')
+{
+
+    if (isset($GLOBALS['shop_id']) && $GLOBALS['shop_id'] > 0)
+    {
+        $img_url = $_GET['img_url'];
+    }
+    else
+    {
+        if (strpos($_GET['img_url'], 'http://') === 0)
+        {
+            $img_url = $_GET['img_url'];
+        }
+        else
+        {
+            $img_url = '../data/' . $_GET['img_url'];
+        }
+    }
+    $smarty->assign('img_url', $img_url);
+    $smarty->display('goods_show_image.htm');
+}
+
 
 /**
  * 获得指定商品的相册
