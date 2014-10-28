@@ -25,6 +25,10 @@ $_LANG['add_time'] = '申请日期';
 $_LANG['rapid_add_cat'] = '添加类别';
 $_LANG['category_manage'] = '类别管理';
 
+$_LANG['label_suppliers_category'] = '门店类别：';
+$_LANG['label_suppliers_main_cate'] = '主分类：';
+$_LANG['label_suppliers_sub_cate']  = '子分类：';
+
 $_LANG['suppliers_manage'] = '门店管理';
 
 $_LANG['drop_shop_logo'] = '删除图标';

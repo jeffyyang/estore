@@ -573,6 +573,29 @@ function cat_options($spec_cat_id, $arr)
     }
 }
 
+/**
+ * 获得商户分类列表
+ *
+ * @access      public
+ * @param       int     parent    父节点 
+ * @return      array 商户分类 id => name
+ */
+function get_shop_cat_list($parent = 0)
+{
+    $sql = 'SELECT cat_id, cat_name FROM ' . $GLOBALS['ecs']->table('shop_cate') .
+            " WHERE  parent_id = '$parent' ORDER BY cat_id ASC";
+            
+    $res = $GLOBALS['db']->GetAll($sql);
+
+    $cate_list = array();
+    foreach ($res AS $row)
+    {
+        if($row['cat_id'] != 0)
+        $cate_list[$row['cat_id']] = addslashes($row['cat_name']);
+    }
+    return $cate_list;
+}
+
 
 /**
  * 获得指定分类下的子分类的数组

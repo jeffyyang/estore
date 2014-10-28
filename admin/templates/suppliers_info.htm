@@ -24,7 +24,7 @@
        {/if}
     </td>
   </tr>   
-  <tr>
+<!--   <tr>
     <td class="label">{$lang.label_suppliers_category}</td>
     <td><select name="cat_id" onchange="hideCatDiv()" ><option value="0">{$lang.select_please}</option>{$cat_list}</select>
       {if $is_add}
@@ -38,7 +38,34 @@
        {/if}
        {$lang.require_field}
     </td>
-  </tr>
+  </tr> -->
+  <tr>
+    <td class="label">{$lang.label_suppliers_category}</td>
+    <td>
+      <span class="label">{$lang.label_suppliers_main_cate}</span>
+      <select name="main_cate_id" id="selMainCate" onChange="changedMainCate(this,'selSubCate');" >
+        <option value="">{$lang.select_please}</option>
+        {html_options options=$cat_list selected=$suppliers.pcat_id}
+      </select>
+      <span class="label">{$lang.label_suppliers_sub_cate}</span>
+      <select name="sub_cate_id" id="selSubCate">
+        <option value="">{$lang.select_please}</option>
+      </select>
+      <!--       
+      {if $is_add}
+        <a href="javascript:void(0)" title="{$lang.rapid_add_cat}" onclick="rapidCatAdd()" class="special" >{$lang.rapid_add_cat}</a>
+        <span id="category_add" style="display:none;">
+        <input class="text" size="10" name="addedCategoryName" />
+         <a href="javascript:void(0)" onclick="addCategory()" class="special" >{$lang.button_submit}</a>
+         <a href="javascript:void(0)" onclick="return goCatPage()" title="{$lang.category_manage}" class="special" >{$lang.category_manage}</a>
+         <a href="javascript:void(0)" onclick="hideCatDiv()" title="{$lang.hide}" class="special" ><<</a>
+         </span>
+       {/if} 
+      -->
+       {$lang.require_field}
+    </td>
+  </tr> 
+
   <tr>
     <td class="label">{$lang.label_suppliers_logo_img}</td>
     <td>
@@ -344,6 +371,168 @@ function validate()
       return;
   }
 
+ /* 处理商户分类 */
+
+  function rapidCatAdd()
+  {
+      var cat_div = document.getElementById("category_add");
+
+      if(cat_div.style.display != '')
+      {
+          var cat =document.forms['theForm'].elements['addedCategoryName'];
+          cat.value = '';
+          cat_div.style.display = '';
+      }
+  }
+
+  function addCategory()
+  {
+      var parent_id = document.forms['theForm'].elements['cat_id'];
+      var cat = document.forms['theForm'].elements['addedCategoryName'];
+      if(cat.value.replace(/^\s+|\s+$/g, '') == '')
+      {
+          alert(shopcate_name_not_null);
+          return;
+      }
+
+      var params = 'parent_id=' + parent_id.value;
+      params += '&cat=' + cat.value;
+      Ajax.call('shopcate.php?is_ajax=1&act=add_category', params, addCatResponse, 'GET', 'JSON');
+  }
+
+  function hideCatDiv()
+  {
+      var category_add_div = document.getElementById("category_add");
+      if(category_add_div.style.display != null)
+      {
+          category_add_div.style.display = 'none';
+      }
+  }
+
+  function addCatResponse(result)
+  {
+      if (result.error == '1' && result.message != '')
+      {
+          alert(result.message);
+          return;
+      }
+
+      var category_add_div = document.getElementById("category_add");
+      category_add_div.style.display = 'none';
+
+      var response = result.content;
+
+      var selCat = document.forms['theForm'].elements['cat_id'];
+      var opt = document.createElement("OPTION");
+      opt.value = response.id;
+      opt.selected = true;
+      opt.innerHTML = response.cat;
+
+      var str = selCat.options[selCat.selectedIndex].text;
+      var temp = str.replace(/^\s+/g, '');
+      var lengOfSpace = str.length - temp.length;
+      if(response.parent_id != 0)
+      {
+          lengOfSpace += 4;
+      }
+      for (i = 0; i < lengOfSpace; i++)
+      {
+          opt.innerHTML = '&nbsp;' + opt.innerHTML;
+      }
+
+      for (i = 0; i < selCat.length; i++)
+      {
+          if(selCat.options[i].value == response.parent_id)
+          {
+              if(i == selCat.length)
+              {
+                  if (Browser.isIE)
+                  {
+                      selCat.add(opt);
+                  }
+                  else
+                  {
+                      selCat.appendChild(opt);
+                  }
+              }
+              else
+              {
+                  selCat.insertBefore(opt, selCat.options[i + 1]);
+              }
+              //opt.selected = true;
+              break;
+          }
+
+      }
+
+      return;
+  }
+
+    function goCatPage()
+    {
+        if(confirm(go_shopcate_page))
+        {
+            window.location.href='shopcate.php?act=add';
+        }
+        else
+        {
+            return;
+        }
+    }
+
+/* *
+ * 处理主分类下拉列表改变的函数
+ *
+ * @obj     object  下拉列表
+ * @selName string  目标列表框的名称
+ */
+
+function changedMainCate(obj, selName)
+{
+  var parent = obj.options[obj.selectedIndex].value;
+  loadSubCate(parent, selName);
+}
+
+function loadSubCate(parent, target)
+{
+
+  Ajax.call('./shopcate.php', 'act=get_shopcate_options&target=' + target + "&parent=" + parent, shopcateResponse, "GET", "JSON");
+
+}
+
+function shopcateResponse(result, text_result)
+{
+  var sel = document.getElementById(result.target);
+
+  sel.length = 1;
+  sel.selectedIndex = 0;
+  sel.style.display = (result.shopcates.length == 0 && ! region.isAdmin) ? "none" : '';
+
+  if (document.all)
+  {
+    sel.fireEvent("onchange");
+  }
+  else
+  {
+    var evt = document.createEvent("HTMLEvents");
+    evt.initEvent('change', true, true);
+    sel.dispatchEvent(evt);
+  }
+
+  if (result.shopcates)
+  {
+    for (i = 0; i < result.shopcates.length; i ++ )
+    {
+      var opt = document.createElement("OPTION");
+      opt.value = result.shopcates[i].cat_id;
+      opt.text  = result.shopcates[i].cat_name;
+      sel.options.add(opt);
+    }
+  }
+}
+
+/*处理商户分类*/
+
 /* *
  * 处理县区下拉列表改变的函数
  *
@@ -476,115 +665,6 @@ function placeResponse(result, text_result)
       return;
   }
   /*快速管理商圈*/
-
-
-  function rapidCatAdd()
-  {
-      var cat_div = document.getElementById("category_add");
-
-      if(cat_div.style.display != '')
-      {
-          var cat =document.forms['theForm'].elements['addedCategoryName'];
-          cat.value = '';
-          cat_div.style.display = '';
-      }
-  }
-
-  function addCategory()
-  {
-      var parent_id = document.forms['theForm'].elements['cat_id'];
-      var cat = document.forms['theForm'].elements['addedCategoryName'];
-      if(cat.value.replace(/^\s+|\s+$/g, '') == '')
-      {
-          alert(shopcate_name_not_null);
-          return;
-      }
-
-      var params = 'parent_id=' + parent_id.value;
-      params += '&cat=' + cat.value;
-      Ajax.call('shopcate.php?is_ajax=1&act=add_category', params, addCatResponse, 'GET', 'JSON');
-  }
-
-  function hideCatDiv()
-  {
-      var category_add_div = document.getElementById("category_add");
-      if(category_add_div.style.display != null)
-      {
-          category_add_div.style.display = 'none';
-      }
-  }
-
-  function addCatResponse(result)
-  {
-      if (result.error == '1' && result.message != '')
-      {
-          alert(result.message);
-          return;
-      }
-
-      var category_add_div = document.getElementById("category_add");
-      category_add_div.style.display = 'none';
-
-      var response = result.content;
-
-      var selCat = document.forms['theForm'].elements['cat_id'];
-      var opt = document.createElement("OPTION");
-      opt.value = response.id;
-      opt.selected = true;
-      opt.innerHTML = response.cat;
-
-      //鑾峰彇瀛愬垎绫荤殑绌烘牸鏁
-      var str = selCat.options[selCat.selectedIndex].text;
-      var temp = str.replace(/^\s+/g, '');
-      var lengOfSpace = str.length - temp.length;
-      if(response.parent_id != 0)
-      {
-          lengOfSpace += 4;
-      }
-      for (i = 0; i < lengOfSpace; i++)
-      {
-          opt.innerHTML = '&nbsp;' + opt.innerHTML;
-      }
-
-      for (i = 0; i < selCat.length; i++)
-      {
-          if(selCat.options[i].value == response.parent_id)
-          {
-              if(i == selCat.length)
-              {
-                  if (Browser.isIE)
-                  {
-                      selCat.add(opt);
-                  }
-                  else
-                  {
-                      selCat.appendChild(opt);
-                  }
-              }
-              else
-              {
-                  selCat.insertBefore(opt, selCat.options[i + 1]);
-              }
-              //opt.selected = true;
-              break;
-          }
-
-      }
-
-      return;
-  }
-
-    function goCatPage()
-    {
-        if(confirm(go_shopcate_page))
-        {
-            window.location.href='shopcate.php?act=add';
-        }
-        else
-        {
-            return;
-        }
-    }
 
   /**
    * 添加海报图片

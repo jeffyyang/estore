@@ -1276,7 +1276,7 @@ function reformat_image_name($type, $goods_id, $source_img, $position='')
     {
         $dir = IMAGE_DIR;
     }
-    $sub_dir = date('Ym', gmtime());
+    $sub_dir = date('Ym', gmtime()).'/goods';
     if (!make_dir(ROOT_PATH.$dir.'/'.$sub_dir))
     {
         return false;

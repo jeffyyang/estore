@@ -332,7 +332,8 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
         $smarty->assign('shop_list', $shop_list);
         unset($shop_list, $shop_exists);
 
-        $smarty->assign('cat_list', shop_cat_list(0, $suppliers['cat_id']));
+        $cate_list = get_shop_cat_list();
+        $smarty->assign('cat_list', $cate_list);
 
         /* 取得地区 */
         // $province_list = get_regions(1,1);
@@ -387,7 +388,8 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
         $smarty->assign('brand_list', $brand_list);
         unset($brand_list, $brands_exists);
 
-        $smarty->assign('cat_list', shop_cat_list(0, $suppliers['cat_id']));
+        $cate_list = get_shop_cat_list();
+        $smarty->assign('cat_list', $cate_list);
 
         /* 取得地区 */
         // $province_list = get_regions(1,1);
@@ -458,7 +460,8 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
 
         /* 提交值 */
         $suppliers['suppliers_name']    = !empty($_POST['suppliers_name'])      ? trim($_POST['suppliers_name'])    : '';
-        $suppliers['cat_id']            = !empty($_POST['cat_id'])              ? intval($_POST['cat_id'])          : 0;
+        $suppliers['pcat_id']           = !empty($_POST['main_cate_id'])        ? intval($_POST['main_cate_id'])    : 0;
+        $suppliers['cat_id']            = !empty($_POST['sub_cate_id'])         ? intval($_POST['sub_cate_id'])     : 0;
         $suppliers['agency_id']         = !empty($_POST['agency_id'])           ? intval($_POST['agency_id'])       : 0;
         $suppliers['brand_id']          = !empty($_POST['brand_id'])            ? intval($_POST['brand_id'])        : 0;
         $suppliers['shop_price']        = !empty($_POST['shop_price'])          ? intval($_POST['shop_price'])      : 30;
@@ -630,7 +633,7 @@ function agencies_list_name()
 }
 
 /**
- *  获取供应商列表信息
+ *  获取门店列表信息
  *
  * @access  public
  * @param
@@ -692,6 +695,204 @@ function suppliers_list()
 
     return $arr;
 }
+
+
+/**
+ * 保存某商户的相册图片
+ * @param   int     $supplier_id   商户标识
+ * @param   array   $image_files
+ * @param   array   $image_descs
+ * @return  void
+ */
+function handle_gallery_image($supplier_id, $image_files, $image_descs, $image_urls)
+{
+    /* 是否处理缩略图 */
+    $proc_thumb = (isset($GLOBALS['shop_id']) && $GLOBALS['shop_id'] > 0)? false : true;
+
+    foreach ($image_descs AS $key => $img_desc)
+    {
+        /* 是否成功上传 */
+        $flag = false;
+        if (isset($image_files['error']))
+        {
+            if ($image_files['error'][$key] == 0)
+            {
+                $flag = true;
+            }
+        }
+        else
+        {
+            if ($image_files['tmp_name'][$key] != 'none')
+            {
+                $flag = true;
+            }
+        }
+
+        if ($flag)
+        {
+            // 生成缩略图
+            if ($proc_thumb)
+            {
+                $thumb_url = $GLOBALS['image']->make_thumb($image_files['tmp_name'][$key], $GLOBALS['_CFG']['thumb_width'],  $GLOBALS['_CFG']['thumb_height']);
+                $thumb_url = is_string($thumb_url) ? $thumb_url : '';
+            }
+
+            $upload = array(
+                'name' => $image_files['name'][$key],
+                'type' => $image_files['type'][$key],
+                'tmp_name' => $image_files['tmp_name'][$key],
+                'size' => $image_files['size'][$key],
+            );
+            if (isset($image_files['error']))
+            {
+                $upload['error'] = $image_files['error'][$key];
+            }
+            $img_original = $GLOBALS['image']->upload_image($upload);
+            if ($img_original === false)
+            {
+                sys_msg($GLOBALS['image']->error_msg(), 1, array(), false);
+            }
+            $img_url = $img_original;
+
+            if (!$proc_thumb)
+            {
+                $thumb_url = $img_original;
+            }
+            // 如果服务器支持GD 则添加水印
+            if ($proc_thumb && gd_version() > 0)
+            {
+                $pos        = strpos(basename($img_original), '.');
+                $newname    = dirname($img_original) . '/' . $GLOBALS['image']->random_filename() . substr(basename($img_original), $pos);
+                copy('../' . $img_original, '../' . $newname);
+                $img_url    = $newname;
+
+                $GLOBALS['image']->add_watermark('../'.$img_url,'',$GLOBALS['_CFG']['watermark'], $GLOBALS['_CFG']['watermark_place'], $GLOBALS['_CFG']['watermark_alpha']);
+            }
+
+            /* 重新格式化图片名称 */
+            $img_original = reformat_image_name('gallery', $supplier_id, $img_original, 'source');
+            $img_url = reformat_image_name('gallery', $supplier_id, $img_url, 'supplier');
+            $thumb_url = reformat_image_name('gallery_thumb', $supplier_id, $thumb_url, 'thumb');
+            $sql = "INSERT INTO " . $GLOBALS['ecs']->table('supplier_gallery') . " (supplier_id, img_url, img_desc, thumb_url, img_original) " .
+                    "VALUES ('$supplier_id', '$img_url', '$img_desc', '$thumb_url', '$img_original')";
+            $GLOBALS['db']->query($sql);
+            /* 不保留商品原图的时候删除原图 */
+            if ($proc_thumb && !$GLOBALS['_CFG']['retain_original_img'] && !empty($img_original))
+            {
+                $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('supplier_gallery') . " SET img_original='' WHERE `supplier_id`='{$supplier_id}'");
+                @unlink('../' . $img_original);
+            }
+        }
+        elseif (!empty($image_urls[$key]) && ($image_urls[$key] != $GLOBALS['_LANG']['img_file']) && ($image_urls[$key] != 'http://') && copy(trim($image_urls[$key]), ROOT_PATH . 'temp/' . basename($image_urls[$key])))
+        {
+            $image_url = trim($image_urls[$key]);
+
+            //定义原图路径
+            $down_img = ROOT_PATH . 'temp/' . basename($image_url);
+
+            // 生成缩略图
+            if ($proc_thumb)
+            {
+                $thumb_url = $GLOBALS['image']->make_thumb($down_img, $GLOBALS['_CFG']['thumb_width'],  $GLOBALS['_CFG']['thumb_height']);
+                $thumb_url = is_string($thumb_url) ? $thumb_url : '';
+                $thumb_url = reformat_image_name('gallery_thumb', $supplier_id, $thumb_url, 'thumb');
+            }
+
+            if (!$proc_thumb)
+            {
+                $thumb_url = htmlspecialchars($image_url);
+            }
+
+            /* 重新格式化图片名称 */
+            $img_url = $img_original = htmlspecialchars($image_url);
+            $sql = "INSERT INTO " . $GLOBALS['ecs']->table('supplier_gallery') . " (supplier_id, img_url, img_desc, thumb_url, img_original) " .
+                    "VALUES ('$supplier_id', '$img_url', '$img_desc', '$thumb_url', '$img_original')";
+            $GLOBALS['db']->query($sql);
+
+            @unlink($down_img);
+        }
+    }
+}
+
+/**
+ * 格式化商品图片名称（按目录存储）
+ *
+ */
+function reformat_image_name($type, $supplier_id, $source_img, $position='')
+{
+    $rand_name = gmtime() . sprintf("%03d", mt_rand(1,999));
+    $img_ext = substr($source_img, strrpos($source_img, '.'));
+    $dir = 'images';
+    if (defined('IMAGE_DIR'))
+    {
+        $dir = IMAGE_DIR;
+    }
+    $sub_dir = date('Ym', gmtime()).'/supplier';
+    if (!make_dir(ROOT_PATH.$dir.'/'.$sub_dir))
+    {
+        return false;
+    }
+    if (!make_dir(ROOT_PATH.$dir.'/'.$sub_dir.'/source_img'))
+    {
+        return false;
+    }
+    if (!make_dir(ROOT_PATH.$dir.'/'.$sub_dir.'/supplier_img'))
+    {
+        return false;
+    }
+    if (!make_dir(ROOT_PATH.$dir.'/'.$sub_dir.'/thumb_img'))
+    {
+        return false;
+    }
+    switch($type)
+    {
+        case 'supplier':
+            $img_name = $supplier_id . '_G_' . $rand_name;
+            break;
+        case 'supplier_thumb':
+            $img_name = $supplier_id . '_thumb_G_' . $rand_name;
+            break;
+        case 'gallery':
+            $img_name = $supplier_id . '_P_' . $rand_name;
+            break;
+        case 'gallery_thumb':
+            $img_name = $supplier_id . '_thumb_P_' . $rand_name;
+            break;
+    }
+    if ($position == 'source')
+    {
+        if (move_image_file(ROOT_PATH.$source_img, ROOT_PATH.$dir.'/'.$sub_dir.'/source_img/'.$img_name.$img_ext))
+        {
+            return $dir.'/'.$sub_dir.'/source_img/'.$img_name.$img_ext;
+        }
+    }
+    elseif ($position == 'thumb')
+    {
+        if (move_image_file(ROOT_PATH.$source_img, ROOT_PATH.$dir.'/'.$sub_dir.'/thumb_img/'.$img_name.$img_ext))
+        {
+            return $dir.'/'.$sub_dir.'/thumb_img/'.$img_name.$img_ext;
+        }
+    }
+    else
+    {
+        if (move_image_file(ROOT_PATH.$source_img, ROOT_PATH.$dir.'/'.$sub_dir.'/supplier_img/'.$img_name.$img_ext))
+        {
+            return $dir.'/'.$sub_dir.'/supplier_img/'.$img_name.$img_ext;
+        }
+    }
+    return false;
+}
+
+function move_image_file($source, $dest)
+{
+    if (@copy($source, $dest))
+    {
+        @unlink($source);
+        return true;
+    }
+    return false;
+}
+
 
 /**
  * 获得指定分类下的商品
@@ -841,203 +1042,6 @@ function assign_brand_goods($brand_id, $num = 0, $cat_id = 0,$order_rule = '')
     $brand_goods = array('brand' => $brand, 'goods' => $goods);
 
     return $brand_goods;
-}
-
-
-/**
- * 保存某商户的相册图片
- * @param   int     $supplier_id   商户标识
- * @param   array   $image_files
- * @param   array   $image_descs
- * @return  void
- */
-function handle_gallery_image($supplier_id, $image_files, $image_descs, $image_urls)
-{
-    /* 是否处理缩略图 */
-    $proc_thumb = (isset($GLOBALS['shop_id']) && $GLOBALS['shop_id'] > 0)? false : true;
-
-    foreach ($image_descs AS $key => $img_desc)
-    {
-        /* 是否成功上传 */
-        $flag = false;
-        if (isset($image_files['error']))
-        {
-            if ($image_files['error'][$key] == 0)
-            {
-                $flag = true;
-            }
-        }
-        else
-        {
-            if ($image_files['tmp_name'][$key] != 'none')
-            {
-                $flag = true;
-            }
-        }
-
-        if ($flag)
-        {
-            // 生成缩略图
-            if ($proc_thumb)
-            {
-                $thumb_url = $GLOBALS['image']->make_thumb($image_files['tmp_name'][$key], $GLOBALS['_CFG']['thumb_width'],  $GLOBALS['_CFG']['thumb_height']);
-                $thumb_url = is_string($thumb_url) ? $thumb_url : '';
-            }
-
-            $upload = array(
-                'name' => $image_files['name'][$key],
-                'type' => $image_files['type'][$key],
-                'tmp_name' => $image_files['tmp_name'][$key],
-                'size' => $image_files['size'][$key],
-            );
-            if (isset($image_files['error']))
-            {
-                $upload['error'] = $image_files['error'][$key];
-            }
-            $img_original = $GLOBALS['image']->upload_image($upload);
-            if ($img_original === false)
-            {
-                sys_msg($GLOBALS['image']->error_msg(), 1, array(), false);
-            }
-            $img_url = $img_original;
-
-            if (!$proc_thumb)
-            {
-                $thumb_url = $img_original;
-            }
-            // 如果服务器支持GD 则添加水印
-            if ($proc_thumb && gd_version() > 0)
-            {
-                $pos        = strpos(basename($img_original), '.');
-                $newname    = dirname($img_original) . '/' . $GLOBALS['image']->random_filename() . substr(basename($img_original), $pos);
-                copy('../' . $img_original, '../' . $newname);
-                $img_url    = $newname;
-
-                $GLOBALS['image']->add_watermark('../'.$img_url,'',$GLOBALS['_CFG']['watermark'], $GLOBALS['_CFG']['watermark_place'], $GLOBALS['_CFG']['watermark_alpha']);
-            }
-
-            /* 重新格式化图片名称 */
-            $img_original = reformat_image_name('gallery', $supplier_id, $img_original, 'source');
-            $img_url = reformat_image_name('gallery', $supplier_id, $img_url, 'supplier');
-            $thumb_url = reformat_image_name('gallery_thumb', $supplier_id, $thumb_url, 'thumb');
-            $sql = "INSERT INTO " . $GLOBALS['ecs']->table('supplier_gallery') . " (supplier_id, img_url, img_desc, thumb_url, img_original) " .
-                    "VALUES ('$supplier_id', '$img_url', '$img_desc', '$thumb_url', '$img_original')";
-            $GLOBALS['db']->query($sql);
-            /* 不保留商品原图的时候删除原图 */
-            if ($proc_thumb && !$GLOBALS['_CFG']['retain_original_img'] && !empty($img_original))
-            {
-                $GLOBALS['db']->query("UPDATE " . $GLOBALS['ecs']->table('supplier_gallery') . " SET img_original='' WHERE `supplier_id`='{$supplier_id}'");
-                @unlink('../' . $img_original);
-            }
-        }
-        elseif (!empty($image_urls[$key]) && ($image_urls[$key] != $GLOBALS['_LANG']['img_file']) && ($image_urls[$key] != 'http://') && copy(trim($image_urls[$key]), ROOT_PATH . 'temp/' . basename($image_urls[$key])))
-        {
-            $image_url = trim($image_urls[$key]);
-
-            //定义原图路径
-            $down_img = ROOT_PATH . 'temp/' . basename($image_url);
-
-            // 生成缩略图
-            if ($proc_thumb)
-            {
-                $thumb_url = $GLOBALS['image']->make_thumb($down_img, $GLOBALS['_CFG']['thumb_width'],  $GLOBALS['_CFG']['thumb_height']);
-                $thumb_url = is_string($thumb_url) ? $thumb_url : '';
-                $thumb_url = reformat_image_name('gallery_thumb', $supplier_id, $thumb_url, 'thumb');
-            }
-
-            if (!$proc_thumb)
-            {
-                $thumb_url = htmlspecialchars($image_url);
-            }
-
-            /* 重新格式化图片名称 */
-            $img_url = $img_original = htmlspecialchars($image_url);
-            $sql = "INSERT INTO " . $GLOBALS['ecs']->table('supplier_gallery') . " (supplier_id, img_url, img_desc, thumb_url, img_original) " .
-                    "VALUES ('$supplier_id', '$img_url', '$img_desc', '$thumb_url', '$img_original')";
-            $GLOBALS['db']->query($sql);
-
-            @unlink($down_img);
-        }
-    }
-}
-
-/**
- * 格式化商品图片名称（按目录存储）
- *
- */
-function reformat_image_name($type, $supplier_id, $source_img, $position='')
-{
-    $rand_name = gmtime() . sprintf("%03d", mt_rand(1,999));
-    $img_ext = substr($source_img, strrpos($source_img, '.'));
-    $dir = 'images';
-    if (defined('IMAGE_DIR'))
-    {
-        $dir = IMAGE_DIR;
-    }
-    $sub_dir = date('Ym', gmtime());
-    if (!make_dir(ROOT_PATH.$dir.'/'.$sub_dir))
-    {
-        return false;
-    }
-    if (!make_dir(ROOT_PATH.$dir.'/'.$sub_dir.'/source_img'))
-    {
-        return false;
-    }
-    if (!make_dir(ROOT_PATH.$dir.'/'.$sub_dir.'/supplier_img'))
-    {
-        return false;
-    }
-    if (!make_dir(ROOT_PATH.$dir.'/'.$sub_dir.'/thumb_img'))
-    {
-        return false;
-    }
-    switch($type)
-    {
-        case 'supplier':
-            $img_name = $supplier_id . '_G_' . $rand_name;
-            break;
-        case 'supplier_thumb':
-            $img_name = $supplier_id . '_thumb_G_' . $rand_name;
-            break;
-        case 'gallery':
-            $img_name = $supplier_id . '_P_' . $rand_name;
-            break;
-        case 'gallery_thumb':
-            $img_name = $supplier_id . '_thumb_P_' . $rand_name;
-            break;
-    }
-    if ($position == 'source')
-    {
-        if (move_image_file(ROOT_PATH.$source_img, ROOT_PATH.$dir.'/'.$sub_dir.'/source_img/'.$img_name.$img_ext))
-        {
-            return $dir.'/'.$sub_dir.'/source_img/'.$img_name.$img_ext;
-        }
-    }
-    elseif ($position == 'thumb')
-    {
-        if (move_image_file(ROOT_PATH.$source_img, ROOT_PATH.$dir.'/'.$sub_dir.'/thumb_img/'.$img_name.$img_ext))
-        {
-            return $dir.'/'.$sub_dir.'/thumb_img/'.$img_name.$img_ext;
-        }
-    }
-    else
-    {
-        if (move_image_file(ROOT_PATH.$source_img, ROOT_PATH.$dir.'/'.$sub_dir.'/supplier_img/'.$img_name.$img_ext))
-        {
-            return $dir.'/'.$sub_dir.'/supplier_img/'.$img_name.$img_ext;
-        }
-    }
-    return false;
-}
-
-function move_image_file($source, $dest)
-{
-    if (@copy($source, $dest))
-    {
-        @unlink($source);
-        return true;
-    }
-    return false;
 }
 
 ?>

@@ -52,7 +52,9 @@ elseif ($_REQUEST['act'] == 'add')
     $smarty->assign('is_add', true);
 
     $shop = array();
-    $smarty->assign('cat_list', shop_cat_list(0, $shop['cat_id']));
+
+    $cate_list = get_shop_cat_list();
+    $smarty->assign('cat_list', $cate_list);
 
     $smarty->assign('ur_here',     $_LANG['shop_add']);
     $smarty->assign('action_link', array('text' => $_LANG['shop_list'], 'href' => 'shops.php?act=list'));
@@ -140,6 +142,9 @@ elseif ($_REQUEST['act'] == 'edit')
     $sql = "SELECT shop_id, shop_name, cat_id, site_url, shop_logo, id_snapshot, lic_snapshot, shop_desc, is_show, sort_order ".
             "FROM " .$ecs->table('shop'). " WHERE shop_id='$_REQUEST[id]'";
     $shop = $db->GetRow($sql);
+
+    $cate_list = get_shop_cat_list();
+    $smarty->assign('cat_list', $cate_list);    
 
     $smarty->assign('ur_here',     $_LANG['shop_edit']);
     $smarty->assign('action_link', array('text' => $_LANG['shop_list'], 'href' => 'shops.php?act=list&' . list_link_postfix()));

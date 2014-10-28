@@ -16,6 +16,7 @@
 define('IN_ECS', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
+require(ROOT_PATH . 'includes/cls_json.php');
 $exc = new exchange($ecs->table("shop_cate"), $db, 'cat_id', 'cat_name');
 
 /* act操作项的初始化 */
@@ -580,6 +581,34 @@ if ($_REQUEST['act'] == 'remove')
 
     ecs_header("Location: $url\n");
     exit;
+}
+/*------------------------------------------------------ */
+//-- 获取商户分类的下拉列表
+/*------------------------------------------------------ */
+if ($_REQUEST['act'] == 'get_shopcate_options')
+{
+    // check_authz_json('place_manage');
+    $parent = !empty($_REQUEST['parent']) ? intval($_REQUEST['parent']) : 0;
+    $arr['shopcates'] = get_shop_cates($parent);
+    $arr['target']  = !empty($_REQUEST['target']) ? stripslashes(trim($_REQUEST['target'])) : '';
+    $arr['target']  = htmlspecialchars($arr['target']);
+    $json = new JSON;
+    echo $json->encode($arr);
+}
+
+
+/**
+ * 获得商户分类列表
+ *
+ * @access      public
+ * @param       int     parent    父节点 
+ * @return      array 商户分类 id => name
+ */
+function get_shop_cates($parent = 0)
+{
+    $sql = 'SELECT cat_id, cat_name FROM ' . $GLOBALS['ecs']->table('shop_cate') .
+            " WHERE  parent_id = '$parent' ORDER BY cat_id ASC";           
+    return $GLOBALS['db']->GetAll($sql);
 }
 
 /*------------------------------------------------------ */
