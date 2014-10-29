@@ -340,7 +340,9 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
         // $smarty->assign('province_list', $province_list);
 
         // 吉林
-        $city_list = get_regions_list(2,15);
+        // $city_list = get_regions_list(2,15);
+        // 江苏
+        $city_list = get_regions_list(2,16);
         $smarty->assign('city_list', $city_list);
 
         $smarty->assign('ur_here', $_LANG['add_suppliers']);
@@ -396,7 +398,9 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
         // $smarty->assign('province_list', $province_list);
 
         // 吉林
-        $city_list = get_regions_list(2,15);
+        // $city_list = get_regions_list(2,15);
+        // 江苏
+        $city_list = get_regions_list(2,16);
         $smarty->assign('city_list', $city_list);
 
         /* 图片列表 */
@@ -489,6 +493,14 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
         $logo_img_name = basename($image->upload_image($_FILES['logo_img'],'supplierimg'));
         $suppliers['logo_img'] = $logo_img_name;
 
+
+        foreach ($_FILES['img_url']['name'] AS $key => $name)
+        {
+            if($_FILES['img_url']['name'][$key] !== '') { 
+                $suppliers['is_has_gallery'] = 1;
+                break;
+            }
+        }
 
         $db->autoExecute($ecs->table('suppliers'), $suppliers, 'INSERT');
         $suppliers['suppliers_id'] = $db->insert_id();
