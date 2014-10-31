@@ -50,7 +50,8 @@
   </tr>
   <tr>
     <td class="label">{$lang.site_url}</td>
-    <td><input type="text" name="site_url" maxlength="60" size="40" value="{$shop.site_url}" /></td>
+    <td><input type="text" name="site_url" maxlength="60" size="40" value="{$shop.site_url}"  style="color:#aaa;" 
+      onfocus="if (this.value == ''){this.value='http://';this.style.color='#000';}"/></td>
   </tr>
   <tr>
     <td class="label"><a href="javascript:showNotice('warn_shoplogo');" title="{$lang.form_notice}">
