@@ -27,6 +27,7 @@ $_LANG['suppliers_phone'] = '门店电话';
 $_LANG['suppliers_address'] = '门店地址';
 $_LANG['suppliers_opening_hours'] = '营业时间';
 $_LANG['suppliers_desc'] = '门店描述';
+$_LANG['suppliers_best'] = '精品推荐';
 $_LANG['suppliers_check'] = '状态';
 
 /* 详情页 */
@@ -43,6 +44,7 @@ $_LANG['label_suppliers_comm_rank'] = '综合评价：';
 $_LANG['label_suppliers_envi_rank'] = '环境评价：';
 $_LANG['label_suppliers_serv_rank'] = '服务评价：';
 $_LANG['label_suppliers_shop_price'] = '人均消费：';
+$_LANG['label_suppliers_price_unit'] = '元/人：';
 $_LANG['label_suppliers_phone']  = '门店电话：';
 $_LANG['label_suppliers_mobile'] = '移动电话：';
 $_LANG['label_suppliers_location'] = '地图位置：';

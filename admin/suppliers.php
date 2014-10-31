@@ -206,6 +206,29 @@ elseif ($_REQUEST['act'] == 'is_check')
 }
 
 /*------------------------------------------------------ */
+//-- 修改门店精品推荐
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'is_best')
+{
+    check_authz_json('shop_manage');
+
+    $id = intval($_REQUEST['id']);
+    $sql = "SELECT suppliers_id, is_best
+            FROM " . $ecs->table('suppliers') . "
+            WHERE suppliers_id = '$id'";
+    $suppliers = $db->getRow($sql, TRUE);
+
+    if ($suppliers['suppliers_id'])
+    {
+        $_suppliers['is_best'] = empty($suppliers['is_best']) ? 1 : 0;
+        $db->autoExecute($ecs->table('suppliers'), $_suppliers, '', "suppliers_id = '$id'");
+        clear_cache_files();
+        make_json_result($_suppliers['is_best']);
+    }
+
+    exit;
+}
+/*------------------------------------------------------ */
 //-- 批量操作
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'batch')
@@ -687,7 +710,7 @@ function suppliers_list()
         $filter['page_count']     = $filter['record_count'] > 0 ? ceil($filter['record_count'] / $filter['page_size']) : 1;
 
         /* 查询 */
-        $sql = "SELECT suppliers_id, suppliers_name, cat_id, region_cities, comment_rank, office_phone, suppliers_desc, is_check
+        $sql = "SELECT suppliers_id, suppliers_name, cat_id, region_cities, comment_rank, office_phone, is_best, suppliers_desc, is_check
                 FROM " . $GLOBALS['ecs']->table("suppliers") . "
                 $where
                 ORDER BY " . $filter['sort_by'] . " " . $filter['sort_order']. "
