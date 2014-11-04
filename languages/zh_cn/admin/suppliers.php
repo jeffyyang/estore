@@ -30,6 +30,16 @@ $_LANG['suppliers_desc'] = '门店描述';
 $_LANG['suppliers_best'] = '精品推荐';
 $_LANG['suppliers_check'] = '状态';
 
+/* 门店搜索 */
+$_LANG['shops_cate'] = '所有分类';
+$_LANG['intro_type'] = '全部';
+$_LANG['on_new'] = '新店';
+$_LANG['on_best'] = '推荐';
+$_LANG['on_hot'] = '热门';
+$_LANG['on_check'] = '上线';
+$_LANG['not_on_check'] = '下线';
+$_LANG['keyword'] = '关键字';
+
 /* 详情页 */
 $_LANG['label_suppliers_name'] = '门店名称：';
 $_LANG['label_suppliers_agency'] = '归属机构：';

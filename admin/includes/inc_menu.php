@@ -20,7 +20,7 @@ if (!defined('IN_ECS'))
 
 
 $modules['01_shop']['shopcate_list']                = 'shopcate.php?act=list';         // 商户分类列表
-$modules['01_shop']['shop_list'] 					= 'shops.php?act=list';             // 商户列表
+$modules['01_shop']['shop_list'] 					= 'shops.php?act=list';            // 商户列表
 $modules['01_shop']['suppliers_list']         		= 'suppliers.php?act=list';        // 门店列表
 
 $modules['02_cat_and_goods']['01_goods_list']       = 'goods.php?act=list';         // 商品列表
@@ -40,7 +40,7 @@ $modules['02_cat_and_goods']['17_tag_manage']       = 'tag_manage.php?act=list';
 // $modules['02_cat_and_goods']['51_virtual_card_add']    = 'goods.php?act=add&extension_code=virtual_card';
 // $modules['02_cat_and_goods']['52_virtual_card_change'] = 'virtual_card.php?act=change';
 $modules['02_cat_and_goods']['goods_auto']          = 'goods_auto.php?act=list';
-$modules['02_cat_and_goods']['53_suppliers_goods']  = 'suppliers_goods.php?act=list';  // 商户商品列表
+// $modules['02_cat_and_goods']['53_suppliers_goods']  = 'suppliers_goods.php?act=list';  // 商户商品列表
 
 // 促销管理
 /*$modules['03_promotion']['02_snatch_list']          = 'snatch.php?act=list';

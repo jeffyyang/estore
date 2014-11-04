@@ -13,6 +13,7 @@
  * $Id: priv_action.php 17217 2011-01-19 06:29:08Z liubo $
 */
 /* 权限管理的一级分组 */
+$_LANG['shop']  = '商户管理';
 $_LANG['goods'] = '商品管理';
 $_LANG['cms_manage'] = '文章管理';
 $_LANG['users_manage'] = '会员管理';
@@ -70,8 +71,12 @@ $_LANG['logs_manage'] = '管理日志列表';
 $_LANG['logs_drop'] = '删除管理日志';
 $_LANG['template_manage'] = '模板管理';
 $_LANG['agency_manage'] = '办事处管理';
-$_LANG['suppliers_manage'] = '供货商管理';
 $_LANG['role_manage'] = '角色管理';
+
+// 商户管理部分权限
+$_LANG['shop_manage']      = '商户管理';
+$_LANG['shopcate_manage']  = '商户分类管理';
+$_LANG['suppliers_manage'] = '门店管理';
 
 //系统设置部分权限
 $_LANG['shop_config'] = '商店设置';

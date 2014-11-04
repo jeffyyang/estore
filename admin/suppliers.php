@@ -26,17 +26,34 @@ define('SUPPLIERS_ACTION_LIST', 'delivery_view,back_view');
 if ($_REQUEST['act'] == 'list')
 {
      /* 检查权限 */
-    admin_priv('shop_manage');
+    admin_priv('suppliers_manage');
 
     // print_r($_SESSION);
-
-    $cat_id = empty($_REQUEST['cat_id']) ? 0 : intval($_REQUEST['cat_id']);
+    // $cat_id = empty($_REQUEST['cat_id']) ? 0 : intval($_REQUEST['cat_id']);
 
     /* 查询 */
-    $result = suppliers_list();
 
+    /*商户列表 */
+    $shop_list = get_shop_list();
+
+    $shop_exists = 1;
+    if (empty($shop_list))
+    {
+        $shop_exists = 0;
+    }
+    
+    $smarty->assign('is_add', true);
+    $smarty->assign('shop_exists', $shop_exists);
+    $smarty->assign('shop_list', $shop_list);
+    unset($shop_list, $shop_exists);
+
+    $cate_list = get_shop_cat_list();
+    $smarty->assign('cat_list', $cate_list);
+
+    $result = suppliers_list();
     /* 模板赋值 */
     $smarty->assign('ur_here', $_LANG['suppliers_list']); // 当前导航
+
     $smarty->assign('action_link', array('href' => 'suppliers.php?act=add', 'text' => $_LANG['add_suppliers']));
 
     $smarty->assign('full_page',        1); // 翻页参数
@@ -57,7 +74,7 @@ if ($_REQUEST['act'] == 'list')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'query')
 {
-    check_authz_json('shop_manage');
+    check_authz_json('suppliers_manage');
 
     $result = suppliers_list();
 
@@ -79,7 +96,7 @@ elseif ($_REQUEST['act'] == 'query')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'edit_suppliers_name')
 {
-    check_authz_json('shop_manage');
+    check_authz_json('suppliers_manage');
 
     $id     = intval($_POST['id']);
     $name   = json_str_iconv(trim($_POST['val']));
@@ -120,7 +137,7 @@ elseif ($_REQUEST['act'] == 'edit_suppliers_name')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'remove')
 {
-    check_authz_json('shop_manage');
+    check_authz_json('suppliers_manage');
 
     $id = intval($_REQUEST['id']);
     $sql = "SELECT *
@@ -186,7 +203,7 @@ elseif ($_REQUEST['act'] == 'remove')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'is_check')
 {
-    check_authz_json('shop_manage');
+    check_authz_json('suppliers_manage');
 
     $id = intval($_REQUEST['id']);
     $sql = "SELECT suppliers_id, is_check
@@ -210,7 +227,7 @@ elseif ($_REQUEST['act'] == 'is_check')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'is_best')
 {
-    check_authz_json('shop_manage');
+    check_authz_json('suppliers_manage');
 
     $id = intval($_REQUEST['id']);
     $sql = "SELECT suppliers_id, is_best
@@ -316,7 +333,7 @@ elseif ($_REQUEST['act'] == 'batch')
 elseif (in_array($_REQUEST['act'], array('add', 'edit')))
 {
     /* 检查权限 */
-    admin_priv('shop_manage');
+    admin_priv('suppliers_manage');
 
     if ($_REQUEST['act'] == 'add')
     {
@@ -480,7 +497,7 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
 elseif (in_array($_REQUEST['act'], array('insert', 'update')))
 {
     /* 检查权限 */
-    admin_priv('shop_manage');
+    admin_priv('suppliers_manage');
 
     if ($_REQUEST['act'] == 'insert')
     {
@@ -680,13 +697,63 @@ function suppliers_list()
     $result = get_filter();
     if ($result === false)
     {
+        $filter['pcat_id']          = empty($_REQUEST['pcat_id']) ? 0 : intval($_REQUEST['pcat_id']);
+        $filter['cat_id']           = empty($_REQUEST['cat_id']) ? 0 : intval($_REQUEST['cat_id']);
+        $filter['intro_type']       = empty($_REQUEST['intro_type']) ? '' : trim($_REQUEST['intro_type']);
+        $filter['shop_id'] = isset($_REQUEST['shop_id']) ? (empty($_REQUEST['shop_id']) ? '' : trim($_REQUEST['shop_id'])) : '';
+        $filter['is_on_check'] = isset($_REQUEST['is_on_check']) ? ((empty($_REQUEST['is_on_check']) && $_REQUEST['is_on_check'] === 0) ? '' : trim($_REQUEST['is_on_check'])) : '';
+        $filter['keyword']          = empty($_REQUEST['keyword']) ? '' : trim($_REQUEST['keyword']);
         $aiax = isset($_GET['is_ajax']) ? $_GET['is_ajax'] : 0;
-
         /* 过滤信息 */
         $filter['sort_by'] = empty($_REQUEST['sort_by']) ? 'suppliers_id' : trim($_REQUEST['sort_by']);
         $filter['sort_order'] = empty($_REQUEST['sort_order']) ? 'ASC' : trim($_REQUEST['sort_order']);
 
-        $where = 'WHERE 1 ';
+        $where = 'WHERE 1';
+
+        /* 推荐类型 */
+        switch ($filter['intro_type'])
+        {
+            case 'is_best':
+                $where .= " AND is_best=1";
+                break;
+            case 'is_hot':
+                $where .= ' AND is_hot=1';
+                break;
+            case 'is_new':
+                $where .= ' AND is_new=1';
+                break;
+            case 'all_type';
+        }
+
+        /* 主分类 */
+        if (!empty($filter['pcat_id']))
+        {
+            $where .= " AND (pcat_id = '" . $filter['pcat_id'] . "')";
+        }
+
+        /* 子分类 */
+        if (!empty($filter['cat_id']))
+        {
+            $where .= " AND (cat_id = '" . $filter['cat_id'] . "')";
+        }  
+
+        /* 商户 */
+        if (!empty($filter['shop_id']))
+        {
+            $where .= " AND (shop_id = '" . $filter['shop_id'] . "')";
+        }
+
+        /* 状态 */
+        if ($filter['is_on_check'] !== '')
+        {
+            $where .= " AND (is_check = '" . $filter['is_on_check'] . "')";
+        }
+
+        /* 关键字 */
+        if (!empty($filter['keyword']))
+        {
+            $where .= " AND (suppliers_name LIKE '%" . mysql_like_quote($filter['keyword']) . "%')";
+        }
 
         /* 分页大小 */
         $filter['page'] = empty($_REQUEST['page']) || (intval($_REQUEST['page']) <= 0) ? 1 : intval($_REQUEST['page']);

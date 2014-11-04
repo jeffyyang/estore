@@ -1,0 +1,105 @@
+<!-- $Id: goods_search.htm 16790 2009-11-10 08:56:15Z wangleisvn $ -->
+<div class="form-div">
+  <form action="javascript:searchSuppliers()" name="searchForm">
+    <img src="images/icon_search.gif" width="26" height="22" border="0" alt="SEARCH" />
+    <!-- 主分类 -->
+    <select name="pcat_id" id="selMainCate" onChange="changedMainCate(this,'selSubCate');">
+      <option value="0">{$lang.shops_cate}</option>{html_options options=$cat_list selected=$$smarty.get.cat_id}
+    </select>
+    <!-- 子分类 -->
+    <select name="cat_id" id="selSubCate">
+      <option value="0">{$lang.shops_cate}</option>
+    </select>
+
+    {if $shop_exists eq 1}    
+    <!-- 商户列表 -->
+    <select name="shop_id"><option value="0">{$lang.intro_type}</option>{html_options options=$shop_list selected=$smarty.get.shop_id}</select>
+    {/if}
+    <!-- 推荐 -->
+    <select name="intro_type"><option value="all_type">{$lang.intro_type}</option>
+      <option value="is_new">{$lang.on_new}</option>
+      <option value="is_best">{$lang.on_best}</option>
+      <option value="is_hot">{$lang.on_hot}</option>
+    </select>      
+      <!-- 上架 -->
+      <select name="is_on_check"><option value=''>{$lang.intro_type}</option><option value="1">{$lang.on_check}</option><option value="0">{$lang.not_on_check}</option></select>
+    <!-- 关键字 -->
+    {$lang.keyword} <input type="text" name="keyword" size="15" />
+    <input type="submit" value="{$lang.button_search}" class="button" />
+  </form>
+</div>
+
+{literal}
+<script language="JavaScript">
+    function searchSuppliers()
+    {
+{/literal}
+        listTable.filter['pcat_id'] = document.forms['searchForm'].elements['pcat_id'].value;
+        listTable.filter['cat_id'] = document.forms['searchForm'].elements['cat_id'].value;
+        listTable.filter['intro_type'] = document.forms['searchForm'].elements['intro_type'].value;
+          {if $shop_exists eq 1}
+          listTable.filter['shop_id'] = document.forms['searchForm'].elements['shop_id'].value;
+          {/if}
+        listTable.filter['is_on_check'] = document.forms['searchForm'].elements['is_on_check'].value;
+{literal}
+        listTable.filter['keyword'] = Utils.trim(document.forms['searchForm'].elements['keyword'].value);
+        listTable.filter['page'] = 1;
+
+        listTable.loadList();
+    }
+
+/* *
+ * 处理主分类下拉列表改变的函数
+ *
+ * @obj     object  下拉列表
+ * @selName string  目标列表框的名称
+ */
+
+function changedMainCate(obj, selName)
+{
+  var parent = obj.options[obj.selectedIndex].value;
+  loadSubCate(parent, selName);
+}
+
+function loadSubCate(parent, target)
+{
+
+  Ajax.call('./shopcate.php', 'act=get_shopcate_options&target=' + target + "&parent=" + parent, shopcateResponse, "GET", "JSON");
+
+}
+
+function shopcateResponse(result, text_result)
+{
+  var sel = document.getElementById(result.target);
+
+  sel.length = 1;
+  sel.selectedIndex = 0;
+  sel.style.display = (result.shopcates.length == 0 && ! region.isAdmin) ? "none" : '';
+
+  if (document.all)
+  {
+    sel.fireEvent("onchange");
+  }
+  else
+  {
+    var evt = document.createEvent("HTMLEvents");
+    evt.initEvent('change', true, true);
+    sel.dispatchEvent(evt);
+  }
+
+  if (result.shopcates)
+  {
+    for (i = 0; i < result.shopcates.length; i ++ )
+    {
+      var opt = document.createElement("OPTION");
+      opt.value = result.shopcates[i].cat_id;
+      opt.text  = result.shopcates[i].cat_name;
+      sel.options.add(opt);
+    }
+  }
+}
+
+/*处理商户分类*/ 
+   
+</script>
+{/literal}

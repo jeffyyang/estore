@@ -19,9 +19,9 @@ if (!defined('IN_ECS'))
 }
 
 //  商户管理权限
-    $purview['shop_list']            = 'shop_manage';    // 商户
-    $purview['suppliers_list']       = 'shop_manage';    // 门店   admin和 商户管理员
-    $purview['03_shopcate_list']     = 'shopcate_manage';    //分类添加、分类转移和删除    
+    $purview['shop_list']            = 'shop_manage';        // 商户
+    $purview['suppliers_list']       = 'suppliers_manage';   // 门店   admin和 商户管理员
+    $purview['shopcate_list']        = 'shopcate_manage';    //分类添加、分类转移和删除    
     $purview['01_goods_list']        = array('goods_manage', 'remove_back');
     $purview['02_goods_add']         = 'goods_manage';
     $purview['05_comment_manage']    = 'comment_priv';
@@ -44,7 +44,8 @@ if (!defined('IN_ECS'))
     $purview['51_virtual_card_add']  = 'virualcard';
     $purview['52_virtual_card_change'] = 'virualcard';
     $purview['goods_auto']           = 'goods_auto';
-    $purview['53_suppliers_goods']   = array('goods_manage', 'suppliers_goods');
+
+    // $purview['53_suppliers_goods']   = array('goods_manage', 'suppliers_manage');
 
 //促销管理权限
     $purview['02_snatch_list']       = 'snatch_manage';

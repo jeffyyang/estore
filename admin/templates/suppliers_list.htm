@@ -3,11 +3,12 @@
 {if $full_page}
 {include file="pageheader.htm"}
 {insert_scripts files="../js/utils.js,listtable.js"}
-
+<!-- 门店搜索 -->
+{include file="suppliers_search.htm"}
+<!-- 门店列表 -->
 <form method="post" action="" name="listForm" onsubmit="return confirm(batch_drop_confirm);">
 <div class="list-div" id="listDiv">
 {/if}
-
   <table cellpadding="3" cellspacing="1">
     <tr>
       <th> <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" />

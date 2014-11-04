@@ -30,7 +30,7 @@
       <td align="right"><span onclick="javascript:listTable.edit(this, 'edit_sort_order', {$shop.shop_id})">{$shop.sort_order}</span></td>
       <td align="center"><img src="images/{if $shop.is_show}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'toggle_show', {$shop.shop_id})" /></td>
       <td align="center">
-        <a href="suppliers.php?act=list" title="{$lang.suppliers_manage}">{$lang.suppliers_manage}</a> |
+        <a href="suppliers.php?act=query&shop_id={$shop.shop_id}" title="{$lang.suppliers_manage}">{$lang.suppliers_manage}</a> |
         <a href="shops.php?act=edit&id={$shop.shop_id}" title="{$lang.edit}">{$lang.edit}</a> |
         <a href="javascript:;" onclick="listTable.remove({$shop.shop_id}, '{$lang.drop_confirm}')" title="{$lang.edit}">{$lang.remove}</a> 
       </td>
