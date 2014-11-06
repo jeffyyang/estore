@@ -42,15 +42,12 @@ if ($_REQUEST['act'] == 'list')
 }
 
 /*------------------------------------------------------ */
-//-- 添加品牌
+//-- 添加商户
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'add')
 {
     /* 权限判断 */
     admin_priv('shop_manage');
-
-    $smarty->assign('is_add', true);
-
     $shop = array();
 
     $cate_list = get_shop_cat_list();
