@@ -63,6 +63,7 @@
                {$lang.require_field}
             </td>
           </tr>
+          <!-- 扩展分类
           <tr>
             <td class="label">{$lang.lab_other_cat}</td>
             <td>
@@ -72,6 +73,8 @@
               {/foreach}
             </td>
           </tr>
+          -->
+          <!-- 品牌管理
           <tr>
             <td class="label">{$lang.lab_goods_brand}</td>
             <td><select name="brand_id" onchange="hideBrandDiv()" ><option value="0">{$lang.select_please}{html_options options=$brand_list selected=$goods.brand_id}</select>
@@ -86,6 +89,7 @@
                {/if}
             </td>
           </tr>
+          -->
          {if $suppliers_exists eq 1}
           <tr>
             <td class="label">{$lang.label_suppliers}</td>
@@ -101,6 +105,7 @@
             <input type="button" value="{$lang.compute_by_mp}" onclick="marketPriceSetted()" />
             {$lang.require_field}</td>
           </tr>
+          <!-- 等级价格
           {if $user_rank_list}
           <tr>
             <td class="label"><a href="javascript:showNotice('noticeUserPrice');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.lab_user_price}</td>
@@ -114,8 +119,9 @@
             </td>
           </tr>
           {/if}
-
-          <!--鍟嗗搧浼樻儬浠锋牸-->
+          -->
+          <!--购买数量优惠 -->
+          <!--
           <tr>
             <td class="label"><a href="javascript:showNotice('volumePrice');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.lab_volume_price}</td>
             <td>
@@ -137,7 +143,8 @@
               <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="volumePrice">{$lang.notice_volume_price}</span>
             </td>
           </tr>
-          <!--鍟嗗搧浼樻儬浠锋牸 end -->
+          -->
+          <!--购买数量优惠 end -->
 
           <tr>
             <td class="label">{$lang.lab_market_price}</td>

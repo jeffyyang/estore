@@ -797,6 +797,29 @@ function admin_info()
 }
 
 /**
+ * 商户列表信息
+ *
+ * @param       string      $conditions
+ * @return      array
+ */
+function shop_list_info($conditions = '')
+{
+    $where = '';
+    if (!empty($conditions))
+    {
+        $where .= 'WHERE ';
+        $where .= $conditions;
+    }
+
+    /* 查询 */
+    $sql = "SELECT shop_id, shop_name, shop_desc
+            FROM " . $GLOBALS['ecs']->table("shop") . "
+            $where";
+
+    return $GLOBALS['db']->getAll($sql);
+}
+
+/**
  * 供货商列表信息
  *
  * @param       string      $conditions

@@ -27,10 +27,6 @@ if ($_REQUEST['act'] == 'list')
 {
      /* 检查权限 */
     admin_priv('suppliers_manage');
-
-    // print_r($_SESSION);
-    // $cat_id = empty($_REQUEST['cat_id']) ? 0 : intval($_REQUEST['cat_id']);
-
     /* 查询 */
 
     /*商户列表 */
@@ -42,7 +38,6 @@ if ($_REQUEST['act'] == 'list')
         $shop_exists = 0;
     }
     
-    $smarty->assign('is_add', true);
     $smarty->assign('shop_exists', $shop_exists);
     $smarty->assign('shop_list', $shop_list);
     unset($shop_list, $shop_exists);
@@ -119,7 +114,7 @@ elseif ($_REQUEST['act'] == 'edit_suppliers_name')
         if ($result = $db->query($sql))
         {
             /* 记日志 */
-            admin_log($name, 'edit', 'suppliers');
+            admin_log($name, 'edit', 'supplier');
 
             clear_cache_files();
 
@@ -186,7 +181,7 @@ elseif ($_REQUEST['act'] == 'remove')
         }
 
         /* 记日志 */
-        admin_log($suppliers['suppliers_name'], 'remove', 'suppliers');
+        admin_log($suppliers['suppliers_name'], 'remove', 'supplier');
 
         /* 清除缓存 */
         clear_cache_files();
@@ -317,7 +312,7 @@ elseif ($_REQUEST['act'] == 'batch')
             {
                 $suppliers_names .= $value['suppliers_name'] . '|';
             }
-            admin_log($suppliers_names, 'remove', 'suppliers');
+            admin_log($suppliers_names, 'remove', 'supplier');
 
             /* 清除缓存 */
             clear_cache_files();
@@ -334,6 +329,8 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
 {
     /* 检查权限 */
     admin_priv('suppliers_manage');
+
+    // print_r($_SESSION);
 
     if ($_REQUEST['act'] == 'add')
     {
@@ -366,8 +363,13 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
         {
             $shop_exists = 0;
         }
-        
-        $smarty->assign('is_add', true);
+
+        if($_SESSION['shop_id'] > 0 ){
+
+            $smarty->assign('is_add', false);
+        }else{
+            $smarty->assign('is_add', true);
+        }
         $smarty->assign('shop_exists', $shop_exists);
         $smarty->assign('shop_list', $shop_list);
         unset($shop_list, $shop_exists);
@@ -555,7 +557,7 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
         handle_gallery_image($suppliers['suppliers_id'], $_FILES['img_url'], $_POST['img_desc'], $_POST['img_file']);
 
         /* 记日志 */
-        admin_log($suppliers['suppliers_name'], 'add', 'suppliers');
+        admin_log($suppliers['suppliers_name'], 'add', 'supplier');
 
         /* 清除缓存 */
         clear_cache_files();
@@ -610,7 +612,7 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
         }
 
         /* 记日志 */
-        admin_log($suppliers['old']['suppliers_name'], 'edit', 'suppliers');
+        admin_log($suppliers['old']['suppliers_name'], 'edit', 'supplier');
 
         /* 清除缓存 */
         clear_cache_files();
@@ -700,7 +702,11 @@ function suppliers_list()
         $filter['pcat_id']          = empty($_REQUEST['pcat_id']) ? 0 : intval($_REQUEST['pcat_id']);
         $filter['cat_id']           = empty($_REQUEST['cat_id']) ? 0 : intval($_REQUEST['cat_id']);
         $filter['intro_type']       = empty($_REQUEST['intro_type']) ? '' : trim($_REQUEST['intro_type']);
-        $filter['shop_id'] = isset($_REQUEST['shop_id']) ? (empty($_REQUEST['shop_id']) ? '' : trim($_REQUEST['shop_id'])) : '';
+        if($_SESSION['shop_id'] > 0){
+            $filter['shop_id'] = $_SESSION['shop_id'];
+        }else{
+            $filter['shop_id'] = isset($_REQUEST['shop_id']) ? (empty($_REQUEST['shop_id']) ? '' : trim($_REQUEST['shop_id'])) : '';            
+        }
         $filter['is_on_check'] = isset($_REQUEST['is_on_check']) ? ((empty($_REQUEST['is_on_check']) && $_REQUEST['is_on_check'] === 0) ? '' : trim($_REQUEST['is_on_check'])) : '';
         $filter['keyword']          = empty($_REQUEST['keyword']) ? '' : trim($_REQUEST['keyword']);
         $aiax = isset($_GET['is_ajax']) ? $_GET['is_ajax'] : 0;

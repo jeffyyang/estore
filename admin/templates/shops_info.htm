@@ -1,10 +1,11 @@
 <!-- $Id: brand_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
 {include file="pageheader.htm"}
+{insert_scripts files="validator.js,../js/transport.js,../js/region.js"}
 <div class="main-div">
 <form method="post" action="shops.php" name="theForm" enctype="multipart/form-data" onsubmit="return validate()">
 <table cellspacing="1" cellpadding="3" width="100%">
   <tr>
-    <td class="label">{$lang.shop_name}</td>
+    <td class="label">{$lang.label_shop_name}</td>
     <td><input type="text" name="shop_name" maxlength="60" value="{$shop.shop_name}" />{$lang.require_field}</td>
   </tr>
 <!--   <tr>
@@ -28,7 +29,7 @@
       <span class="label">{$lang.label_suppliers_main_cate}</span>
       <select name="main_cate_id" id="selMainCate" onChange="changedMainCate(this,'selSubCate');" >
         <option value="">{$lang.select_please}</option>
-        {html_options options=$cat_list selected=$suppliers.pcat_id}
+        {html_options options=$cat_list selected=$shop.pcat_id}
       </select>
       <span class="label">{$lang.label_suppliers_sub_cate}</span>
       <select name="sub_cate_id" id="selSubCate">
@@ -47,12 +48,7 @@
       -->
        {$lang.require_field}
     </td>
-  </tr>
-  <tr>
-    <td class="label">{$lang.site_url}</td>
-    <td><input type="text" name="site_url" maxlength="60" size="40" value="{$shop.site_url}"  style="color:#aaa;" 
-      onfocus="if (this.value == ''){this.value='http://';this.style.color='#000';}"/></td>
-  </tr>
+  </tr>  
   <tr>
     <td class="label"><a href="javascript:showNotice('warn_shoplogo');" title="{$lang.form_notice}">
         <img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.shop_logo}</td>
@@ -66,7 +62,57 @@
     </span>
     </td>
   </tr>
-    <tr>
+  <tr>
+    <td class="label">{$lang.label_site_url}</td>
+    <td><input type="text" name="site_url" maxlength="60" size="40" value="{$shop.site_url}"  style="color:#aaa;" 
+      onfocus="if (this.value == ''){this.value='http://';this.style.color='#000';}"/></td>
+  </tr>
+
+  {if $is_add}
+  <tr>
+    <td class="label">{$lang.label_region}</td>
+    <td>
+          <!-- 省份      
+          <span class="label">{$lang.label_province}</span>
+          <select name="province" id="selProvinces" onChange="region.changed(this, 2, 'selCities')" >
+            <option value="">{$lang.select_please}</option>
+            {html_options options=$province_list selected=$suppliers.brand_id}
+          </select>
+          -->
+          <span class="label">{$lang.label_city}</span>
+          <select name="city" id="selCities" onChange="region.isAdmin= true;region.changed(this, 3, 'selDistricts');" >
+            <option value="">{$lang.select_please}</option>
+            {html_options options=$city_list selected=$suppliers.region_cities}
+          </select>
+          <span class="label">{$lang.label_district}</span>
+          <select name="district" id="selDistricts" onChange="changedDistrict(this,'selPlaces');">
+            <option value="">{$lang.select_please}</option>
+          </select>
+          <span class="label">{$lang.label_place}</span>
+          <select name="place" id="selPlaces" >
+            <option value="">{$lang.select_please}</option>
+          </select>
+            <a href="javascript:void(0)" title="{$lang.rapid_add_place}" onclick="rapidPlaceAdd()" class="special" >{$lang.rapid_add_place}</a>
+            <span id="place_add" style="display:none;">
+            <input class="text" size="15" name="addedPlaceName" />
+             <a href="javascript:void(0)" onclick="addPlace()" class="special" >{$lang.button_submit}</a>
+             <a href="javascript:void(0)" onclick="return goPlacePage()" title="{$lang.place_manage}" class="special" >{$lang.place_manage}</a>
+             <a href="javascript:void(0)" onclick="hidePlaceDiv()" title="{$lang.hide}" class="special" ><<</a>
+             </span>
+           {$lang.require_field}            
+    </td>
+  </tr>
+  <tr>
+    <td class="label">{$lang.label_suppliers_address}</td>
+    <td><input type="text" name="suppliers_address" maxlength="120" size="60" value="{$suppliers.address}" />{$lang.require_field}</td>
+<!--     <td><textarea  name="suppliers_address" cols="60" rows="3"  >{$suppliers.address}</textarea></td> -->
+  </tr>
+  <tr>
+    <td class="label">{$lang.label_suppliers_phone}</td>
+    <td><input type="text" name="office_phone" maxlength="60" value="{$suppliers.office_phone}" />{$lang.require_field}</td>
+  </tr>   
+  <!-- 管理员无需上传商户证件资料  
+  <tr>
     <td class="label"><a href="javascript:showNotice('warn_lic_img');" title="{$lang.form_notice}">
         <img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.label_lic_img}</td>
     <td><input type="file" name="lic_img" id="img_lic" size="45">{if $shop.shop_logo neq ""}<input type="button" value="{$lang.drop_lic_img}" onclick="if (confirm('{$lang.confirm_drop_licimg}'))location.href='shops.php?act=drop_licimg&id={$shop.shop_id}'">{/if}
@@ -91,15 +137,38 @@
     {/if}
     </span>
     </td>
-  </tr>    
-  <tr>
-    <td class="label">{$lang.shop_desc}</td>
-    <td><textarea  name="shop_desc" cols="60" rows="4"  >{$shop.shop_desc}</textarea></td>
   </tr>
+  -->
+  <!--   
   <tr>
     <td class="label">{$lang.sort_order}</td>
     <td><input type="text" name="sort_order" maxlength="40" size="15" value="{$shop.sort_order}" /></td>
+  </tr> 
+  -->
+  <!-- 管理员信息 -->
+
+  <tr>
+    <td class="label">{$lang.admin_name}</td>
+    <td>
+      <input type="text" name="user_name" maxlength="20" value="{$user.user_name|escape}" size="34"/>{$lang.require_field}</td>
   </tr>
+  <tr>
+    <td class="label">{$lang.admin_email}</td>
+    <td>
+      <input type="text" name="email" value="{$user.email|escape}" size="34" />{$lang.require_field}</td>
+  </tr>
+  <tr>
+    <td class="label">{$lang.admin_password}</td>
+    <td>
+      <input type="password" name="password" maxlength="32" size="34" />{$lang.require_field}</td>
+  </tr>
+  <tr>
+    <td class="label">{$lang.admin_pwd_confirm}</td>
+    <td>
+      <input type="password" name="pwd_confirm" maxlength="32" size="34" />{$lang.require_field}</td>
+  </tr>
+  {/if}
+  <!--
   <tr>
     <td class="label">{$lang.is_show}</td>
     <td><input type="radio" name="is_show" value="1" {if $brand.is_show eq 1}checked="checked"{/if} /> {$lang.yes}
@@ -107,6 +176,11 @@
         ({$lang.visibility_notes})
     </td>
   </tr>
+  -->
+  <tr>
+    <td class="label">{$lang.label_shop_desc}</td>
+    <td><textarea  name="shop_desc" cols="60" rows="4"  >{$shop.shop_desc}</textarea></td>
+  </tr>  
   <tr>
     <td colspan="2" align="center"><br />
       <input type="submit" class="button" value="{$lang.button_submit}" />
@@ -115,6 +189,7 @@
       <input type="hidden" name="old_shopname" value="{$shop.shop_name}" />
       <input type="hidden" name="id" value="{$shop.shop_id}" />
       <input type="hidden" name="old_shoplogo" value="{$shop.shop_logo}">
+      <input type="hidden" name="select_role" value="1" />
     </td>
   </tr>
 </table>
@@ -136,8 +211,26 @@ onload = function()
 function validate()
 {
     validator = new Validator("theForm");
+    validator.password = function (controlId, msg)
+    {
+      var obj = document.forms[this.formName].elements[controlId];
+      obj.value = Utils.trim(obj.value);
+      if (!(obj.value.length >= 6 && /\d+/.test(obj.value) && /[a-zA-Z]+/.test(obj.value)))
+      {
+        this.addErrorMsg(msg);
+      }
+
+    }
+
     validator.required("shop_name",  no_shopname);
-    validator.isNumber("sort_order", require_num, true);
+    validator.required("suppliers_address",  no_address);
+    validator.required("office_phone",  no_phone);
+    validator.required("user_name",  no_username);
+    validator.required("email", email_empty, 1);
+    validator.isEmail("email", email_error);    
+    validator.password("password", password_invaild);
+    validator.eqaul("password", "pwd_confirm", password_error);    
+    // validator.isNumber("sort_order", require_num, true);
     return validator.passed();
 }
 
@@ -302,6 +395,138 @@ function shopcateResponse(result, text_result)
 }
 
 /*处理商户分类*/
+
+/* *
+ * 处理县区下拉列表改变的函数
+ *
+ * @obj     object  下拉列表
+ * @selName string  目标列表框的名称
+ */
+function changedDistrict(obj, selName)
+{
+  var parent = obj.options[obj.selectedIndex].value;
+  loadPlaces(parent, selName);
+}
+
+function loadPlaces(parent, target)
+{
+
+  Ajax.call('./place.php', 'act=get_place_options&target=' + target + "&parent=" + parent, placeResponse, "GET", "JSON");
+
+}
+
+function placeResponse(result, text_result)
+{
+  var sel = document.getElementById(result.target);
+
+  sel.length = 1;
+  sel.selectedIndex = 0;
+  sel.style.display = (result.places.length == 0 && ! region.isAdmin) ? "none" : '';
+
+  if (document.all)
+  {
+    sel.fireEvent("onchange");
+  }
+  else
+  {
+    var evt = document.createEvent("HTMLEvents");
+    evt.initEvent('change', true, true);
+    sel.dispatchEvent(evt);
+  }
+
+  if (result.places)
+  {
+    for (i = 0; i < result.places.length; i ++ )
+    {
+      var opt = document.createElement("OPTION");
+      opt.value = result.places[i].place_id;
+      opt.text  = result.places[i].place_name;
+      sel.options.add(opt);
+    }
+  }
+}
+  /**
+   * 商圈管理
+   */
+  function rapidPlaceAdd(conObj)
+  {
+      var brand_div = document.getElementById("place_add");
+
+      if(brand_div.style.display != '')
+      {
+          var brand =document.forms['theForm'].elements['addedPlaceName'];
+          brand.value = '';
+          brand_div.style.display = '';
+      }
+  }
+
+  function hidePlaceDiv()
+  {
+      var brand_add_div = document.getElementById("place_add");
+      if(brand_add_div.style.display != 'none')
+      {
+          brand_add_div.style.display = 'none';
+      }
+  }
+
+  function goPlacePage()
+  {
+      if(confirm(go_place_page))
+      {
+        window.location.href='place.php?act=list';
+      }
+      else
+      {
+          return;
+      }
+  }
+  function addPlace()
+  {
+      var place = document.forms['theForm'].elements['addedPlaceName'];
+      var district = document.forms['theForm'].elements['district'];
+      
+
+      if(place.value.replace(/^\s+|\s+$/g, '') == '')
+      {
+          alert(place_name_not_null);
+          return;
+      }
+
+      var params = 'district=' + district.value + '&place=' + place.value;
+
+      Ajax.call('place.php?is_ajax=1&act=add_place', params, addPlaceResponse, 'GET', 'JSON');
+  }
+
+  function addPlaceResponse(result)
+  {
+      if (result.error == '1' && result.message != '')
+      {
+          alert(result.message);
+          return;
+      }
+
+      var place_div = document.getElementById("place_add");
+      place_div.style.display = 'none';
+
+      var response = result.content;
+
+      var selPlc = document.forms['theForm'].elements['place'];
+      var opt = document.createElement("OPTION");
+      opt.value = response.id;
+      opt.selected = true;
+      opt.text = response.place;
+
+      if (Browser.isIE)
+      {
+          selPlc.add(opt);
+      }
+      else
+      {
+          selPlc.appendChild(opt);
+      }
+
+      return;
+  }
     
 //-->
 </script>

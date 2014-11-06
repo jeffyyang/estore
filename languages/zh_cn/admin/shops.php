@@ -14,20 +14,43 @@
 */
 
 $_LANG['shop_name'] = '商户名称';
-$_LANG['site_url'] = '商户网址';
+$_LANG['site_url']  = '商户网址';
 
 $_LANG['shop_desc'] = '商户描述';
 $_LANG['shop_logo'] = '商户LOGO';
 $_LANG['sort_order'] = '排序';
-$_LANG['is_show'] = '审核状态';
+$_LANG['is_show']    = '是否显示';
+$_LANG['is_check']   = '审核状态';
 $_LANG['add_time'] = '申请日期';
+
+$_LANG['admin_name']  = '用户名：';
+$_LANG['admin_email'] = '电子邮箱：';
+$_LANG['admin_password'] = '密码：';
+$_LANG['admin_pwd_confirm'] = '确认密码：';
 
 $_LANG['rapid_add_cat'] = '添加类别';
 $_LANG['category_manage'] = '类别管理';
 
-$_LANG['label_suppliers_category'] = '门店类别：';
+$_LANG['label_shop_name'] = '商户名称：';
+$_LANG['label_shop_logo'] = '商户LOGO:';
+$_LANG['label_site_url']  = '商户网址：';
+$_LANG['label_shop_desc'] = '商户描述：';
+$_LANG['label_suppliers_category']  = '商户类别：';
 $_LANG['label_suppliers_main_cate'] = '主分类：';
 $_LANG['label_suppliers_sub_cate']  = '子分类：';
+$_LANG['label_region'] = '门店区域：';
+$_LANG['label_country'] = '国家：';
+$_LANG['label_province'] = '省份：';
+$_LANG['label_city'] = '城市：';
+$_LANG['label_district'] = '地区：';
+$_LANG['label_place'] = '商圈：';
+$_LANG['label_suppliers_address'] = '门店地址：';
+$_LANG['label_suppliers_phone']  = '门店电话：';
+
+$_LANG['category_manage'] = '类别管理';
+$_LANG['rapid_add_cat']   = '添加类别';
+$_LANG['place_manage']    = '商圈管理';
+$_LANG['rapid_add_place'] = '添加商圈';
 
 $_LANG['suppliers_manage'] = '门店管理';
 
@@ -86,6 +109,13 @@ $_LANG['visibility_notes'] = '当商户下还没有商品的时候，首页及�
 
 /*JS 语言项*/
 $_LANG['js_languages']['no_shopname'] = '您必须输入商户名称！';
+$_LANG['js_languages']['no_address']  = '您必须输入门店地址！';
+$_LANG['js_languages']['no_phone']    = '您必须输门店电话！';
+$_LANG['js_languages']['no_username'] = '您必须输入用户名称！';
+$_LANG['js_languages']['email_empty'] = '您必须输入电子邮箱地址！';
+$_LANG['js_languages']['email_error'] = '非法的邮箱地址';
+$_LANG['js_languages']['password_invaild'] = '无效的密码！';
+$_LANG['js_languages']['password_error'] = '两次输入的密码不一致！';
 $_LANG['js_languages']['require_num'] =  '排序序号必须是一个数字';
 
 ?>

@@ -28,6 +28,7 @@ $exc = new exchange($ecs->table('goods'), $db, 'goods_id', 'goods_name');
 if ($_REQUEST['act'] == 'list' || $_REQUEST['act'] == 'trash')
 {
     admin_priv('goods_manage');
+    print_r($_SESSION);
 
     $cat_id = empty($_REQUEST['cat_id']) ? 0 : intval($_REQUEST['cat_id']);
     $code   = empty($_REQUEST['extension_code']) ? '' : trim($_REQUEST['extension_code']);

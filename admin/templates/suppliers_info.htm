@@ -9,21 +9,21 @@
     <td class="label">{$lang.label_suppliers_name}</td>
     <td><input type="text" name="suppliers_name" maxlength="60" value="{$suppliers.suppliers_name}" />{$lang.require_field}</td>
   </tr>
-  <tr>
-    <td class="label">{$lang.label_suppliers_shop}</td>
-    <td><select name="shop_id" onchange="hideShopDiv()" ><option value="0">{$lang.select_please}{html_options options=$shop_list selected=$suppliers.shop_id}
-    </select>
-      {if $is_add}
-      <a href="javascript:void(0)" title="{$lang.rapid_add_shop}" onclick="rapidShopAdd()" class="special" >{$lang.rapid_add_shop}</a>
-      <span id="shop_add" style="display:none;">
-      <input class="text" size="15" name="addedShopName" />
-       <a href="javascript:void(0)" onclick="addShop()" class="special" >{$lang.button_submit}</a>
-       <a href="javascript:void(0)" onclick="return goShopPage();" title="{$lang.shop_manage}" class="special" >{$lang.shop_manage}</a>
-       <a href="javascript:void(0)" onclick="hideShopDiv()" title="{$lang.hide}" class="special" ><<</a>
-       </span>
-       {/if}
-    </td>
-  </tr>   
+  {if $is_add}
+    <tr>
+      <td class="label">{$lang.label_suppliers_shop}</td>
+      <td><select name="shop_id" onchange="hideShopDiv()" ><option value="0">{$lang.select_please}{html_options options=$shop_list selected=$suppliers.shop_id}
+      </select>
+        <a href="javascript:void(0)" title="{$lang.rapid_add_shop}" onclick="rapidShopAdd()" class="special" >{$lang.rapid_add_shop}</a>
+        <span id="shop_add" style="display:none;">
+        <input class="text" size="15" name="addedShopName" />
+         <a href="javascript:void(0)" onclick="addShop()" class="special" >{$lang.button_submit}</a>
+         <a href="javascript:void(0)" onclick="return goShopPage();" title="{$lang.shop_manage}" class="special" >{$lang.shop_manage}</a>
+         <a href="javascript:void(0)" onclick="hideShopDiv()" title="{$lang.hide}" class="special" ><<</a>
+         </span>
+      </td>
+    </tr>
+  {/if}   
 <!--   <tr>
     <td class="label">{$lang.label_suppliers_category}</td>
     <td><select name="cat_id" onchange="hideCatDiv()" ><option value="0">{$lang.select_please}</option>{$cat_list}</select>

@@ -56,6 +56,18 @@ elseif ($_REQUEST['act'] == 'add')
     $cate_list = get_shop_cat_list();
     $smarty->assign('cat_list', $cate_list);
 
+    /* 取得地区 */
+    // $province_list = get_regions(1,1);
+    // $smarty->assign('province_list', $province_list);
+
+    // 吉林
+    // $city_list = get_regions_list(2,15);
+    // 江苏
+    $city_list = get_regions_list(2,16);
+    $smarty->assign('city_list', $city_list);    
+
+    $is_add = true;
+    $smarty->assign('is_add', $is_add);    
     $smarty->assign('ur_here',     $_LANG['shop_add']);
     $smarty->assign('action_link', array('text' => $_LANG['shop_list'], 'href' => 'shops.php?act=list'));
     $smarty->assign('form_action', 'insert');
@@ -99,29 +111,71 @@ elseif ($_REQUEST['act'] == 'insert')
 
     /*插入数据*/
 
-    $sql = "INSERT INTO ".$ecs->table('shop')."(cat_id, shop_name, site_url, shop_desc, shop_logo, lic_snapshot, id_snapshot, is_show, sort_order) ".
-           "VALUES ('$_POST[cat_id]','$_POST[shop_name]', '$site_url', '$_POST[shop_desc]', '$logo_img_name', '$id_img_name', '$lic_img_name', '$is_show', '$_POST[sort_order]')";
+    $sql = "INSERT INTO ".$ecs->table('shop')."(pcat_id, cat_id, shop_name, site_url, shop_desc, shop_logo, lic_snapshot, id_snapshot, is_show, sort_order) ".
+           "VALUES ('$_POST[main_cate_id]','$_POST[sub_cate_id]','$_POST[shop_name]', '$site_url', '$_POST[shop_desc]', '$logo_img_name', '$id_img_name', '$lic_img_name', '$is_show', '$_POST[sort_order]')";
     $db->query($sql);
+    $shop_id = $db->Insert_ID();
 
     admin_log($_POST['shop_name'],'add','shop');
 
-    /** 插入管理员信息 **/
-    // $sql = "INSERT INTO ".$ecs->table('shop')."(brand_name, site_url, brand_desc, brand_logo, is_show, sort_order) ".
-    //        "VALUES ('$_POST[brand_name]', '$site_url', '$_POST[brand_desc]', '$img_name', '$is_show', '$_POST[sort_order]')";
-    // $db->query($sql);
 
-    // admin_log($_POST['shop_name'],'add','shop');
+    /* 添加门店资料 */
+    $sql = "INSERT INTO ".$ecs->table('suppliers')." (pcat_id, cat_id, suppliers_name, shop_id, region_cities, region_districts, place_id, address, office_phone) ".
+           "VALUES ('$_POST[main_cate_id]','$_POST[sub_cate_id]','$_POST[shop_name]','$shop_id', '$_POST[city]', '$_POST[district]', '$_POST[place]', '$_POST[suppliers_address]', '$_POST[office_phone]')";
 
-    /** 插入门店信息 **/
-    // $sql = "INSERT INTO ".$ecs->table('shop')."(brand_name, site_url, brand_desc, brand_logo, is_show, sort_order) ".
-    //        "VALUES ('$_POST[brand_name]', '$site_url', '$_POST[brand_desc]', '$img_name', '$is_show', '$_POST[sort_order]')";
-    // $db->query($sql);
+    $db->query($sql);
+    $suppliers_id = $db->Insert_ID();
 
-    // admin_log($_POST['shop_name'],'add','shop');    
+    admin_log($_POST['shop_name'],'add','supplier');
+    /* 转入权限分配列表 */
+  
+
+    /* 判断管理员是否已经存在 */
+    // if (!empty($_POST['user_name']))
+    // {
+    //     $is_only = $exc->is_only('user_name', stripslashes($_POST['user_name']));
+
+    //     if (!$is_only)
+    //     {
+    //         sys_msg(sprintf($_LANG['user_name_exist'], stripslashes($_POST['user_name'])), 1);
+    //     }
+    // }
+
+    /* Email地址是否有重复 */
+    // if (!empty($_POST['email']))
+    // {
+    //     $is_only = $exc->is_only('email', stripslashes($_POST['email']));
+
+    //     if (!$is_only)
+    //     {
+    //         sys_msg(sprintf($_LANG['email_exist'], stripslashes($_POST['email'])), 1);
+    //     }
+    // }
+
+    /* 获取添加日期及密码 */
+    $add_time = gmtime();
+    $role_id = '';
+    $password  = md5($_POST['password']);
+    $action_list = '';
+    if (!empty($_POST['select_role']))
+    {
+        $sql = "SELECT action_list FROM " . $ecs->table('role') . " WHERE role_id = '".$_POST['select_role']."'";
+        $row = $db->getRow($sql);
+        $action_list = $row['action_list'];
+        $role_id = $_POST['select_role'];
+    }
+
+        $sql = "SELECT nav_list FROM " . $ecs->table('admin_user') . " WHERE action_list = 'all'";
+        $row = $db->getRow($sql);
+  
+    $sql = "INSERT INTO ".$ecs->table('admin_user')." (user_name, email, password, add_time, nav_list, action_list, shop_id, role_id) ".
+           "VALUES ('".trim($_POST['user_name'])."', '".trim($_POST['email'])."', '$password', '$add_time', '$row[nav_list]', '$action_list', '$shop_id', '$role_id')";
 
 
-    /* 清除缓存 */
-    clear_cache_files();
+    $db->query($sql);
+    /* 转入权限分配列表 */
+    $new_id = $db->Insert_ID();
+    admin_log(trim($_POST['user_name']), 'add', 'admin');
 
     $link[0]['text'] = $_LANG['continue_add'];
     $link[0]['href'] = 'shops.php?act=add';
@@ -139,7 +193,7 @@ elseif ($_REQUEST['act'] == 'edit')
 {
     /* 权限判断 */
     admin_priv('shop_manage');
-    $sql = "SELECT shop_id, shop_name, cat_id, site_url, shop_logo, id_snapshot, lic_snapshot, shop_desc, is_show, sort_order ".
+    $sql = "SELECT shop_id, shop_name, pcat_id, cat_id, site_url, shop_logo, id_snapshot, lic_snapshot, shop_desc, is_show, sort_order ".
             "FROM " .$ecs->table('shop'). " WHERE shop_id='$_REQUEST[id]'";
     $shop = $db->GetRow($sql);
 
@@ -159,7 +213,7 @@ elseif ($_REQUEST['act'] == 'updata')
     admin_priv('shop_manage');
     if ($_POST['shop_name'] != $_POST['old_shopname'])
     {
-        /*检查品牌名是否相同*/
+        /*检查商户名是否相同*/
         $is_only = $exc->is_only('shop_name', $_POST['shop_name'], $_POST['id']);
 
         if (!$is_only)
@@ -294,6 +348,21 @@ elseif ($_REQUEST['act'] == 'toggle_show')
 }
 
 /*------------------------------------------------------ */
+//-- 切换是否显示
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'toggle_check')
+{
+    check_authz_json('shop_manage');
+
+    $id     = intval($_POST['id']);
+    $val    = intval($_POST['val']);
+
+    $exc->edit("is_check='$val'", $id);
+
+    make_json_result($val);
+}
+
+/*------------------------------------------------------ */
 //-- 删除商户信息
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'remove')
@@ -302,28 +371,43 @@ elseif ($_REQUEST['act'] == 'remove')
 
     $id = intval($_GET['id']);
 
-    /* 删除商户的图标 */
-    $sql = "SELECT brand_logo FROM " .$ecs->table('brand'). " WHERE brand_id = '$id'";
-    $logo_name = $db->getOne($sql);
-    if (!empty($logo_name))
+    $sql = "SELECT *
+            FROM " . $ecs->table('shop') . "
+            WHERE shop_id = '$id'";
+    $shop = $db->getRow($sql, TRUE);
+
+
+    if ($shop['shop_id'])
     {
-        @unlink(ROOT_PATH . DATA_DIR . '/brandlogo/' .$logo_name);
+        /* 判断商户是否有门店 */
+        $sql = "SELECT COUNT(*)
+                FROM " .$ecs->table('suppliers'). " WHERE shop_id = '$id'";
+
+        $supplier_exists = $db->getOne($sql, TRUE);
+        if ($supplier_exists > 0)
+        {
+            $url = 'shops.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
+            ecs_header("Location: $url\n");
+            exit;
+        }
+
+         /* 删除商户的图标 */
+        if(!empty($shop['shop_logo'])){
+              @unlink(ROOT_PATH . DATA_DIR . '/shopimg/' .$logo_name);
+        }
+        $exc->drop($id);
+        admin_log($shop['shop_name'],'remove','shop');
     }
-
-    $exc->drop($id);
-
-    /* 更新商品的品牌编号 */
-    $sql = "UPDATE " .$ecs->table('goods'). " SET brand_id=0 WHERE brand_id='$id'";
-    $db->query($sql);
-
+   
+    /* 清除缓存 */
+    clear_cache_files();
     $url = 'shops.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
-
     ecs_header("Location: $url\n");
     exit;
 }
 
 /*------------------------------------------------------ */
-//-- 删除品牌图片
+//-- 删除商户Logo
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'drop_logo')
 {
@@ -395,14 +479,14 @@ elseif ($_REQUEST['act'] == 'drop_idimg')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'query')
 {
-    $brand_list = get_brandlist();
-    $smarty->assign('brand_list',   $brand_list['brand']);
-    $smarty->assign('filter',       $brand_list['filter']);
-    $smarty->assign('record_count', $brand_list['record_count']);
-    $smarty->assign('page_count',   $brand_list['page_count']);
+    $shop_list = get_shoplist();
+    $smarty->assign('shop_list',    $shop_list['shop']);
+    $smarty->assign('filter',       $shop_list['filter']);
+    $smarty->assign('record_count', $shop_list['record_count']);
+    $smarty->assign('page_count',   $shop_list['page_count']);
 
-    make_json_result($smarty->fetch('brand_list.htm'), '',
-        array('filter' => $brand_list['filter'], 'page_count' => $brand_list['page_count']));
+    make_json_result($smarty->fetch('shops_list.htm'), '',
+        array('filter' => $shop_list['filter'], 'page_count' => $shop_list['page_count']));
 }
 
 /**
@@ -438,7 +522,7 @@ function get_shoplist()
         {
             if(strtoupper(EC_CHARSET) == 'GBK')
             {
-                $keyword = iconv("UTF-8", "gb2312", $_POST['brand_name']);
+                $keyword = iconv("UTF-8", "gb2312", $_POST['shop_name']);
             }
             else
             {

@@ -87,21 +87,32 @@ elseif ($_REQUEST['act'] == 'signin')
     if(!empty($ec_salt))
     {
          /* 检查密码是否正确 */
-         $sql = "SELECT user_id, user_name, password, last_login, action_list, last_login,suppliers_id,ec_salt".
+         $sql = "SELECT user_id, user_name, password, last_login, action_list, last_login, shop_id, suppliers_id,ec_salt".
             " FROM " . $ecs->table('admin_user') .
             " WHERE user_name = '" . $_POST['username']. "' AND password = '" . md5(md5($_POST['password']).$ec_salt) . "'";
     }
     else
     {
          /* 检查密码是否正确 */
-         $sql = "SELECT user_id, user_name, password, last_login, action_list, last_login,suppliers_id,ec_salt".
+         $sql = "SELECT user_id, user_name, password, last_login, action_list, last_login, shop_id, suppliers_id,ec_salt".
             " FROM " . $ecs->table('admin_user') .
             " WHERE user_name = '" . $_POST['username']. "' AND password = '" . md5($_POST['password']) . "'";
     }
     $row = $db->getRow($sql);
     if ($row)
     {
-        // 检查是否为供货商的管理员 所属供货商是否有效
+
+        // 检查是否为商户管理员 所属供货商是否有效
+        if (!empty($row['shop_id']))
+        {
+            $shop_is_check = suppliers_list_info(' is_check = 1 AND shop_id = ' . $row['shop_id']);
+            if (empty($shop_is_check))
+            {
+                sys_msg($_LANG['login_disable'], 1);
+            }
+        }
+
+        // 检查是否为门店的管理员 所属门店是否有效
         if (!empty($row['suppliers_id']))
         {
             $supplier_is_check = suppliers_list_info(' is_check = 1 AND suppliers_id = ' . $row['suppliers_id']);
@@ -111,9 +122,13 @@ elseif ($_REQUEST['act'] == 'signin')
             }
         }
 
-        // 登录成功
+
+        // 登录成功,将管理员信息写入登录会话
         set_admin_session($row['user_id'], $row['user_name'], $row['action_list'], $row['last_login']);
+
+        $_SESSION['shop_id'] = $row['shop_id'];
         $_SESSION['suppliers_id'] = $row['suppliers_id'];
+        
 		if(empty($row['ec_salt']))
 	    {
 			$ec_salt=rand(1,9999);
