@@ -1,0 +1,661 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader.htm"}
+{insert_scripts files="validator.js,../js/transport.js,../js/region.js"}
+<!-- <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&key=262BZ-6OFHJ-25UFG-FD2KP-C6MNZ-QCBCO"></script> -->
+<div class="main-div">
+<form method="post" action="shop_suppliers.php" name="theForm" enctype="multipart/form-data" onsubmit="return validate()">
+<table cellspacing="1" cellpadding="3" width="100%">
+  <tr>
+    <td class="label">{$lang.label_suppliers_name}</td>
+    <td><input type="text" name="suppliers_name" maxlength="60" value="{$suppliers.suppliers_name}" />{$lang.require_field}</td>
+  </tr>
+  <tr>
+    <td class="label">{$lang.label_suppliers_logo_img}</td>
+    <td>
+      <input type="file" name="logo_img" size="35" />
+      {if $suppliers.logo_img}
+        <a href="suppliers.php?act=show_image&img_url={$suppliers.logo_img}" target="_blank"><img src="images/yes.gif" border="0" /></a>
+      {else}
+        <img src="images/no.gif" />
+      {/if}
+    </td>
+  </tr>
+  <tr id="auto_thumb_1">
+    <td class="label"> {$lang.label_suppliers_logo_thumb}</td>
+    <td id="auto_thumb_3">
+      <input type="file" name="logo_thumb" size="35" />
+      {if $suppliers.logo_thumb}
+        <a href="suppliers.php?act=show_image&img_url={$suppliers.logo_thumb}" target="_blank"><img src="images/yes.gif" border="0" /></a>
+      {else}
+        <img src="images/no.gif" />
+      {/if}
+      {if $gd > 0}
+      <br /><label for="auto_thumb"><input type="checkbox" id="auto_thumb" name="auto_thumb" checked="true" value="1" onclick="handleAutoThumb(this.checked)" />{$lang.auto_thumb}</label>{/if}
+    </td>
+  </tr>    
+  <tr>
+    <td class="label">{$lang.label_suppliers_posters}</td>
+    <td>
+      <!-- 商户相册 -->
+      <table width="90%" id="gallery-table" style="display:block" align="center">
+        <!-- 相册列表 -->
+        <tr>
+          <td>
+            {foreach from=$img_list item=img key=i}
+            <div id="gallery_{$img.img_id}" style="float:left; text-align:center; border: 1px solid #DADADA; margin: 4px; padding:2px;">
+              <a href="javascript:;" onclick="if (confirm('{$lang.drop_img_confirm}')) dropImg('{$img.img_id}')">[-]</a><br />
+              <a href="goods.php?act=show_image&img_url={$img.img_url}" target="_blank">
+              <img src="../{if $img.thumb_url}{$img.thumb_url}{else}{$img.img_url}{/if}" {if $thumb_width neq 0}width="{$thumb_width}"{/if} {if $thumb_height neq 0}height="{$thumb_height}"{/if} border="0" />
+              </a><br />
+              <input type="text" value="{$img.img_desc|escape}" size="15" name="old_img_desc[{$img.img_id}]" />
+            </div>
+            {/foreach}
+          </td>
+        </tr>
+        <tr><td>&nbsp;</td></tr>
+        <!-- 添加图片 -->
+        <tr>
+          <td>
+            <a href="javascript:;" onclick="addImg(this)">[+]</a>
+            {$lang.img_desc} <input type="text" name="img_desc[]" size="20" />
+            {$lang.img_url} <input type="file" name="img_url[]" />
+            <input type="text" size="40" value="{$lang.img_file}" style="color:#aaa;" onfocus="if (this.value == '{$lang.img_file}'){this.value='http://';this.style.color='#000';}" name="img_file[]"/>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td class="label">{$lang.label_suppliers_shop_price}</td>
+    <td><input type="text" name="shop_price" maxlength="60" value="{$suppliers.shop_price}" />&nbsp;&nbsp;{$lang.label_suppliers_price_unit}{$lang.require_field}</td>
+  </tr> 
+  <tr>
+    <td class="label">{$lang.label_suppliers_phone}</td>
+    <td><input type="text" name="office_phone" maxlength="60" value="{$suppliers.office_phone}" />{$lang.require_field}</td>
+  </tr>   
+  <tr>
+    <td class="label">{$lang.label_suppliers_mobile}</td>
+    <td><input type="text" name="mobile_phone" maxlength="60" value="{$suppliers.mobile_phone}" />{$lang.require_field}</td>
+  </tr>
+  <tr>
+    <td class="label">{$lang.label_suppliers_opening_hours}</td>
+    <td><input type="text" name="opening_hours" maxlength="60" size ="45" value="{$suppliers.opening_hours}" onfocus="if (this.value == ''){this.value='9:00~21:00';}"
+      />{$lang.require_field}</td>
+  </tr>  
+  <tr>
+    <td class="label">{$lang.label_region}</td>
+    <td>
+          <!-- 省份      
+          <span class="label">{$lang.label_province}</span>
+          <select name="province" id="selProvinces" onChange="region.changed(this, 2, 'selCities')" >
+            <option value="">{$lang.select_please}</option>
+            {html_options options=$province_list selected=$suppliers.brand_id}
+          </select>
+          -->
+          <span class="label">{$lang.label_city}</span>
+          <select name="city" id="selCities" onChange="region.isAdmin= true;region.changed(this, 3, 'selDistricts');" >
+            <option value="">{$lang.select_please}</option>
+            {html_options options=$city_list selected=$suppliers.region_cities}
+          </select>
+          <span class="label">{$lang.label_district}</span>
+          <select name="district" id="selDistricts" onChange="changedDistrict(this,'selPlaces');">
+            <option value="">{$lang.select_please}</option>
+          </select>
+          <span class="label">{$lang.label_place}</span>
+          <select name="place" id="selPlaces" >
+            <option value="">{$lang.select_please}</option>
+          </select>
+          {if $is_add}
+            <a href="javascript:void(0)" title="{$lang.rapid_add_place}" onclick="rapidPlaceAdd()" class="special" >{$lang.rapid_add_place}</a>
+            <span id="place_add" style="display:none;">
+            <input class="text" size="15" name="addedPlaceName" />
+             <a href="javascript:void(0)" onclick="addPlace()" class="special" >{$lang.button_submit}</a>
+             <a href="javascript:void(0)" onclick="return goPlacePage()" title="{$lang.place_manage}" class="special" >{$lang.place_manage}</a>
+             <a href="javascript:void(0)" onclick="hidePlaceDiv()" title="{$lang.hide}" class="special" ><<</a>
+             </span>
+           {/if}
+           {$lang.require_field}            
+    </td>
+  </tr>      
+  <tr>
+    <td class="label">{$lang.label_suppliers_address}</td>
+    <td><input type="text" name="suppliers_address" maxlength="120" size="60" value="{$suppliers.address}" />{$lang.require_field}</td>
+<!--     <td><textarea  name="suppliers_address" cols="60" rows="3"  >{$suppliers.address}</textarea></td> -->
+  </tr>
+  <tr>
+    <td class="label">{$lang.label_suppliers_traffic_info}</td>
+    <td><textarea  name="traffic_info" cols="60" rows="3"  >{$suppliers.traffic_info}</textarea></td>
+  </tr>  
+  <tr>
+    <td class="label">{$lang.label_suppliers_location}</td>
+    <td><a href="javascript:void(0)" onclick="geolocation_cityname();" class="special" ></br>{$lang.start_marker}</a><div id="container" style="width:420px; height:300px"></div></td>
+  </tr>        
+  <tr>
+    <td class="label">{$lang.label_suppliers_desc}</td>
+    <td><textarea  name="suppliers_desc" cols="60" rows="6"  >{$suppliers.suppliers_desc}</textarea></td>
+  </tr>
+  <tr>
+    <td class="label">
+    <a href="javascript:showNotice('noticeAdmins');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.label_admins}</td>
+    <td>{foreach from=$suppliers.admin_list item=admin}
+      <input type="checkbox" name="admins[]" value="{$admin.user_id}" {if $admin.type eq "this"}checked="checked"{/if} />
+      {$admin.user_name}{if $admin.type eq "other"}(*){/if}&nbsp;&nbsp;
+    {/foreach}<br />
+    <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeAdmins">{$lang.notice_admins}</span></td>
+  </tr>
+</table>
+
+<table align="center">
+  <tr>
+    <td colspan="2" align="center">
+      <input type="submit" class="button" value="{$lang.button_submit}" />
+      <input type="reset" class="button" value="{$lang.button_reset}" />
+      <input type="hidden" name="act" value="{$form_action}" />
+      <input type="hidden" name="shop_id" value="{$suppliers.shop_id}" />
+      <input type="hidden" name="id" value="{$suppliers.suppliers_id}" />
+      <input type="hidden" name="pcat_id" value="{$suppliers.pcat_id}" />
+      <input type="hidden" name="cat_id"  value="{$suppliers.cat_id}" />
+      <input type="hidden" name="agency_id" value="{$suppliers.agency_id}" />
+      <input type="hidden" id="h_map_lat" name="map_lat" value="{$suppliers.map_lat}" />
+      <input type="hidden" id="h_map_lng" name="map_lng" value="{$suppliers.map_lng}" />      
+    </td>
+  </tr>
+</table>
+</form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+<script language="JavaScript">
+<!--
+document.forms['theForm'].elements['suppliers_name'].focus();
+
+onload = function()
+{
+  loadScript();
+  // 开始检查订单
+  startCheckOrder();
+}
+
+var citylocation,map,marker = null;
+var markerStatus = false;
+
+function init() {
+  var myLatlng = new qq.maps.LatLng(39.916527,116.397128);
+  var myOptions = {
+    zoom: 13,
+    center: myLatlng,
+    mapTypeId: qq.maps.MapTypeId.ROADMAP
+  }
+  var map = new qq.maps.Map(document.getElementById("container"), myOptions);
+
+  qq.maps.event.addListener(map, 'click', function(event) {
+      if(markerStatus){
+        document.getElementById("h_map_lat").value = event.latLng.getLat();
+        document.getElementById("h_map_lng").value = event.latLng.getLng();
+      }
+  });
+
+  citylocation = new qq.maps.CityService({
+      complete : function(results){
+          map.setCenter(results.detail.latLng);
+          city.style.display = 'inline';
+          city.innerHTML = '所在位置: ' + results.detail.name;
+          if (marker != null) {
+              marker.setMap(null);
+          }
+          marker = new qq.maps.Marker({
+              map: map,
+              position: results.detail.latLng
+          });
+      }
+  });
+}
+  
+function geolocation_cityname() {
+    var selCities = document.getElementById("selCities");
+    var index = selCities.selectedIndex; // 选中索引
+    var cityname = selCities.options[index].text; // 选中文本
+    citylocation.searchCityByName(cityname);
+    markerStatus = true;
+}
+
+function loadScript() {
+  var script = document.createElement("script");
+  script.type = "text/javascript";
+  script.src = "http://map.qq.com/api/js?v=2.exp&callback=init";
+  document.body.appendChild(script);
+}
+  
+// window.onload = loadScript;
+
+
+/**
+ * 检查表单输入的数据
+ */
+function validate()
+{
+    validator = new Validator("theForm");
+    validator.required("suppliers_name",  no_suppliers_name);
+    validator.required("suppliers_name",  no_suppliers_name);
+    validator.required("suppliers_name",  no_suppliers_name);
+    return validator.passed();
+}
+
+  /**
+   * 商户管理
+   */
+  function rapidShopAdd(conObj)
+  {
+      var shop_div = document.getElementById("shop_add");
+
+      if(shop_div.style.display != '')
+      {
+          var shop =document.forms['theForm'].elements['addedShopName'];
+          shop.value = '';
+          shop_div.style.display = '';
+      }
+  }
+
+  function hideShopDiv()
+  {
+      var shop_add_div = document.getElementById("shop_add");
+      if(shop_add_div.style.display != 'none')
+      {
+          shop_add_div.style.display = 'none';
+      }
+  }
+
+  function goShopPage()
+  {
+      if(confirm(go_shop_page))
+      {
+          window.location.href='shop.php?act=add';
+      }
+      else
+      {
+          return;
+      }
+  }
+  function addShop()
+  {
+      var shop = document.forms['theForm'].elements['addedShopName'];
+      if(shop.value.replace(/^\s+|\s+$/g, '') == '')
+      {
+          alert(shop_name_not_null);
+          return;
+      }
+
+      var params = 'shop=' + shop.value;
+      Ajax.call('shop.php?is_ajax=1&act=add_shop', params, addShopResponse, 'GET', 'JSON');
+  }
+
+  function addShopResponse(result)
+  {
+      if (result.error == '1' && result.message != '')
+      {
+          alert(result.message);
+          return;
+      }
+
+      var shop_div = document.getElementById("shop_add");
+      shop_div.style.display = 'none';
+
+      var response = result.content;
+
+      var selShop = document.forms['theForm'].elements['shop_id'];
+      var opt = document.createElement("OPTION");
+      opt.value = response.id;
+      opt.selected = true;
+      opt.text = response.brand;
+
+      if (Browser.isIE)
+      {
+          selShop.add(opt);
+      }
+      else
+      {
+          selShop.appendChild(opt);
+      }
+
+      return;
+  }
+
+ /* 处理商户分类 */
+
+  function rapidCatAdd()
+  {
+      var cat_div = document.getElementById("category_add");
+
+      if(cat_div.style.display != '')
+      {
+          var cat =document.forms['theForm'].elements['addedCategoryName'];
+          cat.value = '';
+          cat_div.style.display = '';
+      }
+  }
+
+  function addCategory()
+  {
+      var parent_id = document.forms['theForm'].elements['cat_id'];
+      var cat = document.forms['theForm'].elements['addedCategoryName'];
+      if(cat.value.replace(/^\s+|\s+$/g, '') == '')
+      {
+          alert(shopcate_name_not_null);
+          return;
+      }
+
+      var params = 'parent_id=' + parent_id.value;
+      params += '&cat=' + cat.value;
+      Ajax.call('shopcate.php?is_ajax=1&act=add_category', params, addCatResponse, 'GET', 'JSON');
+  }
+
+  function hideCatDiv()
+  {
+      var category_add_div = document.getElementById("category_add");
+      if(category_add_div.style.display != null)
+      {
+          category_add_div.style.display = 'none';
+      }
+  }
+
+  function addCatResponse(result)
+  {
+      if (result.error == '1' && result.message != '')
+      {
+          alert(result.message);
+          return;
+      }
+
+      var category_add_div = document.getElementById("category_add");
+      category_add_div.style.display = 'none';
+
+      var response = result.content;
+
+      var selCat = document.forms['theForm'].elements['cat_id'];
+      var opt = document.createElement("OPTION");
+      opt.value = response.id;
+      opt.selected = true;
+      opt.innerHTML = response.cat;
+
+      var str = selCat.options[selCat.selectedIndex].text;
+      var temp = str.replace(/^\s+/g, '');
+      var lengOfSpace = str.length - temp.length;
+      if(response.parent_id != 0)
+      {
+          lengOfSpace += 4;
+      }
+      for (i = 0; i < lengOfSpace; i++)
+      {
+          opt.innerHTML = '&nbsp;' + opt.innerHTML;
+      }
+
+      for (i = 0; i < selCat.length; i++)
+      {
+          if(selCat.options[i].value == response.parent_id)
+          {
+              if(i == selCat.length)
+              {
+                  if (Browser.isIE)
+                  {
+                      selCat.add(opt);
+                  }
+                  else
+                  {
+                      selCat.appendChild(opt);
+                  }
+              }
+              else
+              {
+                  selCat.insertBefore(opt, selCat.options[i + 1]);
+              }
+              //opt.selected = true;
+              break;
+          }
+
+      }
+
+      return;
+  }
+
+    function goCatPage()
+    {
+        if(confirm(go_shopcate_page))
+        {
+            window.location.href='shopcate.php?act=add';
+        }
+        else
+        {
+            return;
+        }
+    }
+
+/* *
+ * 处理主分类下拉列表改变的函数
+ *
+ * @obj     object  下拉列表
+ * @selName string  目标列表框的名称
+ */
+
+function changedMainCate(obj, selName)
+{
+  var parent = obj.options[obj.selectedIndex].value;
+  loadSubCate(parent, selName);
+}
+
+function loadSubCate(parent, target)
+{
+
+  Ajax.call('./shopcate.php', 'act=get_shopcate_options&target=' + target + "&parent=" + parent, shopcateResponse, "GET", "JSON");
+
+}
+
+function shopcateResponse(result, text_result)
+{
+  var sel = document.getElementById(result.target);
+
+  sel.length = 1;
+  sel.selectedIndex = 0;
+  sel.style.display = (result.shopcates.length == 0 && ! region.isAdmin) ? "none" : '';
+
+  if (document.all)
+  {
+    sel.fireEvent("onchange");
+  }
+  else
+  {
+    var evt = document.createEvent("HTMLEvents");
+    evt.initEvent('change', true, true);
+    sel.dispatchEvent(evt);
+  }
+
+  if (result.shopcates)
+  {
+    for (i = 0; i < result.shopcates.length; i ++ )
+    {
+      var opt = document.createElement("OPTION");
+      opt.value = result.shopcates[i].cat_id;
+      opt.text  = result.shopcates[i].cat_name;
+      sel.options.add(opt);
+    }
+  }
+}
+
+/*处理商户分类*/
+
+/* *
+ * 处理县区下拉列表改变的函数
+ *
+ * @obj     object  下拉列表
+ * @selName string  目标列表框的名称
+ */
+function changedDistrict(obj, selName)
+{
+  var parent = obj.options[obj.selectedIndex].value;
+  loadPlaces(parent, selName);
+}
+
+function loadPlaces(parent, target)
+{
+
+  Ajax.call('./place.php', 'act=get_place_options&target=' + target + "&parent=" + parent, placeResponse, "GET", "JSON");
+
+}
+
+function placeResponse(result, text_result)
+{
+  var sel = document.getElementById(result.target);
+
+  sel.length = 1;
+  sel.selectedIndex = 0;
+  sel.style.display = (result.places.length == 0 && ! region.isAdmin) ? "none" : '';
+
+  if (document.all)
+  {
+    sel.fireEvent("onchange");
+  }
+  else
+  {
+    var evt = document.createEvent("HTMLEvents");
+    evt.initEvent('change', true, true);
+    sel.dispatchEvent(evt);
+  }
+
+  if (result.places)
+  {
+    for (i = 0; i < result.places.length; i ++ )
+    {
+      var opt = document.createElement("OPTION");
+      opt.value = result.places[i].place_id;
+      opt.text  = result.places[i].place_name;
+      sel.options.add(opt);
+    }
+  }
+}
+  /**
+   * 商圈管理
+   */
+  function rapidPlaceAdd(conObj)
+  {
+      var brand_div = document.getElementById("place_add");
+
+      if(brand_div.style.display != '')
+      {
+          var brand =document.forms['theForm'].elements['addedPlaceName'];
+          brand.value = '';
+          brand_div.style.display = '';
+      }
+  }
+
+  function hidePlaceDiv()
+  {
+      var brand_add_div = document.getElementById("place_add");
+      if(brand_add_div.style.display != 'none')
+      {
+          brand_add_div.style.display = 'none';
+      }
+  }
+
+  function goPlacePage()
+  {
+      if(confirm(go_place_page))
+      {
+        window.location.href='place.php?act=list';
+      }
+      else
+      {
+          return;
+      }
+  }
+  function addPlace()
+  {
+      var place = document.forms['theForm'].elements['addedPlaceName'];
+      var district = document.forms['theForm'].elements['district'];
+      
+
+      if(place.value.replace(/^\s+|\s+$/g, '') == '')
+      {
+          alert(place_name_not_null);
+          return;
+      }
+
+      var params = 'district=' + district.value + '&place=' + place.value;
+
+      Ajax.call('place.php?is_ajax=1&act=add_place', params, addPlaceResponse, 'GET', 'JSON');
+  }
+
+  function addPlaceResponse(result)
+  {
+      if (result.error == '1' && result.message != '')
+      {
+          alert(result.message);
+          return;
+      }
+
+      var place_div = document.getElementById("place_add");
+      place_div.style.display = 'none';
+
+      var response = result.content;
+
+      var selPlc = document.forms['theForm'].elements['place'];
+      var opt = document.createElement("OPTION");
+      opt.value = response.id;
+      opt.selected = true;
+      opt.text = response.place;
+
+      if (Browser.isIE)
+      {
+          selPlc.add(opt);
+      }
+      else
+      {
+          selPlc.appendChild(opt);
+      }
+
+      return;
+  }
+  /*快速管理商圈*/
+
+  /**
+   * 添加海报图片
+   */
+  function addImg(obj)
+  {
+      var src  = obj.parentNode.parentNode;
+      var idx  = rowindex(src);
+      var tbl  = document.getElementById('gallery-table');
+      var row  = tbl.insertRow(idx + 1);
+      var cell = row.insertCell(-1);
+      cell.innerHTML = src.cells[0].innerHTML.replace(/(.*)(addImg)(.*)(\[)(\+)/i, "$1removeImg$3$4-");
+  }
+
+  /**
+   * 删除海报图片
+   */
+  function removeImg(obj)
+  {
+      var row = rowindex(obj.parentNode.parentNode);
+      var tbl = document.getElementById('gallery-table');
+
+      tbl.deleteRow(row);
+  }
+
+  /**
+   * 删除图片
+   */
+  function dropImg(imgId)
+  {
+    Ajax.call('goods.php?is_ajax=1&act=drop_image', "img_id="+imgId, dropImgResponse, "GET", "JSON");
+  }
+
+  function dropImgResponse(result)
+  {
+      if (result.error == 0)
+      {
+          document.getElementById('gallery_' + result.content).style.display = 'none';
+      }
+  }
+
+//-->
+</script>
+{/literal}
+{include file="pagefooter.htm"}
