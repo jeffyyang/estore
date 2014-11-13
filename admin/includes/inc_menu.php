@@ -73,7 +73,7 @@ $modules['05_banner']['ad_list']                    = 'ads.php?act=list';
 
 // 报表统计
 $modules['06_stats']['flow_stats']                  = 'flow_stats.php?act=view';
-$modules['06_stats']['searchengine_stats']          = 'searchengine_stats.php?act=view';
+// $modules['06_stats']['searchengine_stats']          = 'searchengine_stats.php?act=view';
 // $modules['06_stats']['z_clicks_stats']              = 'adsense.php?act=list';
 $modules['06_stats']['report_guest']                = 'guest_stats.php?act=list';
 $modules['06_stats']['report_order']                = 'order_stats.php?act=list';
