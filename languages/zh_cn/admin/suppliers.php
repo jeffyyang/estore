@@ -86,6 +86,7 @@ $_LANG['suppliers_name_exist'] = '该门店名称已存在，请您换一个名�
 
 /* 系统提示 */
 $_LANG['continue_add_suppliers'] = '继续添加门店';
+$_LANG['drop_img_confirm'] = '您确实要删除该图片吗？';
 $_LANG['back_suppliers_list'] = '返回门店列表';
 $_LANG['add_suppliers_ok'] = '添加门店成功';
 $_LANG['edit_suppliers_ok'] = '编辑门店成功';
