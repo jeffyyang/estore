@@ -27,24 +27,34 @@ if ($_REQUEST['act'] == 'list')
 {
      /* 检查权限 */
     admin_priv('suppliers_manage');
+
     /* 查询 */
+    $is_dis_searchbar = true;
+    $shop_id = intval($_REQUEST['shop_id']);
+    if($shop_id > 0){
 
-    /*商户列表 */
-    $shop_list = get_shop_list();
+        $is_dis_searchbar = false;
 
-    $shop_exists = 1;
-    if (empty($shop_list))
-    {
-        $shop_exists = 0;
     }
-    
-    $smarty->assign('shop_exists', $shop_exists);
-    $smarty->assign('shop_list', $shop_list);
-    unset($shop_list, $shop_exists);
+    if($is_dis_searchbar){
+        /*商户列表 */
+        $shop_list = get_shop_list();
 
-    $cate_list = get_shop_cat_list();
-    $smarty->assign('cat_list', $cate_list);
+        $shop_exists = 1;
+        if (empty($shop_list))
+        {
+            $shop_exists = 0;
+        }
+        
+        $smarty->assign('shop_exists', $shop_exists);
+        $smarty->assign('shop_list', $shop_list);
+        unset($shop_list, $shop_exists);
 
+        $cate_list = get_shop_cat_list();
+        $smarty->assign('cat_list', $cate_list);
+    }
+
+    $smarty->assign('is_dis_searchbar', $is_dis_searchbar);
     $result = suppliers_list();
     /* 模板赋值 */
     $smarty->assign('ur_here', $_LANG['suppliers_list']); // 当前导航
@@ -336,18 +346,6 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
     {
         $suppliers = array();
 
-        /* 取得所有管理员，*/
-        /* 标注哪些是该供货商的('this')，哪些是空闲的('free')，哪些是别的供货商的('other') */
-        /* 排除是办事处的管理员 */
-        $sql = "SELECT user_id, user_name, CASE
-                WHEN suppliers_id = 0 THEN 'free'
-                ELSE 'other' END AS type
-                FROM " . $ecs->table('admin_user') . "
-                WHERE agency_id = 0
-                AND action_list <> 'all'";
-        $suppliers['admin_list'] = $db->getAll($sql);
-
- 
         /* 代理机构名称 */
         $agencies_list_name = agencies_list_name();
         $agencies_exists = 1;
@@ -387,14 +385,36 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
         $city_list = get_regions_list(2,16);
         $smarty->assign('city_list', $city_list);
 
+        /* 取得所有管理员，*/
+        /* 标注哪些是该供货商的('this')，哪些是空闲的('free')，哪些是别的供货商的('other') */
+        /* 排除是办事处的管理员 */
+        $sql = "SELECT user_id, user_name, CASE
+                WHEN suppliers_id = '$id' THEN 'this'
+                WHEN suppliers_id = 0 THEN 'free'
+                ELSE 'other' END AS type
+                FROM " . $ecs->table('admin_user') . "
+                WHERE agency_id = 0
+                AND action_list <> 'all'";
+
+        if($_SESSION['shop_id'] != 0){
+
+        $sql = "SELECT user_id, user_name, CASE
+                WHEN suppliers_id = '$id' THEN 'this'
+                WHEN suppliers_id = 0 THEN 'free'
+                ELSE 'other' END AS type
+                FROM " . $ecs->table('admin_user') . "
+                WHERE agency_id = 0 AND shop_id = ". $_SESSION['shop_id'] ."
+                AND action_list <> 'all'";
+
+        }                
+        $suppliers['admin_list'] = $db->getAll($sql);
+
         $smarty->assign('ur_here', $_LANG['add_suppliers']);
         $smarty->assign('action_link', array('href' => 'suppliers.php?act=list', 'text' => $_LANG['suppliers_list']));
         $smarty->assign('gd', gd_version());
         $smarty->assign('form_action', 'insert');
         $smarty->assign('suppliers', $suppliers);
-
         assign_query_info();
-
         $smarty->display('suppliers_info.htm');
 
     }
@@ -418,19 +438,6 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
         {
             $agencies_exists = 0;
         }
-
-        /*连锁品牌店铺*/
-        $brand_list = get_brand_list();
-        $brands_exists = 1;
-        if (empty($brand_list))
-        {
-            $brands_exists = 0;
-        }
-        
-        $smarty->assign('is_add', true);
-        $smarty->assign('brands_exists', $brands_exists);
-        $smarty->assign('brand_list', $brand_list);
-        unset($brand_list, $brands_exists);
 
         $cate_list = get_shop_cat_list();
         $smarty->assign('cat_list', $cate_list);
@@ -466,7 +473,6 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
             }
         }
 
-
         /* 取得所有管理员，*/
         /* 标注哪些是该供货商的('this')，哪些是空闲的('free')，哪些是别的供货商的('other') */
         /* 排除是办事处的管理员 */
@@ -477,6 +483,18 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
                 FROM " . $ecs->table('admin_user') . "
                 WHERE agency_id = 0
                 AND action_list <> 'all'";
+
+        if($_SESSION['shop_id'] != 0){
+
+        $sql = "SELECT user_id, user_name, CASE
+                WHEN suppliers_id = '$id' THEN 'this'
+                WHEN suppliers_id = 0 THEN 'free'
+                ELSE 'other' END AS type
+                FROM " . $ecs->table('admin_user') . "
+                WHERE agency_id = 0 AND shop_id = ". $_SESSION['shop_id'] ."
+                AND action_list <> 'all'";
+
+        }                
         $suppliers['admin_list'] = $db->getAll($sql);
 
 
@@ -509,7 +527,6 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
         $suppliers['pcat_id']           = !empty($_POST['main_cate_id'])        ? intval($_POST['main_cate_id'])    : 0;
         $suppliers['cat_id']            = !empty($_POST['sub_cate_id'])         ? intval($_POST['sub_cate_id'])     : 0;
         $suppliers['agency_id']         = !empty($_POST['agency_id'])           ? intval($_POST['agency_id'])       : 0;
-        $suppliers['brand_id']          = !empty($_POST['brand_id'])            ? intval($_POST['brand_id'])        : 0;
         $suppliers['shop_price']        = !empty($_POST['shop_price'])          ? intval($_POST['shop_price'])      : 30;
         $suppliers['office_phone']      = !empty($_POST['office_phone'])        ? trim($_POST['office_phone'])      : '';
         $suppliers['mobile_phone']      = !empty($_POST['mobile_phone'])        ? trim($_POST['mobile_phone'])      : '';
@@ -572,6 +589,7 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
 
     if ($_REQUEST['act'] == 'update')
     {
+
         /* 提交值 */
         $suppliers = array('id'   => trim($_POST['id']));
 
@@ -579,7 +597,7 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
                            'suppliers_desc'   => trim($_POST['suppliers_desc'])
                            );
 
-        /* 取得供货商信息 */
+        /* 获取门店信息 */
         $sql = "SELECT * FROM " . $ecs->table('suppliers') . " WHERE suppliers_id = '" . $suppliers['id'] . "'";
         $suppliers['old'] = $db->getRow($sql);
         if (empty($suppliers['old']['suppliers_id']))
@@ -592,15 +610,44 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
                 FROM " . $ecs->table('suppliers') . "
                 WHERE suppliers_name = '" . $suppliers['new']['suppliers_name'] . "'
                 AND suppliers_id <> '" . $suppliers['id'] . "'";
+
+        $row = $db->getRow($sql);        
         if ($db->getOne($sql))
         {
             sys_msg($_LANG['suppliers_name_exist']);
         }
 
-        /* 保存供货商信息 */
+        // 如果上传了图标,并且有旧图，删除旧图
+        if(($_FILES['logo_img']['tmp_name'] != '' && $_FILES['logo_img']['tmp_name'] != 'none')){
+
+            $old_logo_img = $suppliers['old']['logo_img'];
+
+            if ($old_logo_img != '' && is_file('../data/supplierimg/' . $old_logo_img))
+            {
+                @unlink('../data/supplierimg/' . $old_logo_img);
+            }
+
+        $logo_img_name = basename($image->upload_image($_FILES['logo_img'],'supplierimg'));
+        $suppliers['new']['logo_img'] = $logo_img_name;
+
+        }
+        // 如果上传了图标缩略图，并且有旧图，删除旧图
+        if(($_FILES['logo_thumb']['tmp_name'] != '' && $_FILES['logo_thumb']['tmp_name'] != 'none')){
+
+            $old_logo_thumb = $suppliers['old']['logo_thumb'];
+           if ($old_logo_thumb != '' && is_file('../data/supplierimg/' . $old_logo_thumb))
+            {
+                @unlink('../data/supplierimg/' . $old_logo_thumb);
+            }
+
+            $logo_thumb_name = basename($image->upload_image($_FILES['logo_thumb'],'supplierimg'));
+            $suppliers['new']['logo_thumb'] = $logo_thumb_name;        
+        }
+
+        /* 保存门店信息 */
         $db->autoExecute($ecs->table('suppliers'), $suppliers['new'], 'UPDATE', "suppliers_id = '" . $suppliers['id'] . "'");
 
-        /* 清空供货商的管理员 */
+        /* 清空门店的管理员 */
         $sql = "UPDATE " . $ecs->table('admin_user') . " SET suppliers_id = 0, action_list = '" . SUPPLIERS_ACTION_LIST . "' WHERE suppliers_id = '" . $suppliers['id'] . "'";
         $db->query($sql);
 
@@ -624,7 +671,67 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
 
 }
 /*------------------------------------------------------ */
+//-- 删除图片
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'drop_image')
+{
+    check_authz_json('suppliers_manage');
+
+    $img_id = empty($_REQUEST['img_id']) ? 0 : intval($_REQUEST['img_id']);
+
+    /* 删除图片文件 */
+    $sql = "SELECT img_url, thumb_url, img_original " .
+            " FROM " . $GLOBALS['ecs']->table('supplier_gallery') .
+            " WHERE img_id = '$img_id'";
+    $row = $GLOBALS['db']->getRow($sql);
+
+    if ($row['img_url'] != '' && is_file('../' . $row['img_url']))
+    {
+        @unlink('../' . $row['img_url']);
+    }
+    if ($row['thumb_url'] != '' && is_file('../' . $row['thumb_url']))
+    {
+        @unlink('../' . $row['thumb_url']);
+    }
+    if ($row['img_original'] != '' && is_file('../' . $row['img_original']))
+    {
+        @unlink('../' . $row['img_original']);
+    }
+
+    /* 删除数据 */
+    $sql = "DELETE FROM " . $GLOBALS['ecs']->table('supplier_gallery') . " WHERE img_id = '$img_id' LIMIT 1";
+    $GLOBALS['db']->query($sql);
+
+    clear_cache_files();
+    make_json_result($img_id);
+}
+/*------------------------------------------------------ */
 //-- 显示图片
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'show_logo')
+{
+
+    if (isset($GLOBALS['shop_id']) && $GLOBALS['shop_id'] > 0)
+    {
+        $img_url = $_GET['img_url'];
+    }
+    else
+    {
+        if (strpos($_GET['img_url'], 'http://') === 0)
+        {
+            $img_url = $_GET['img_url'];
+        }
+        else
+        {
+            $img_url = '../data/supplierimg/' . $_GET['img_url'];
+        }
+    }
+    $smarty->assign('img_url', $img_url);
+    $smarty->display('goods_show_image.htm');
+}
+
+/*------------------------------------------------------ */
+//-- 显示相册图片
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'show_image')
 {
@@ -641,13 +748,12 @@ elseif ($_REQUEST['act'] == 'show_image')
         }
         else
         {
-            $img_url = '../data/' . $_GET['img_url'];
+            $img_url = '../' . $_GET['img_url'];
         }
     }
     $smarty->assign('img_url', $img_url);
     $smarty->display('goods_show_image.htm');
 }
-
 
 /**
  * 获得指定商品的相册
@@ -806,8 +912,8 @@ function suppliers_list()
 
 
 /**
- * 保存某商户的相册图片
- * @param   int     $supplier_id   商户标识
+ * 保存某门店的相册图片
+ * @param   int     $supplier_id   门店标识
  * @param   array   $image_files
  * @param   array   $image_descs
  * @return  void
@@ -999,157 +1105,6 @@ function move_image_file($source, $dest)
         return true;
     }
     return false;
-}
-
-
-/**
- * 获得指定分类下的商品
- *
- * @access  public
- * @param   integer     $cat_id     分类ID
- * @param   integer     $num        数量
- * @param   string      $from       来自web/wap的调用
- * @param   string      $order_rule 指定商品排序规则
- * @return  array
- */
-function assign_cat_goods($cat_id, $num = 0, $from = 'web', $order_rule = '')
-{
-    $children = get_children($cat_id);
-
-    $sql = 'SELECT g.goods_id, g.goods_name, g.market_price, g.shop_price AS org_price, ' .
-                "IFNULL(mp.user_price, g.shop_price * '$_SESSION[discount]') AS shop_price, ".
-               'g.promote_price, promote_start_date, promote_end_date, g.goods_brief, g.goods_thumb, g.goods_img ' .
-            "FROM " . $GLOBALS['ecs']->table('goods') . ' AS g '.
-            "LEFT JOIN " . $GLOBALS['ecs']->table('member_price') . " AS mp ".
-                    "ON mp.goods_id = g.goods_id AND mp.user_rank = '$_SESSION[user_rank]' ".
-            'WHERE g.is_on_sale = 1 AND g.is_alone_sale = 1 AND '.
-                'g.is_delete = 0 AND (' . $children . 'OR ' . get_extension_goods($children) . ') ';
-
-    $order_rule = empty($order_rule) ? 'ORDER BY g.sort_order, g.goods_id DESC' : $order_rule;
-    $sql .= $order_rule;
-    if ($num > 0)
-    {
-        $sql .= ' LIMIT ' . $num;
-    }
-    $res = $GLOBALS['db']->getAll($sql);
-
-    $goods = array();
-    foreach ($res AS $idx => $row)
-    {
-        if ($row['promote_price'] > 0)
-        {
-            $promote_price = bargain_price($row['promote_price'], $row['promote_start_date'], $row['promote_end_date']);
-            $goods[$idx]['promote_price'] = $promote_price > 0 ? price_format($promote_price) : '';
-        }
-        else
-        {
-            $goods[$idx]['promote_price'] = '';
-        }
-
-        $goods[$idx]['id']           = $row['goods_id'];
-        $goods[$idx]['name']         = $row['goods_name'];
-        $goods[$idx]['brief']        = $row['goods_brief'];
-        $goods[$idx]['market_price'] = price_format($row['market_price']);
-        $goods[$idx]['short_name']   = $GLOBALS['_CFG']['goods_name_length'] > 0 ?
-                                        sub_str($row['goods_name'], $GLOBALS['_CFG']['goods_name_length']) : $row['goods_name'];
-        $goods[$idx]['shop_price']   = price_format($row['shop_price']);
-        $goods[$idx]['thumb']        = get_image_path($row['goods_id'], $row['goods_thumb'], true);
-        $goods[$idx]['goods_img']    = get_image_path($row['goods_id'], $row['goods_img']);
-        $goods[$idx]['url']          = build_uri('goods', array('gid' => $row['goods_id']), $row['goods_name']);
-    }
-
-    if ($from == 'web')
-    {
-        $GLOBALS['smarty']->assign('cat_goods_' . $cat_id, $goods);
-    }
-    elseif ($from == 'wap')
-    {
-        $cat['goods'] = $goods;
-    }
-
-    /* 分类信息 */
-    $sql = 'SELECT cat_name FROM ' . $GLOBALS['ecs']->table('category') . " WHERE cat_id = '$cat_id'";
-    $cat['name'] = $GLOBALS['db']->getOne($sql);
-    $cat['url']  = build_uri('category', array('cid' => $cat_id), $cat['name']);
-    $cat['id']   = $cat_id;
-
-    return $cat;
-}
-
-/**
- * 获得指定的品牌下的商品
- *
- * @access  public
- * @param   integer     $brand_id       品牌的ID
- * @param   integer     $num            数量
- * @param   integer     $cat_id         分类编号
- * @param   string      $order_rule     指定商品排序规则
- * @return  void
- */
-function assign_brand_goods($brand_id, $num = 0, $cat_id = 0,$order_rule = '')
-{
-    $sql =  'SELECT g.goods_id, g.goods_name, g.market_price, g.shop_price AS org_price, ' .
-                "IFNULL(mp.user_price, g.shop_price * '$_SESSION[discount]') AS shop_price, ".
-                'g.promote_price, g.promote_start_date, g.promote_end_date, g.goods_brief, g.goods_thumb, g.goods_img ' .
-            'FROM ' . $GLOBALS['ecs']->table('goods') . ' AS g ' .
-            "LEFT JOIN " . $GLOBALS['ecs']->table('member_price') . " AS mp ".
-                    "ON mp.goods_id = g.goods_id AND mp.user_rank = '$_SESSION[user_rank]' ".
-            "WHERE g.is_on_sale = 1 AND g.is_alone_sale = 1 AND g.is_delete = 0 AND g.brand_id = '$brand_id'";
-
-    if ($cat_id > 0)
-    {
-        $sql .= get_children($cat_id);
-    }
-
-    $order_rule = empty($order_rule) ? ' ORDER BY g.sort_order, g.goods_id DESC' : $order_rule;
-    $sql .= $order_rule;
-    if ($num > 0)
-    {
-        $res = $GLOBALS['db']->selectLimit($sql, $num);
-    }
-    else
-    {
-        $res = $GLOBALS['db']->query($sql);
-    }
-
-    $idx = 0;
-    $goods = array();
-    while ($row = $GLOBALS['db']->fetchRow($res))
-    {
-        if ($row['promote_price'] > 0)
-        {
-            $promote_price = bargain_price($row['promote_price'], $row['promote_start_date'], $row['promote_end_date']);
-        }
-        else
-        {
-            $promote_price = 0;
-        }
-
-        $goods[$idx]['id']            = $row['goods_id'];
-        $goods[$idx]['name']          = $row['goods_name'];
-        $goods[$idx]['short_name']    = $GLOBALS['_CFG']['goods_name_length'] > 0 ?
-            sub_str($row['goods_name'], $GLOBALS['_CFG']['goods_name_length']) : $row['goods_name'];
-        $goods[$idx]['market_price']  = price_format($row['market_price']);
-        $goods[$idx]['shop_price']    = price_format($row['shop_price']);
-        $goods[$idx]['promote_price'] = $promote_price > 0 ? price_format($promote_price) : '';
-        $goods[$idx]['brief']         = $row['goods_brief'];
-        $goods[$idx]['thumb']         = get_image_path($row['goods_id'], $row['goods_thumb'], true);
-        $goods[$idx]['goods_img']     = get_image_path($row['goods_id'], $row['goods_img']);
-        $goods[$idx]['url']           = build_uri('goods', array('gid' => $row['goods_id']), $row['goods_name']);
-
-        $idx++;
-    }
-
-    /* 分类信息 */
-    $sql = 'SELECT brand_name FROM ' . $GLOBALS['ecs']->table('brand') . " WHERE brand_id = '$brand_id'";
-
-    $brand['id']   = $brand_id;
-    $brand['name'] = $GLOBALS['db']->getOne($sql);
-    $brand['url']  = build_uri('brand', array('bid' => $brand_id), $brand['name']);
-
-    $brand_goods = array('brand' => $brand, 'goods' => $goods);
-
-    return $brand_goods;
 }
 
 ?>

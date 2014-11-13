@@ -4,7 +4,9 @@
 {include file="pageheader.htm"}
 {insert_scripts files="../js/utils.js,listtable.js"}
 <!-- 门店搜索 -->
+{if $is_dis_searchbar}
 {include file="suppliers_search.htm"}
+{/if}
 <!-- 门店列表 -->
 <form method="post" action="" name="listForm" onsubmit="return confirm(batch_drop_confirm);">
 <div class="list-div" id="listDiv">

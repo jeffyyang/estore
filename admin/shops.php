@@ -125,29 +125,34 @@ elseif ($_REQUEST['act'] == 'insert')
 
     admin_log($_POST['shop_name'],'add','supplier');
     /* 转入权限分配列表 */
-  
 
     /* 判断管理员是否已经存在 */
-    // if (!empty($_POST['user_name']))
-    // {
-    //     $is_only = $exc->is_only('user_name', stripslashes($_POST['user_name']));
+    if (!empty($_POST['user_name']))
+    {
+        $sql = "SELECT *
+                FROM " . $ecs->table('admin_user') . "
+                WHERE user_name = '" . stripslashes($_POST['user_name']) . "' ";
 
-    //     if (!$is_only)
-    //     {
-    //         sys_msg(sprintf($_LANG['user_name_exist'], stripslashes($_POST['user_name'])), 1);
-    //     }
-    // }
+
+        if ($db->getOne($sql))
+        {
+             sys_msg(sprintf($_LANG['user_name_exist'], stripslashes($_POST['user_name'])), 1);
+        }
+
+    }
 
     /* Email地址是否有重复 */
-    // if (!empty($_POST['email']))
-    // {
-    //     $is_only = $exc->is_only('email', stripslashes($_POST['email']));
+    if (!empty($_POST['email']))
+    {
+        $sql = "SELECT *
+                FROM " . $ecs->table('admin_user') . "
+                WHERE email = '" . stripslashes($_POST['email']) . "' ";
 
-    //     if (!$is_only)
-    //     {
-    //         sys_msg(sprintf($_LANG['email_exist'], stripslashes($_POST['email'])), 1);
-    //     }
-    // }
+        if ($db->getOne($sql))
+        {
+            sys_msg(sprintf($_LANG['email_exist'], stripslashes($_POST['email'])), 1);
+        }
+    }
 
     /* 获取添加日期及密码 */
     $add_time = gmtime();
@@ -162,11 +167,12 @@ elseif ($_REQUEST['act'] == 'insert')
         $role_id = $_POST['select_role'];
     }
 
-        $sql = "SELECT nav_list FROM " . $ecs->table('admin_user') . " WHERE action_list = 'all'";
-        $row = $db->getRow($sql);
+
+    $sql = "SELECT nav_list FROM " . $ecs->table('admin_user') . " WHERE action_list = 'all'";
+    $row = $db->getRow($sql);
   
-    $sql = "INSERT INTO ".$ecs->table('admin_user')." (user_name, email, password, add_time, nav_list, action_list, shop_id, role_id) ".
-           "VALUES ('".trim($_POST['user_name'])."', '".trim($_POST['email'])."', '$password', '$add_time', '$row[nav_list]', '$action_list', '$shop_id', '$role_id')";
+    $sql = "INSERT INTO ".$ecs->table('admin_user')." (user_name, email, password, add_time, nav_list, action_list, suppliers_id, role_id) ".
+           "VALUES ('".trim($_POST['user_name'])."', '".trim($_POST['email'])."', '$password', '$add_time', '$row[nav_list]', '$action_list', '$suppliers_id', '$role_id')";
 
 
     $db->query($sql);

@@ -341,9 +341,7 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
                 AND action_list <> 'all'";
         $suppliers['admin_list'] = $db->getAll($sql);
 
- 
         /* 代理机构名称 */
-
         /*        
         $agencies_list_name = agencies_list_name();
         $agencies_exists = 1;
@@ -587,7 +585,67 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
 
 }
 /*------------------------------------------------------ */
+//-- 删除图片
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'drop_image')
+{
+    check_authz_json('suppliers_manage');
+
+    $img_id = empty($_REQUEST['img_id']) ? 0 : intval($_REQUEST['img_id']);
+
+    /* 删除图片文件 */
+    $sql = "SELECT img_url, thumb_url, img_original " .
+            " FROM " . $GLOBALS['ecs']->table('supplier_gallery') .
+            " WHERE img_id = '$img_id'";
+    $row = $GLOBALS['db']->getRow($sql);
+
+    if ($row['img_url'] != '' && is_file('../' . $row['img_url']))
+    {
+        @unlink('../' . $row['img_url']);
+    }
+    if ($row['thumb_url'] != '' && is_file('../' . $row['thumb_url']))
+    {
+        @unlink('../' . $row['thumb_url']);
+    }
+    if ($row['img_original'] != '' && is_file('../' . $row['img_original']))
+    {
+        @unlink('../' . $row['img_original']);
+    }
+
+    /* 删除数据 */
+    $sql = "DELETE FROM " . $GLOBALS['ecs']->table('supplier_gallery') . " WHERE img_id = '$img_id' LIMIT 1";
+    $GLOBALS['db']->query($sql);
+
+    clear_cache_files();
+    make_json_result($img_id);
+}
+/*------------------------------------------------------ */
 //-- 显示图片
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'show_logo')
+{
+
+    if (isset($GLOBALS['shop_id']) && $GLOBALS['shop_id'] > 0)
+    {
+        $img_url = $_GET['img_url'];
+    }
+    else
+    {
+        if (strpos($_GET['img_url'], 'http://') === 0)
+        {
+            $img_url = $_GET['img_url'];
+        }
+        else
+        {
+            $img_url = '../data/supplierimg/' . $_GET['img_url'];
+        }
+    }
+    $smarty->assign('img_url', $img_url);
+    $smarty->display('goods_show_image.htm');
+}
+
+/*------------------------------------------------------ */
+//-- 显示相册图片
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'show_image')
 {
@@ -604,7 +662,7 @@ elseif ($_REQUEST['act'] == 'show_image')
         }
         else
         {
-            $img_url = '../data/' . $_GET['img_url'];
+            $img_url = '../' . $_GET['img_url'];
         }
     }
     $smarty->assign('img_url', $img_url);
