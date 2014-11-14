@@ -2816,7 +2816,7 @@ function excode_list()
         $filter['start_time'] = empty($_REQUEST['start_time']) ? '' : (strpos($_REQUEST['start_time'], '-') > 0 ?  local_strtotime($_REQUEST['start_time']) : $_REQUEST['start_time']);
         $filter['end_time'] = empty($_REQUEST['end_time']) ? '' : (strpos($_REQUEST['end_time'], '-') > 0 ?  local_strtotime($_REQUEST['end_time']) : $_REQUEST['end_time']);
 
-        $where = 'WHERE 1 ';
+        $where = 'WHERE 1 AND is_real = 0 ';
 
         // if ($filter['extension_code'])
         // {
@@ -2916,10 +2916,10 @@ function excode_list()
                 // " ORDER BY $filter[sort_by] $filter[sort_order] ".
                 " LIMIT " . ($filter['page'] - 1) * $filter['page_size'] . ",$filter[page_size]";
 
-        foreach (array('order_sn', 'consignee', 'email', 'address', 'zipcode', 'tel', 'user_name') AS $val)
-        {
-            $filter[$val] = stripslashes($filter[$val]);
-        }
+        // foreach (array('order_sn', 'consignee', 'email', 'address', 'zipcode', 'tel', 'user_name') AS $val)
+        // {
+        //     $filter[$val] = stripslashes($filter[$val]);
+        // }
         set_filter($filter, $sql);
     }
     else
