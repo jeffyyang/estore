@@ -31,11 +31,11 @@
   <tr>
     <td valign="top" nowrap="nowrap"><input type="checkbox" name="checkboxes" value="{$o.rec_id}" /><a href="excode.php?act=info&order_id={$excode.rec_id}" id="order_{$okey}">{$excode.rec_id}</td>
     <td>{$excode.excode_code|escape}</td>
-<!--     <td align="left" valign="top"><a href="mailto:{$order.email}"> {$order.consignee|escape}</a>{if $order.tel} [TEL: {$order.tel|escape}]{/if} <br />{$order.address|escape}</td> -->
     <td>{$excode.goods_name|escape}</td>
-    <td align="center" valign="top" nowrap="nowrap">{$lang.os[$order.order_status]},{$lang.ps[$order.pay_status]},{$lang.ss[$order.shipping_status]}</td>
+    <td align="center" valign="top" nowrap="nowrap">{$excode.order_sn|escape}</td>
+    <td align="center" valign="top" nowrap="nowrap">{$excode.add_time|escape}</td>
     <td align="center" valign="top"  nowrap="nowrap">
-     <a href="excode.php?act=info&order_id={$excode.order_id}">{$lang.detail}</a>
+     <a href="order.php?act=info&order_id={$excode.order_id}">{$lang.detail}</a>
      {if $order.can_remove}
      <br /><a href="javascript:;" onclick="listTable.remove({$excode.rec_id}, remove_confirm, 'remove_order')">{$lang.remove}</a>
      {/if}
