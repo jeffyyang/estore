@@ -27,26 +27,11 @@ $_LANG['cd'][CD_OVERDUE]   = '已过期';
 
 
 
-
-/* 订单状态 */
-$_LANG['os'][OS_UNCONFIRMED] = '未确认';
-$_LANG['os'][OS_CONFIRMED] = '已确认';
-$_LANG['os'][OS_CANCELED] = '<font color="red"> 取消</font>';
-$_LANG['os'][OS_INVALID] = '<font color="red">无效</font>';
-$_LANG['os'][OS_RETURNED] = '<font color="red">退货</font>';
-$_LANG['os'][OS_SPLITED] = '已分单';
-$_LANG['os'][OS_SPLITING_PART] = '部分分单';
-
 /* 兑换码列表 */
-$_LANG['order_amount'] = '应付金额';
-$_LANG['total_fee'] = '总金额';
-$_LANG['shipping_name'] = '配送方式';
-$_LANG['pay_name'] = '支付方式';
-$_LANG['address'] = '地址';
-$_LANG['order_time'] = '下单时间';
-$_LANG['detail'] = '查看';
-$_LANG['phone'] = '电话';
-$_LANG['group_buy'] = '（团购）';
+$_LANG['rec_id'] = '记录号';
+$_LANG['order_sn']   = '订单号';
+$_LANG['goods_name'] = '商品名称';
+$_LANG['order_time'] = '订购时间';
 $_LANG['error_get_goods_info'] = '获取订单商品信息错误';
 $_LANG['exchange_goods'] = '（积分兑换）';
 
