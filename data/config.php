@@ -1,8 +1,8 @@
 <?php
 // database host
 #$db_host   = "localhost:3306";
-#$db_host   = "61.154.127.132:3306";
-$db_host   = "10.66.120.20:3306";
+$db_host   = "61.154.127.132:3306";
+#$db_host   = "10.66.120.20:3306";
 // database name
 $db_name   = "wxshop";
 
@@ -39,5 +39,5 @@ define('AUTH_KEY', 'this is a key');
 
 define('OLD_AUTH_KEY', '');
 
-define('API_TIME', '2014-11-07 03:01:05');
+define('API_TIME', '2014-11-14 08:40:07');
 ?>
