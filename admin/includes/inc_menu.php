@@ -59,14 +59,14 @@ $modules['03_promotion']['15_exchange_goods']       = 'exchange_goods.php?act=li
 // 订单管理
 $modules['04_order']['02_order_list']               = 'order.php?act=list';
 $modules['04_order']['03_order_query']              = 'order.php?act=order_query';
-$modules['04_order']['04_merge_order']              = 'order.php?act=merge';
+// $modules['04_order']['04_merge_order']              = 'order.php?act=merge'; 
 $modules['04_order']['05_edit_order_print']         = 'order.php?act=templates';
 $modules['04_order']['06_undispose_booking']        = 'goods_booking.php?act=list_all';
 //$modules['04_order']['07_repay_application']        = 'repay.php?act=list_all';
 $modules['04_order']['08_add_order']                = 'order.php?act=add';
 $modules['04_order']['09_delivery_order']           = 'order.php?act=delivery_list';
 $modules['04_order']['10_back_order']               = 'order.php?act=back_list';
-
+$modules['04_order']['11_excode_verify']            = 'excode.php?act=list';
 // 广告管理
 $modules['05_banner']['ad_position']                = 'ad_position.php?act=list';
 $modules['05_banner']['ad_list']                    = 'ads.php?act=list';
@@ -115,7 +115,7 @@ $modules['10_priv_admin']['agency_list']            = 'agency.php?act=list';    
 // $modules['11_system']['02_payment_list']            = 'payment.php?act=list';
 // $modules['11_system']['03_shipping_list']           = 'shipping.php?act=list';
 // $modules['11_system']['04_mail_settings']           = 'shop_config.php?act=mail_settings';
-$modules['11_system']['05_area_list']               = 'area_manage.php?act=list';
+// $modules['11_system']['05_area_list']               = 'area_manage.php?act=list';
 //$modules['11_system']['06_plugins']                 = 'plugins.php?act=list';
 $modules['11_system']['07_cron_schcron']            = 'cron.php?act=list';
 // $modules['11_system']['08_friendlink_list']         = 'friend_link.php?act=list';
