@@ -1383,74 +1383,8 @@ elseif ($_REQUEST['act'] == 'operate_post')
             }
         }
     }
-    /* 付款 */
-    elseif ('pay' == $operation)
-    {
-        /* 检查权限 */
-        admin_priv('order_ps_edit');
 
-        /* 标记订单为已确认、已付款，更新付款时间和已支付金额，如果是货到付款，同时修改订单为“收货确认” */
-        if ($order['order_status'] != OS_CONFIRMED)
-        {
-            $arr['order_status']    = OS_CONFIRMED;
-            $arr['confirm_time']    = gmtime();
-        }
-        $arr['pay_status']  = PS_PAYED;
-        $arr['pay_time']    = gmtime();
-        $arr['money_paid']  = $order['money_paid'] + $order['order_amount'];
-        $arr['order_amount']= 0;
-        $payment = payment_info($order['pay_id']);
-        if ($payment['is_cod'])
-        {
-            $arr['shipping_status'] = SS_RECEIVED;
-            $order['shipping_status'] = SS_RECEIVED;
-        }
-        update_order($order_id, $arr);
 
-        /* 记录log */
-        order_action($order['order_sn'], OS_CONFIRMED, $order['shipping_status'], PS_PAYED, $action_note);
-    }
-    /* 设为未付款 */
-    elseif ('unpay' == $operation)
-    {
-        /* 检查权限 */
-        admin_priv('order_ps_edit');
-
-        /* 标记订单为未付款，更新付款时间和已付款金额 */
-        $arr = array(
-            'pay_status'    => PS_UNPAYED,
-            'pay_time'      => 0,
-            'money_paid'    => 0,
-            'order_amount'  => $order['money_paid']
-        );
-        update_order($order_id, $arr);
-
-        /* todo 处理退款 */
-        $refund_type = @$_REQUEST['refund'];
-        $refund_note = @$_REQUEST['refund_note'];
-        order_refund($order, $refund_type, $refund_note);
-
-        /* 记录log */
-        order_action($order['order_sn'], OS_CONFIRMED, SS_UNSHIPPED, PS_UNPAYED, $action_note);
-    }
-    /* 配货 */
-    elseif ('prepare' == $operation)
-    {
-        /* 标记订单为已确认，配货中 */
-        if ($order['order_status'] != OS_CONFIRMED)
-        {
-            $arr['order_status']    = OS_CONFIRMED;
-            $arr['confirm_time']    = gmtime();
-        }
-        $arr['shipping_status']     = SS_PREPARING;
-        update_order($order_id, $arr);
-
-        /* 记录log */
-        order_action($order['order_sn'], OS_CONFIRMED, SS_PREPARING, $order['pay_status'], $action_note);
-
-        /* 清除缓存 */
-        clear_cache_files();
-    }
     /* 分单确认 */
     elseif ('split' == $operation)
     {
@@ -2147,34 +2081,6 @@ elseif ($_REQUEST['act'] == 'json')
 }
 
 /*------------------------------------------------------ */
-//-- 合并订单
-/*------------------------------------------------------ */
-elseif ($_REQUEST['act'] == 'ajax_merge_order')
-{
-    /* 检查权限 */
-    admin_priv('order_os_edit');
-
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON();
-
-    $from_order_sn = empty($_POST['from_order_sn']) ? '' : json_str_iconv(substr($_POST['from_order_sn'], 1));
-    $to_order_sn = empty($_POST['to_order_sn']) ? '' : json_str_iconv(substr($_POST['to_order_sn'], 1));
-
-    $m_result = merge_order($from_order_sn, $to_order_sn);
-    $result = array('error'=>0,  'content'=>'');
-    if ($m_result === true)
-    {
-        $result['message'] = $GLOBALS['_LANG']['act_ok'];
-    }
-    else
-    {
-        $result['error'] = 1;
-        $result['message'] = $m_result;
-    }
-    die($json->encode($result));
-}
-
-/*------------------------------------------------------ */
 //-- 删除订单
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'remove_order')
@@ -2215,39 +2121,7 @@ elseif ($_REQUEST['act'] == 'remove_order')
     }
 }
 
-/*------------------------------------------------------ */
-//-- 根据关键字和id搜索用户
-/*------------------------------------------------------ */
-elseif ($_REQUEST['act'] == 'search_users')
-{
-    include_once(ROOT_PATH . 'includes/cls_json.php');
-    $json = new JSON();
 
-    $id_name = empty($_GET['id_name']) ? '' : json_str_iconv(trim($_GET['id_name']));
-
-    $result = array('error'=>0, 'message'=>'', 'content'=>'');
-    if ($id_name != '')
-    {
-        $sql = "SELECT user_id, user_name FROM " . $GLOBALS['ecs']->table('users') .
-                " WHERE user_id LIKE '%" . mysql_like_quote($id_name) . "%'" .
-                " OR user_name LIKE '%" . mysql_like_quote($id_name) . "%'" .
-                " LIMIT 20";
-        $res = $GLOBALS['db']->query($sql);
-
-         $result['userlist'] = array();
-        while ($row = $GLOBALS['db']->fetchRow($res))
-        {
-             $result['userlist'][] = array('user_id' => $row['user_id'], 'user_name' => $row['user_name']);
-        }
-    }
-    else
-    {
-        $result['error'] = 1;
-        $result['message'] = 'NO KEYWORDS!';
-    }
-
-    die($json->encode($result));
-}
 
 /*------------------------------------------------------ */
 //-- 根据关键字搜索商品
@@ -2804,19 +2678,14 @@ function excode_list()
     if ($result === false)
     {
         /* 过滤信息 */
-        $filter['extension_code'] = empty($_REQUEST['code']) ? '' : trim($_REQUEST['code']);
         if (!empty($_GET['is_ajax']) && $_GET['is_ajax'] == 1)
         {
-            $_REQUEST['consignee'] = json_str_iconv($_REQUEST['consignee']);
-            //$_REQUEST['address'] = json_str_iconv($_REQUEST['address']);
+            $filter['extension_code'] = empty($_REQUEST['code']) ? '' : trim($_REQUEST['code']);
         }
 
-        $filter['sort_order'] = empty($_REQUEST['sort_order']) ? 'DESC' : trim($_REQUEST['sort_order']);
+        $filter['sort_by'] = empty($_REQUEST['sort_by']) ? 'DESC' : trim($_REQUEST['sort_by']);
 
-        $filter['start_time'] = empty($_REQUEST['start_time']) ? '' : (strpos($_REQUEST['start_time'], '-') > 0 ?  local_strtotime($_REQUEST['start_time']) : $_REQUEST['start_time']);
-        $filter['end_time'] = empty($_REQUEST['end_time']) ? '' : (strpos($_REQUEST['end_time'], '-') > 0 ?  local_strtotime($_REQUEST['end_time']) : $_REQUEST['end_time']);
-
-        $where = 'WHERE 1 AND is_real = 0 ';
+        $where = 'WHERE og.order_id = oi.order_id AND og.is_real = 0 ';
 
         // if ($filter['extension_code'])
         // {
@@ -2824,52 +2693,14 @@ function excode_list()
         // }
         if ($filter['extension_code'])
         {
-            $where .= " AND extension_code  = '$filter[extension_code]'";
-        }        
-        if ($filter['is_gift'] != -1)
-        {
-            $where .= " AND is_gift  = '$filter[is_gift]'";
-        }
-
-        //综合状态
-        // switch($filter['composite_status'])
+            $where .= " AND og.extension_code  = '$filter[extension_code]'";
+        }   
+        // if ($filter['is_gift'] != -1)
         // {
-        //     case CS_AWAIT_PAY :
-        //         $where .= order_query_sql('await_pay');
-        //         break;
-
-        //     case CS_AWAIT_SHIP :
-        //         $where .= order_query_sql('await_ship');
-        //         break;
-
-        //     case CS_FINISHED :
-        //         $where .= order_query_sql('finished');
-        //         break;
-
-        //     case PS_PAYING :
-        //         if ($filter['composite_status'] != -1)
-        //         {
-        //             $where .= " AND o.pay_status = '$filter[composite_status]' ";
-        //         }
-        //         break;
-        //     case OS_SHIPPED_PART :
-        //         if ($filter['composite_status'] != -1)
-        //         {
-        //             $where .= " AND o.shipping_status  = '$filter[composite_status]'-2 ";
-        //         }
-        //         break;
-        //     default:
-        //         if ($filter['composite_status'] != -1)
-        //         {
-        //             $where .= " AND o.order_status = '$filter[composite_status]' ";
-        //         }
+        //     $where .= " AND og.is_gift  = '$filter[is_gift]'";
         // }
 
-        // /* 团购订单 */
-        // if ($filter['group_buy_id'])
-        // {
-        //     $where .= " AND o.extension_code = 'group_buy' AND o.extension_id = '$filter[group_buy_id]' ";
-        // }
+
 
         /* 如果管理员属于某个办事处，只列出这个办事处管辖的订单 */
         // $sql = "SELECT agency_id FROM " . $GLOBALS['ecs']->table('admin_user') . " WHERE user_id = '$_SESSION[admin_id]'";
@@ -2896,24 +2727,19 @@ function excode_list()
         }
 
         /* 记录总数 */
-        if ($filter['user_name'])
-        {
-            $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('order_goods') . " AS o ,".
-                   $GLOBALS['ecs']->table('users') . " AS u " . $where;
-        }
-        else
-        {
-            $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('order_goods') . " AS o ". $where;
-        }
+
+        $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('order_goods') . " AS og ,".
+               $GLOBALS['ecs']->table('order_info') . " AS oi " . $where;
+
 
         $filter['record_count']   = $GLOBALS['db']->getOne($sql);
         $filter['page_count']     = $filter['record_count'] > 0 ? ceil($filter['record_count'] / $filter['page_size']) : 1;
 
         /* 查询 */
-        $sql = "SELECT order_id, goods_id, extension_code, is_real, is_gift" .
-                " FROM " . $GLOBALS['ecs']->table('order_goods')
-                . $where .
-                // " ORDER BY $filter[sort_by] $filter[sort_order] ".
+        $sql = "SELECT og.rec_id, og.goods_id, og.extension_code, og.is_real, og.is_gift, oi.add_time" .
+                " FROM " . $GLOBALS['ecs']->table('order_goods'). " AS og ,".
+                 $GLOBALS['ecs']->table('order_info') . " AS oi " . $where .
+                " ORDER BY oi.add_time $filter[sort_by] ".
                 " LIMIT " . ($filter['page'] - 1) * $filter['page_size'] . ",$filter[page_size]";
 
         // foreach (array('order_sn', 'consignee', 'email', 'address', 'zipcode', 'tel', 'user_name') AS $val)

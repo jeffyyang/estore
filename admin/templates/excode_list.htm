@@ -21,19 +21,15 @@
       <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" /><a href="javascript:listTable.sort('order_sn', 'DESC'); ">{$lang.order_sn}</a>{$sort_order_sn}
     </th>
     <th><a href="javascript:listTable.sort('add_time', 'DESC'); ">{$lang.order_time}</a>{$sort_order_time}</th>
-    <th><a href="javascript:listTable.sort('consignee', 'DESC'); ">{$lang.consignee}</a>{$sort_consignee}</th>
-    <th><a href="javascript:listTable.sort('total_fee', 'DESC'); ">{$lang.total_fee}</a>{$sort_total_fee}</th>
-    <th><a href="javascript:listTable.sort('order_amount', 'DESC'); ">{$lang.order_amount}</a>{$sort_order_amount}</th>
     <th>{$lang.all_status}</th>
     <th>{$lang.handler}</th>
   <tr>
-  {foreach from=$order_list item=order key=okey}
+  {foreach from=$excode_list item=excode key=okey}
   <tr>
-    <td valign="top" nowrap="nowrap"><input type="checkbox" name="checkboxes" value="{$order.order_sn}" /><a href="order.php?act=info&order_id={$order.order_id}" id="order_{$okey}">{$order.order_sn}{if $order.extension_code eq "group_buy"}<br /><div align="center">{$lang.group_buy}</div>{elseif $order.extension_code eq "exchange_goods"}<br /><div align="center">{$lang.exchange_goods}</div>{/if}</a></td>
+    <td valign="top" nowrap="nowrap"><input type="checkbox" name="checkboxes" value="{$o.order_sn}" /><a href="order.php?act=info&order_id={$order.order_id}" id="order_{$okey}">{$order.order_sn}{if $order.extension_code eq "group_buy"}<br /><div align="center">{$lang.group_buy}</div>{elseif $order.extension_code eq "exchange_goods"}<br /><div align="center">{$lang.exchange_goods}</div>{/if}</a></td>
     <td>{$order.buyer|escape}<br />{$order.short_order_time}</td>
     <td align="left" valign="top"><a href="mailto:{$order.email}"> {$order.consignee|escape}</a>{if $order.tel} [TEL: {$order.tel|escape}]{/if} <br />{$order.address|escape}</td>
-    <td align="right" valign="top" nowrap="nowrap">{$order.formated_total_fee}</td>
-    <td align="right" valign="top" nowrap="nowrap">{$order.formated_order_amount}</td>
+
     <td align="center" valign="top" nowrap="nowrap">{$lang.os[$order.order_status]},{$lang.ps[$order.pay_status]},{$lang.ss[$order.shipping_status]}</td>
     <td align="center" valign="top"  nowrap="nowrap">
      <a href="order.php?act=info&order_id={$order.order_id}">{$lang.detail}</a>
