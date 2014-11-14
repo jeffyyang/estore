@@ -2770,7 +2770,7 @@ function excode_list()
     //         $row[$key]['can_remove'] = 0;
     //     }
     // }
-    $arr = array('oxcodes' => $row, 'filter' => $filter, 'page_count' => $filter['page_count'], 'record_count' => $filter['record_count']);
+    $arr = array('excodes' => $row, 'filter' => $filter, 'page_count' => $filter['page_count'], 'record_count' => $filter['record_count']);
 
     return $arr;
 }
