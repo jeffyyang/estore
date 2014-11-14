@@ -15,7 +15,7 @@
 
 $_LANG['app_name'] = '商城后台管理';
 $_LANG['cp_home'] = '管理中心';
-$_LANG['copyright'] = '版权所有 &copy; 2005-2012 上海商派网络科技有限公司，并保留所有权利。';
+$_LANG['copyright'] = '版权所有 &copy; 2005-2012 网络科技有限公司，并保留所有权利。';
 $_LANG['query_info'] = '共执行 %d 个查询，用时 %s 秒';
 $_LANG['memory_info'] = '，内存占用 %0.3f MB';
 $_LANG['gzip_enabled'] = '，Gzip 已启用';
@@ -154,6 +154,7 @@ $_LANG['shop_list'] = '商户列表';
 $_LANG['shop_add'] = '添加商户';
 $_LANG['suppliers_list'] = '门店列表';
 $_LANG['suppliers_add'] = '添加门店';
+
 /* 商品管理 */
 $_LANG['01_goods_list'] = '商品列表';
 $_LANG['02_goods_add'] = '添加新商品';
@@ -216,6 +217,7 @@ $_LANG['06_undispose_booking'] = '缺货登记';
 $_LANG['08_add_order'] = '添加订单';
 $_LANG['09_delivery_order'] = '发货单列表';
 $_LANG['10_back_order'] = '退货单列表';
+$_LANG['11_excode_verify'] = '兑换码核销';
 
 /* 广告管理 */
 $_LANG['ad_position'] = '广告位置';

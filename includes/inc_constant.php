@@ -72,6 +72,11 @@ define('OS_RETURNED',               4); // 退货
 define('OS_SPLITED',                5); // 已分单
 define('OS_SPLITING_PART',          6); // 部分分单
 
+/* 兑换码状态 */
+define('CD_UNUSED',            		0); // 未使用
+define('CD_USED',              		1); // 已使用
+define('CD_OVERDUE',                2); // 已过期
+
 /* 支付类型 */
 define('PAY_ORDER',                 0); // 订单支付
 define('PAY_SURPLUS',               1); // 会员预付款
