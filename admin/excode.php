@@ -270,12 +270,11 @@ function excode_list()
         {
             $where .= " AND og.extension_code  = '$filter[extension_code]'";
         }   
-        if ($filter['status'] == 0)
+        if (!$filter['status'])
         {
-            $where .= " AND og.is_gift  = '$filter[status]'";
+            $where .= " AND og.is_gift IN (1,2)";
         }else{
-
-            $where .= " AND og.is_gift  = IN (1,2)";
+            $where .= " AND og.is_gift  = '$filter[status]'";
         }
 
         /* 如果管理员属于某个办事处，只列出这个办事处管辖的订单 */
