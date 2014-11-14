@@ -33,8 +33,8 @@
     <td>{$excode.excode_code|escape}</td>
     <td>{$excode.goods_name|escape}</td>
     <td align="center" valign="top" nowrap="nowrap">{$excode.order_sn|escape}</td>
-    <td align="center" valign="top" nowrap="nowrap">{$excode.add_time|escape}</td>
-    <td align="center" valign="top" nowrap="nowrap">{$excode.add_time|escape}</td>
+    <td align="center" valign="top" nowrap="nowrap">{$excode.order_time|escape}</td>
+    <td align="center" valign="top" nowrap="nowrap">{$excode.is_gift|escape}</td>
     <td align="center" valign="top"  nowrap="nowrap">
      <a href="order.php?act=info&order_id={$excode.order_id}">{$lang.detail}</a>
      {if $order.can_remove}

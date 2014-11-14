@@ -334,7 +334,7 @@ function excode_list()
     /* 格式话数据 */
     foreach ($row AS $key => $value)
     {
-        $row[$key]['short_order_time'] = local_date('Y-m-d H:i', $value['add_time']);
+        $row[$key]['order_time'] = local_date('Y-m-d H:i', $value['add_time']);
         // if ($value['order_status'] == OS_INVALID || $value['order_status'] == OS_CANCELED)
         // {
         //      如果该订单为无效或取消则显示删除链接 
