@@ -122,12 +122,8 @@ elseif ($_REQUEST['act'] == 'signin')
         // 检查是否为门店的管理员 所属门店是否有效
         if (!empty($row['suppliers_id']))
         {
-            echo "suppliers_id...";
-            exit;
             $supplier_is_check = suppliers_list_info(' is_check = 1 AND suppliers_id = ' . $row['suppliers_id']);
 
-            print_r($supplier_is_check);
-            exit;
             if (empty($supplier_is_check))
             {
                 sys_msg($_LANG['login_disable'], 1);

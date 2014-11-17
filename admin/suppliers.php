@@ -816,7 +816,7 @@ function get_supplier_gallery($supplier_id)
 }
 
 /**
- * 代理机构列表
+ * 分支机构列表
  *
  * @access  public
  * @return  array
