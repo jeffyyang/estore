@@ -30,7 +30,7 @@
   {foreach from=$excode_list item=excode key=okey}
   <tr>
     <td valign="top" nowrap="nowrap"><input type="checkbox" name="checkboxes" value="{$o.rec_id}" /><a href="excode.php?act=info&order_id={$excode.rec_id}" id="order_{$okey}">{$excode.rec_id}</td>
-    <td>{$excode.excode_code|escape}</td>
+    <td>{$excode.extension_code|escape}</td>
     <td>{$excode.goods_name|escape}</td>
     <td align="center" valign="top" nowrap="nowrap">{$excode.order_sn|escape}</td>
     <td align="center" valign="top" nowrap="nowrap">{$excode.order_time|escape}</td>

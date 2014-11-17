@@ -321,6 +321,9 @@ function excode_list()
         // {
         //     $filter[$val] = stripslashes($filter[$val]);
         // }
+        echo $sql;
+        exit;
+                
         set_filter($filter, $sql);
     }
     else
