@@ -31,8 +31,8 @@
   <tr>
     <td valign="top" nowrap="nowrap"><input type="checkbox" name="checkboxes" value="{$o.rec_id}" /></td>
     <td><font size="3" color="red"> {$excode.extension_code|escape} </font></td>
-    <td>{$excode.goods_name|escape}</td>
-    <td align="center" valign="top" nowrap="nowrap">{$excode.order_sn|escape}<a href="excode.php?act=info&order_id={$excode.rec_id}" id="order_{$okey}">{$excode.rec_id}</td>
+    <td>{$excode.goods_name|escape}<a href="excode.php?act=info&order_id={$excode.order_id}" id="order_{$okey}">[{$excode.goods_id}]</td>
+    <td align="center" valign="top" nowrap="nowrap">{$excode.order_sn|escape}</td>
     <td align="center" valign="top" nowrap="nowrap">{$excode.order_time|escape}</td>
     <td align="center" valign="top" nowrap="nowrap">{$excode.is_gift|escape}</td>
     <td align="center" valign="top"  nowrap="nowrap">
