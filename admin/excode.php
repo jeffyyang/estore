@@ -27,7 +27,7 @@ if ($_REQUEST['act'] == 'list')
 {
     /* 检查权限 */
     admin_priv('order_view');
-    
+
     /* 模板赋值 */
     $smarty->assign('ur_here', $_LANG['excode_list']);
     $smarty->assign('status_list', $_LANG['cd']);    // 兑换码状态

@@ -530,6 +530,7 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
         $suppliers['shop_price']        = !empty($_POST['shop_price'])          ? intval($_POST['shop_price'])      : 30;
         $suppliers['office_phone']      = !empty($_POST['office_phone'])        ? trim($_POST['office_phone'])      : '';
         $suppliers['mobile_phone']      = !empty($_POST['mobile_phone'])        ? trim($_POST['mobile_phone'])      : '';
+        $suppliers['opening_hours']      = !empty($_POST['opening_hours'])       ? trim($_POST['opening_hours'])    : '';
         $suppliers['comment_rank']      = !empty($_POST['comment_rank'])        ? intval($_POST['comment_rank'])    : 3;
         $suppliers['region_cities']     = !empty($_POST['city'])                ? intval($_POST['city'])            : 0;
         $suppliers['region_districts']  = !empty($_POST['district'])            ? intval($_POST['district'])        : 0;     
@@ -593,9 +594,23 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
         /* 提交值 */
         $suppliers = array('id'   => trim($_POST['id']));
 
-        $suppliers['new'] = array('suppliers_name'   => trim($_POST['suppliers_name']),
-                           'suppliers_desc'   => trim($_POST['suppliers_desc'])
-                           );
+        $suppliers['new']['suppliers_name']    = !empty($_POST['suppliers_name'])      ? trim($_POST['suppliers_name'])    : '';
+        // $suppliers['new']['pcat_id']           = !empty($_POST['main_cate_id'])        ? intval($_POST['main_cate_id'])    : 0;
+        // $suppliers['new']['cat_id']            = !empty($_POST['sub_cate_id'])         ? intval($_POST['sub_cate_id'])     : 0;
+        $suppliers['new']['agency_id']         = !empty($_POST['agency_id'])           ? intval($_POST['agency_id'])       : 0;
+        $suppliers['new']['shop_price']        = !empty($_POST['shop_price'])          ? intval($_POST['shop_price'])      : 30;
+        $suppliers['new']['office_phone']      = !empty($_POST['office_phone'])        ? trim($_POST['office_phone'])      : '';
+        $suppliers['new']['mobile_phone']      = !empty($_POST['mobile_phone'])        ? trim($_POST['mobile_phone'])      : '';
+        $suppliers['new']['opening_hours']      = !empty($_POST['opening_hours'])       ? trim($_POST['opening_hours'])    : '';
+        $suppliers['new']['comment_rank']      = !empty($_POST['comment_rank'])        ? intval($_POST['comment_rank'])    : 3;
+        $suppliers['new']['region_cities']     = !empty($_POST['city'])                ? intval($_POST['city'])            : 0;
+        $suppliers['new']['region_districts']  = !empty($_POST['district'])            ? intval($_POST['district'])        : 0;     
+        $suppliers['new']['place_id']          = !empty($_POST['place'])               ? intval($_POST['place'])           : 0;         
+        $suppliers['new']['map_lat']           = !empty($_POST['map_lat'])             ? doubleval($_POST['map_lat'])      : 0;
+        $suppliers['new']['map_lng']           = !empty($_POST['map_lng'])             ? doubleval($_POST['map_lng'])      : 0;
+        $suppliers['new']['address']           = !empty($_POST['suppliers_address'])   ? trim($_POST['suppliers_address']) : '';
+        $suppliers['new']['suppliers_desc']    = !empty($_POST['suppliers_desc'])      ? trim($_POST['suppliers_desc'])    : '';
+
 
         /* 获取门店信息 */
         $sql = "SELECT * FROM " . $ecs->table('suppliers') . " WHERE suppliers_id = '" . $suppliers['id'] . "'";
@@ -644,8 +659,22 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
             $suppliers['new']['logo_thumb'] = $logo_thumb_name;        
         }
 
+
+        foreach ($_FILES['img_url']['name'] AS $key => $name)
+        {
+            if($_FILES['img_url']['name'][$key] !== '') { 
+                $suppliers['new']['is_has_gallery'] = 1;
+                break;
+            }
+        }
+
         /* 保存门店信息 */
         $db->autoExecute($ecs->table('suppliers'), $suppliers['new'], 'UPDATE', "suppliers_id = '" . $suppliers['id'] . "'");
+
+
+        /* 处理相册图片 */
+        handle_gallery_image($suppliers['id'], $_FILES['img_url'], $_POST['img_desc'], $_POST['img_file']);
+
 
         /* 清空门店的管理员 */
         $sql = "UPDATE " . $ecs->table('admin_user') . " SET suppliers_id = 0, action_list = '" . SUPPLIERS_ACTION_LIST . "' WHERE suppliers_id = '" . $suppliers['id'] . "'";
@@ -680,7 +709,7 @@ elseif ($_REQUEST['act'] == 'drop_image')
     $img_id = empty($_REQUEST['img_id']) ? 0 : intval($_REQUEST['img_id']);
 
     /* 删除图片文件 */
-    $sql = "SELECT img_url, thumb_url, img_original " .
+    $sql = "SELECT img_url, thumb_url, img_original, supplier_id " .
             " FROM " . $GLOBALS['ecs']->table('supplier_gallery') .
             " WHERE img_id = '$img_id'";
     $row = $GLOBALS['db']->getRow($sql);
@@ -701,6 +730,15 @@ elseif ($_REQUEST['act'] == 'drop_image')
     /* 删除数据 */
     $sql = "DELETE FROM " . $GLOBALS['ecs']->table('supplier_gallery') . " WHERE img_id = '$img_id' LIMIT 1";
     $GLOBALS['db']->query($sql);
+
+    $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('supplier_gallery') . " WHERE supplier_id = '" .$row['supplier_id'] ."'";
+    $count = $GLOBALS['db']->getOne($sql);
+
+    if($count < 1){
+
+        $sql = "UPDATE " . $ecs->table('suppliers') . " SET is_has_gallery = 0 WHERE suppliers_id = '" . $row['supplier_id'] . "'";
+        $db->query($sql);
+    }
 
     clear_cache_files();
     make_json_result($img_id);
