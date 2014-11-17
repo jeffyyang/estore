@@ -157,7 +157,7 @@ listTable.gotoPage = function(page)
 listTable.loadList = function()
 {
   var args = "act="+this.query+"" + this.compileFilter();
-  alert(args);
+  alert(this.url + args);
   Ajax.call(this.url, args, this.listCallback, "POST", "JSON");
 }
 

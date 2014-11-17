@@ -20,42 +20,10 @@ require_once(ROOT_PATH . 'includes/lib_order.php');
 require_once(ROOT_PATH . 'includes/lib_goods.php');
 
 /*------------------------------------------------------ */
-//-- 兑换码查询
-/*------------------------------------------------------ */
-
-if ($_REQUEST['act'] == 'order_query')
-{
-    /* 检查权限 */
-    admin_priv('order_view');
-
-    /* 载入配送方式 */
-    $smarty->assign('shipping_list', shipping_list());
-
-    /* 载入支付方式 */
-    $smarty->assign('pay_list', payment_list());
-
-    /* 载入国家 */
-    $smarty->assign('country_list', get_regions());
-
-    /* 载入订单状态、付款状态、发货状态 */
-    $smarty->assign('os_list', get_status_list('order'));
-    $smarty->assign('ps_list', get_status_list('payment'));
-    $smarty->assign('ss_list', get_status_list('shipping'));
-
-    /* 模板赋值 */
-    $smarty->assign('ur_here', $_LANG['03_order_query']);
-    $smarty->assign('action_link', array('href' => 'order.php?act=list', 'text' => $_LANG['02_order_list']));
-
-    /* 显示模板 */
-    assign_query_info();
-    $smarty->display('order_query.htm');
-}
-
-/*------------------------------------------------------ */
 //-- 兑换码列表
 /*------------------------------------------------------ */
 
-elseif ($_REQUEST['act'] == 'list')
+if ($_REQUEST['act'] == 'list')
 {
     /* 检查权限 */
     admin_priv('order_view');
@@ -70,7 +38,6 @@ elseif ($_REQUEST['act'] == 'list')
     $smarty->assign('full_page',        1);
 
     $excode_list = excode_list();
-    print_r($excode_list);
 
     $smarty->assign('excode_list',   $excode_list['excodes']);
     $smarty->assign('filter',       $excode_list['filter']);
@@ -321,9 +288,6 @@ function excode_list()
         // {
         //     $filter[$val] = stripslashes($filter[$val]);
         // }
-        echo $sql;
-        exit;
-                
         set_filter($filter, $sql);
     }
     else
