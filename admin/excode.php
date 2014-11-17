@@ -285,9 +285,7 @@ function excode_list()
         // {
         //     $filter[$val] = stripslashes($filter[$val]);
         // }
-
-        // echo "sql:" .$sql;
-        // exit;        
+     
         set_filter($filter, $sql);
     }
     else
@@ -550,50 +548,6 @@ function get_order_finish($order_id)
 
 
 /**
- * 删除订单所有相关单子
- * @param   int     $order_id      订单 id
- * @param   int     $action_array  操作列表 Array('delivery', 'back', ......)
- * @return  int     1，成功；0，失败
- */
-function del_delivery($order_id, $action_array)
-{
-    $return_res = 0;
-
-    if (empty($order_id) || empty($action_array))
-    {
-        return $return_res;
-    }
-
-    $query_delivery = 1;
-    $query_back = 1;
-    if (in_array('delivery', $action_array))
-    {
-        $sql = 'DELETE O, G
-                FROM ' . $GLOBALS['ecs']->table('delivery_order') . ' AS O, ' . $GLOBALS['ecs']->table('delivery_goods') . ' AS G
-                WHERE O.order_id = \'' . $order_id . '\'
-                AND O.delivery_id = G.delivery_id';
-        $query_delivery = $GLOBALS['db']->query($sql, 'SILENT');
-    }
-    if (in_array('back', $action_array))
-    {
-        $sql = 'DELETE O, G
-                FROM ' . $GLOBALS['ecs']->table('back_order') . ' AS O, ' . $GLOBALS['ecs']->table('back_goods') . ' AS G
-                WHERE O.order_id = \'' . $order_id . '\'
-                AND O.back_id = G.back_id';
-        $query_back = $GLOBALS['db']->query($sql, 'SILENT');
-    }
-
-    if ($query_delivery && $query_back)
-    {
-        $return_res = 1;
-    }
-
-    return $return_res;
-}
-
-
-
-/**
  *  获取退货单列表信息
  *
  * @access  public
@@ -709,64 +663,6 @@ function back_list()
     return $arr;
 }
 
-/**
- * 取得发货单信息
- * @param   int     $delivery_order   发货单id（如果delivery_order > 0 就按id查，否则按sn查）
- * @param   string  $delivery_sn      发货单号
- * @return  array   发货单信息（金额都有相应格式化的字段，前缀是formated_）
- */
-function delivery_order_info($delivery_id, $delivery_sn = '')
-{
-    $return_order = array();
-    if (empty($delivery_id) || !is_numeric($delivery_id))
-    {
-        return $return_order;
-    }
-
-    $where = '';
-    /* 获取管理员信息 */
-    $admin_info = admin_info();
-
-    /* 如果管理员属于某个办事处，只列出这个办事处管辖的发货单 */
-    if ($admin_info['agency_id'] > 0)
-    {
-        $where .= " AND agency_id = '" . $admin_info['agency_id'] . "' ";
-    }
-
-    /* 如果管理员属于某个供货商，只列出这个供货商的发货单 */
-    if ($admin_info['suppliers_id'] > 0)
-    {
-        $where .= " AND suppliers_id = '" . $admin_info['suppliers_id'] . "' ";
-    }
-
-    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('delivery_order');
-    if ($delivery_id > 0)
-    {
-        $sql .= " WHERE delivery_id = '$delivery_id'";
-    }
-    else
-    {
-        $sql .= " WHERE delivery_sn = '$delivery_sn'";
-    }
-
-    $sql .= $where;
-    $sql .= " LIMIT 0, 1";
-    $delivery = $GLOBALS['db']->getRow($sql);
-    if ($delivery)
-    {
-        /* 格式化金额字段 */
-        $delivery['formated_insure_fee']     = price_format($delivery['insure_fee'], false);
-        $delivery['formated_shipping_fee']   = price_format($delivery['shipping_fee'], false);
-
-        /* 格式化时间字段 */
-        $delivery['formated_add_time']       = local_date($GLOBALS['_CFG']['time_format'], $delivery['add_time']);
-        $delivery['formated_update_time']    = local_date($GLOBALS['_CFG']['time_format'], $delivery['update_time']);
-
-        $return_order = $delivery;
-    }
-
-    return $return_order;
-}
 
 /**
  * 取得退货单信息

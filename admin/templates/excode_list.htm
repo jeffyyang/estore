@@ -29,17 +29,14 @@
   <tr>
   {foreach from=$excode_list item=excode key=okey}
   <tr>
-    <td valign="top" nowrap="nowrap"><input type="checkbox" name="checkboxes" value="{$o.rec_id}" /><a href="excode.php?act=info&order_id={$excode.rec_id}" id="order_{$okey}">{$excode.rec_id}</td>
-    <td>{$excode.extension_code|escape}</td>
+    <td valign="top" nowrap="nowrap"><input type="checkbox" name="checkboxes" value="{$o.rec_id}" /></td>
+    <td><font size="3" color="red"> {$excode.extension_code|escape} </font></td>
     <td>{$excode.goods_name|escape}</td>
-    <td align="center" valign="top" nowrap="nowrap">{$excode.order_sn|escape}</td>
+    <td align="center" valign="top" nowrap="nowrap">{$excode.order_sn|escape}<a href="excode.php?act=info&order_id={$excode.rec_id}" id="order_{$okey}">{$excode.rec_id}</td>
     <td align="center" valign="top" nowrap="nowrap">{$excode.order_time|escape}</td>
     <td align="center" valign="top" nowrap="nowrap">{$excode.is_gift|escape}</td>
     <td align="center" valign="top"  nowrap="nowrap">
-     <a href="order.php?act=info&order_id={$excode.order_id}">{$lang.detail}</a>
-     {if $order.can_remove}
-     <br /><a href="javascript:;" onclick="listTable.remove({$excode.rec_id}, remove_confirm, 'remove_order')">{$lang.remove}</a>
-     {/if}
+          <a href="excode.php?act=exchange&id={$excode.rec_id}" title="{$lang.exchange_goods}"><font color="green">{$lang.exchange_goods}</font></a>
     </td>
   </tr>
   {/foreach}

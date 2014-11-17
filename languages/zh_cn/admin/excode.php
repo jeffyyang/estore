@@ -25,16 +25,14 @@ $_LANG['cd'][CD_UNUSED]    = '未使用';
 $_LANG['cd'][CD_USED]      = '已使用';
 $_LANG['cd'][CD_OVERDUE]   = '已过期';
 
-
-
 /* 兑换码列表 */
 $_LANG['rec_id'] = '记录号';
 $_LANG['order_sn']   = '订单号';
 $_LANG['goods_name'] = '商品名称';
 $_LANG['order_time'] = '订购时间';
-$_LANG['error_get_goods_info'] = '获取订单商品信息错误';
-$_LANG['exchange_goods'] = '（积分兑换）';
+$_LANG['exchange_goods'] = '兑换';
 
+$_LANG['error_get_goods_info'] = '获取商品信息错误';
 
 /* 订单操作 */
 $_LANG['label_operable_act'] = '当前可执行操作：';
