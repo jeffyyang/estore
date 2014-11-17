@@ -69,8 +69,28 @@ elseif ($_REQUEST['act'] == 'query')
     $smarty->assign($sort_flag['tag'], $sort_flag['img']);
     make_json_result($smarty->fetch('excode_list.htm'), '', array('filter' => $excode_list['filter'], 'page_count' => $excode_list['page_count']));
 }
+/*------------------------------------------------------ */
+//-- 兑换商品
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'exchange')
+{
+    check_authz_json('order_view');
 
+    $id = intval($_REQUEST['id']);
+    $sql = "SELECT rec_id, is_gift
+            FROM " . $ecs->table('order_goods') . "
+            WHERE rec_id = '$id'";
+    $excode = $db->getRow($sql, TRUE);
 
+    if ($excode['rec_id'])
+    {
+        $_excode['is_gift'] = 1;
+        $db->autoExecute($ecs->table('order_goods'), $_excode, '', "rec_id = '$id'");
+        clear_cache_files();
+        make_json_result($excode['is_gift']);
+    }
+    exit;
+}
 /*------------------------------------------------------ */
 //-- 根据关键字搜索商品
 /*------------------------------------------------------ */
