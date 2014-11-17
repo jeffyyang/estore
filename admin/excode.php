@@ -227,7 +227,6 @@ function excode_list()
         if (!empty($_GET['is_ajax']) && $_GET['is_ajax'] == 1)
         {
             $filter['extension_code'] = empty($_REQUEST['code']) ? '' : trim($_REQUEST['code']);
-            $filter['status'] = '0';
         }
 
         $filter['sort_by'] = empty($_REQUEST['sort_by']) ? 'DESC' : trim($_REQUEST['sort_by']);
@@ -236,13 +235,11 @@ function excode_list()
 
         if ($filter['extension_code'])
         {
-            $where .= " AND og.extension_code  = '$filter[extension_code]'";
-        }   
-        if (!$filter['status'])
-        {
-            $where .= " AND og.is_gift IN (1,2)";
+            $where .= " AND og.extension_code  = '$filter[extension_code]' AND og.is_gift  = '$filter[status]' ";
+
         }else{
-            $where .= " AND og.is_gift  = '$filter[status]'";
+
+            $where .= " AND og.is_gift IN (1,2)";
         }
 
         /* 如果管理员属于某个办事处，只列出这个办事处管辖的订单 */
@@ -288,6 +285,9 @@ function excode_list()
         // {
         //     $filter[$val] = stripslashes($filter[$val]);
         // }
+
+        // echo "sql:" .$sql;
+        // exit;        
         set_filter($filter, $sql);
     }
     else
