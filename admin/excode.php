@@ -91,15 +91,16 @@ elseif ($_REQUEST['act'] == 'query')
     /* 检查权限 */
     admin_priv('order_view');
 
-    $order_list = order_list();
+    $excode_list = excode_list();
 
-    $smarty->assign('order_list',   $order_list['orders']);
-    $smarty->assign('filter',       $order_list['filter']);
-    $smarty->assign('record_count', $order_list['record_count']);
-    $smarty->assign('page_count',   $order_list['page_count']);
-    $sort_flag  = sort_flag($order_list['filter']);
+    $smarty->assign('excode_list',  $excode_list['excodes']);
+    $smarty->assign('filter',       $excode_list['filter']);
+    $smarty->assign('record_count', $excode_list['record_count']);
+    $smarty->assign('page_count',   $excode_list['page_count']);
+
+    $sort_flag  = sort_flag($excode_list['filter']);
     $smarty->assign($sort_flag['tag'], $sort_flag['img']);
-    make_json_result($smarty->fetch('order_list.htm'), '', array('filter' => $order_list['filter'], 'page_count' => $order_list['page_count']));
+    make_json_result($smarty->fetch('excode_list.htm'), '', array('filter' => $excode_list['filter'], 'page_count' => $excode_list['page_count']));
 }
 
 
