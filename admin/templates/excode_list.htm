@@ -36,7 +36,11 @@
     <td align="center" valign="top" nowrap="nowrap">{$excode.order_time|escape}</td>
     <td align="center" valign="top" nowrap="nowrap">{$lang.cd[$excode.is_gift]}</td>
     <td align="center" valign="top"  nowrap="nowrap">
+          {if $excode.is_gift == 0}
           <a href="excode.php?act=exchange&id={$excode.rec_id}" title="{$lang.exchange_goods}"><font color="green">{$lang.exchange_goods}</font></a>
+          {else if}
+          <font color="Gray">{$lang.exchange_goods}
+          {/if}
     </td>
   </tr>
   {/foreach}
