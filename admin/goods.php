@@ -791,7 +791,6 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
         $url_goods_img = $goods_img = $original_img = htmlspecialchars(trim($_POST['goods_img_url']));
     }
 
-
     /* 如果没有输入商品货号则自动生成一个商品货号 */
     if (empty($_POST['goods_sn']))
     {
