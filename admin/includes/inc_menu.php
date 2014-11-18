@@ -51,7 +51,7 @@ $modules['03_promotion']['08_group_buy']            = 'group_buy.php?act=list';
 $modules['03_promotion']['09_topic']                = 'topic.php?act=list';
 $modules['03_promotion']['10_auction']              = 'auction.php?act=list';
 $modules['03_promotion']['12_favourable']           = 'favourable.php?act=list';
-$modules['03_promotion']['13_wholesale']            = 'wholesale.php?act=list';
+$modules['03_promotion']['13_wholesale']            = 'wholesale.php?act=list';   // 批发管理
 $modules['03_promotion']['14_package_list']         = 'package.php?act=list';
 //$modules['03_promotion']['ebao_commend']            = 'ebao_commend.php?act=list';
 $modules['03_promotion']['15_exchange_goods']       = 'exchange_goods.php?act=list';*/
@@ -62,17 +62,18 @@ $modules['04_order']['03_order_query']              = 'order.php?act=order_query
 // $modules['04_order']['04_merge_order']              = 'order.php?act=merge'; 
 $modules['04_order']['05_edit_order_print']         = 'order.php?act=templates';
 $modules['04_order']['06_undispose_booking']        = 'goods_booking.php?act=list_all';
-//$modules['04_order']['07_repay_application']        = 'repay.php?act=list_all';
+// 退款 $modules['04_order']['07_repay_application']        = 'repay.php?act=list_all';
 $modules['04_order']['08_add_order']                = 'order.php?act=add';
 $modules['04_order']['09_delivery_order']           = 'order.php?act=delivery_list';
 $modules['04_order']['10_back_order']               = 'order.php?act=back_list';
 $modules['04_order']['11_excode_verify']            = 'excode.php?act=list';
+
 // 广告管理
 $modules['05_banner']['ad_position']                = 'ad_position.php?act=list';
 $modules['05_banner']['ad_list']                    = 'ads.php?act=list';
 
 // 报表统计
-$modules['06_stats']['flow_stats']                  = 'flow_stats.php?act=view';
+// $modules['06_stats']['flow_stats']                  = 'flow_stats.php?act=view';
 // $modules['06_stats']['searchengine_stats']          = 'searchengine_stats.php?act=view';
 // $modules['06_stats']['z_clicks_stats']              = 'adsense.php?act=list';
 $modules['06_stats']['report_guest']                = 'guest_stats.php?act=list';
@@ -89,8 +90,8 @@ $modules['06_stats']['report_users']                = 'users_order.php?act=order
 // $modules['07_content']['02_articlecat_list']        = 'articlecat.php?act=list';
 // $modules['07_content']['vote_list']                 = 'vote.php?act=list';
 // $modules['07_content']['article_auto']              = 'article_auto.php?act=list';
-//$modules['07_content']['shop_help']                 = 'shophelp.php?act=list_cat';
-//$modules['07_content']['shop_info']                 = 'shopinfo.php?act=list';
+// $modules['07_content']['shop_help']                 = 'shophelp.php?act=list_cat';
+// $modules['07_content']['shop_info']                 = 'shopinfo.php?act=list';
 
 // 会员管理
 

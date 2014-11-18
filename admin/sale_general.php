@@ -76,6 +76,7 @@ $sql = "SELECT DATE_FORMAT(FROM_UNIXTIME(shipping_time), '$format') AS period, C
         " AND (shipping_status = '" . SS_SHIPPED . "' OR shipping_status = '" . SS_RECEIVED . "') " .
         " AND shipping_time >= '$start_time' AND shipping_time <= '$end_time'" .
         " GROUP BY period ";
+
 $data_list = $db->getAll($sql);
 
 /*------------------------------------------------------ */

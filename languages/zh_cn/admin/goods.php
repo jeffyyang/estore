@@ -114,6 +114,8 @@ $_LANG['lab_market_price'] = '市场售价：';
 $_LANG['lab_user_price'] = '会员价格：';
 $_LANG['lab_promote_price'] = '促销价：';
 $_LANG['lab_promote_date'] = '促销日期：';
+$_LANG['lab_group_date'] = '团购日期：';
+$_LANG['lab_use_date']   = '使用日期：';
 $_LANG['lab_picture'] = '上传商品图片：';
 $_LANG['lab_thumb'] = '上传商品缩略图：';
 $_LANG['auto_thumb'] = '自动生成商品缩略图';
@@ -237,9 +239,13 @@ $_LANG['js_languages']['spec_price_not_number'] = '加价不是数字';
 $_LANG['js_languages']['market_price_not_number'] = '市场价格不是数字';
 $_LANG['js_languages']['goods_number_not_int'] = '商品库存不是整数';
 $_LANG['js_languages']['warn_number_not_int'] = '库存警告不是整数';
-$_LANG['js_languages']['promote_not_lt'] = '促销开始日期不能大于结束日期';
-$_LANG['js_languages']['promote_start_not_null'] = '促销开始时间不能为空';
-$_LANG['js_languages']['promote_end_not_null'] = '促销结束时间不能为空';
+$_LANG['js_languages']['promote_not_lt'] = '团购开始日期不能大于结束日期';
+$_LANG['js_languages']['promote_start_not_null'] = '团购开始时间不能为空';
+$_LANG['js_languages']['promote_end_not_null'] = '团购结束时间不能为空';
+
+$_LANG['js_languages']['use_not_lt'] = '有效使用开始日期不能大于结束日期';
+$_LANG['js_languages']['use_start_not_null'] = '有效使用开始时间不能为空';
+$_LANG['js_languages']['use_end_not_null'] = '有效使用结束时间不能为空';
 
 $_LANG['js_languages']['drop_img_confirm'] = '您确实要删除该图片吗？';
 $_LANG['js_languages']['batch_no_on_sale'] = '您确实要将选定的商品下架吗？';
