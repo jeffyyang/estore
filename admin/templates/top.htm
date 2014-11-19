@@ -107,7 +107,7 @@
 <script type="text/javascript">
 onload = function()
 {
-  Ajax.call('index.php?is_ajax=1&act=license','', start_sendmail_Response, 'GET', 'JSON');
+  // Ajax.call('index.php?is_ajax=1&act=license','', start_sendmail_Response, 'GET', 'JSON');
 }
 /**
  * 帮助系统调用
@@ -187,8 +187,8 @@ var adminId = "{$admin_id}";
 </head>
 <body>
 <div id="header-div">
-  <div id="logo-div" style="bgcolor:#000000;"><img src="images/ecshop_logo.gif" alt="ECSHOP - power for e-commerce" /></div>
-  <div id="license-div" style="bgcolor:#000000;"></div>
+  <div id="logo-div" style="bgcolor:#000000;"><img src="images/ecshop_logo.gif" alt="商户管理中心" /></div>
+  <!-- <div id="license-div" style="bgcolor:#000000;"></div> -->
   <div id="submenu-div">
     <ul>
       <!-- <li><a href="index.php?act=about_us" target="main-frame">{$lang.about}</a></li> -->
@@ -402,7 +402,7 @@ var adminId = "{$admin_id}";
   <ul>
     <li class="fix-spacel">&nbsp;</li>
     <li><a href="index.php?act=main" target="main-frame">{$lang.admin_home}</a></li>
-    <li><a href="privilege.php?act=modif" target="main-frame">{$lang.set_navigator}</a></li>
+<!--     <li><a href="privilege.php?act=modif" target="main-frame">{$lang.set_navigator}</a></li>  导航栏设置 -->  
     {foreach from=$nav_list item=item key=key}
     <li><a href="{$key}" target="main-frame">{$item}</a></li>
     {/foreach}
