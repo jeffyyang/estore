@@ -19,10 +19,11 @@
         class="tab-back" id="detail-tab">{$lang.tab_detail}</span><span
         class="tab-back" id="mix-tab">{$lang.tab_mix}</span>{if $goods_type_list}<span
         class="tab-back" id="properties-tab">{$lang.tab_properties}</span>{/if}<span
-        class="tab-back" id="gallery-tab">{$lang.tab_gallery}</span><span
+        class="tab-back" id="gallery-tab">{$lang.tab_gallery}</span>
+<!--         <span
         class="tab-back" id="linkgoods-tab">{$lang.tab_linkgoods}</span>{if $code eq ''}<span
         class="tab-back" id="groupgoods-tab">{$lang.tab_groupgoods}</span>{/if}<span
-        class="tab-back" id="article-tab">{$lang.tab_article}</span>
+        class="tab-back" id="article-tab">{$lang.tab_article}</span> -->
       </p>
     </div>
 
@@ -50,7 +51,7 @@
           </tr>
           <tr>
             <td class="label">{$lang.lab_goods_cat}</td>
-            <td><select name="cat_id" onchange="hideCatDiv()" ><option value="0">{$lang.select_please}</option>{$cat_list}</select>
+            <td><select name="cat_id" onchange="changeCat(this);" ><option value="0">{$lang.select_please}</option>{$cat_list}</select>
               {if $is_add}
               <a href="javascript:void(0)" onclick="rapidCatAdd()" title="{$lang.rapid_add_cat}" class="special">{$lang.rapid_add_cat}</a>
               <span id="category_add" style="display:none;">
@@ -224,12 +225,12 @@
 
         <!-- 其他信息 -->
         <table width="90%" id="mix-table" style="display:none" align="center">
-          {if $code eq ''}
+<!--           {if $code eq ''}
           <tr>
             <td class="label">{$lang.lab_goods_weight}</td>
             <td><input type="text" name="goods_weight" value="{$goods.goods_weight_by_unit}" size="20" /> <select name="weight_unit">{html_options options=$unit_list selected=$weight_unit}</select></td>
           </tr>
-          {/if}
+          {/if} -->
           {if $cfg.use_storage}
           <tr>
             <td class="label"><a href="javascript:showNotice('noticeStorage');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a> {$lang.lab_goods_number}</td>
@@ -254,10 +255,10 @@
             <td class="label">{$lang.lab_is_alone_sale}</td>
             <td><input type="checkbox" name="is_alone_sale" value="1" {if $goods.is_alone_sale}checked="checked"{/if} /> {$lang.alone_sale}</td>
           </tr>
-          <tr>
+<!--           <tr>
             <td class="label">{$lang.lab_is_free_shipping}</td>
             <td><input type="checkbox" name="is_shipping" value="1" {if $goods.is_shipping}checked="checked"{/if} /> {$lang.free_shipping}</td>
-          </tr>
+          </tr> -->
           <tr>
             <td class="label">{$lang.lab_keywords}</td>
             <td><input type="text" name="keywords" value="{$goods.keywords|escape}" size="40" /> {$lang.notice_keywords}</td>
@@ -440,8 +441,9 @@
         <div class="button-div">
           <input type="hidden" name="goods_id" value="{$goods.goods_id}" />
           {if $code neq ''}
-          <input type="hidden" name="extension_code" value="{$code}" />
           {/if}
+          <input type="hidden" name="extension_code" value="{$code}" />
+          
           <input type="button" value="{$lang.button_submit}" class="button" onclick="validate('{$goods.goods_id}')" />
           <input type="reset" value="{$lang.button_reset}" class="button" />
         </div>
@@ -815,6 +817,43 @@
       var params = 'parent_id=' + parent_id.value;
       params += '&cat=' + cat.value;
       Ajax.call('category.php?is_ajax=1&act=add_category', params, addCatResponse, 'GET', 'JSON');
+  }
+
+  // 改变商品类别 
+  function changeCat(obj)
+  {
+    hideCatDiv();
+    
+    var use_date_div = document.getElementById("use_date");
+    var group_date_div = document.getElementById("promote_4");
+
+    var parent = obj.options[obj.selectedIndex].value;
+
+    if( (parent > 3) && (parent < 7) ){
+
+      if(use_date_div.style.display != null)
+      {
+          use_date_div.style.display = 'block';
+      }
+
+      if(group_date_div.style.display != null)
+      {
+          group_date_div.style.display = 'block';
+      }
+      document.forms['theForm'].elements['extension_code'].value = 'virtual_goods';
+    
+    }else{
+
+      if(use_date_div.style.display != null)
+      {
+          use_date_div.style.display = 'none';
+      }
+      if(group_date_div.style.display != null)
+      {
+          group_date_div.style.display = 'none';
+      }
+      document.forms['theForm'].elements['extension_code'].value = '';
+    }
   }
 
   function hideCatDiv()

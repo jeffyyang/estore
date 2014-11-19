@@ -176,8 +176,8 @@ elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit' || $_REQUEST['ac
             'warn_number'   => 1,
             'promote_start_date' => local_date('Y-m-d'),
             'promote_end_date'   => local_date('Y-m-d', local_strtotime('+1 month')),
-            'use_start_date' => local_date('Y-m-d'),
-            'use_end_date'   => local_date('Y-m-d', local_strtotime('+1 month')),            
+            'use_start_date'     => local_date('Y-m-d'),
+            'use_end_date'       => local_date('Y-m-d', local_strtotime('+1 month')),            
             'goods_weight'  => 0,
             'give_integral' => -1,
             'rank_integral' => -1
@@ -1606,8 +1606,8 @@ elseif ($_REQUEST['act'] == 'query')
 {
     $is_delete = empty($_REQUEST['is_delete']) ? 0 : intval($_REQUEST['is_delete']);
     $code = empty($_REQUEST['extension_code']) ? '' : trim($_REQUEST['extension_code']);
-    $goods_list = goods_list($is_delete, ($code=='') ? 1 : 0);
-
+    // $goods_list = goods_list($is_delete, ($code=='') ? 1 : 0);
+    $goods_list = goods_list($is_delete, -1);
     $handler_list = array();
     $handler_list['virtual_card'][] = array('url'=>'virtual_card.php?act=card', 'title'=>$_LANG['card'], 'img'=>'icon_send_bonus.gif');
     $handler_list['virtual_card'][] = array('url'=>'virtual_card.php?act=replenish', 'title'=>$_LANG['replenish'], 'img'=>'icon_add.gif');

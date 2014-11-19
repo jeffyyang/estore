@@ -260,6 +260,10 @@ $_LANG['js_languages']['volume_price_not_number'] = '优惠价格不是数字';
 
 $_LANG['js_languages']['cancel_color'] = '无样式';
 
+$_LANG['js_languages']['cat_group_goods'] = '团购商品';
+$_LANG['js_languages']['cat_group_card']  = '虚拟卡券';
+$_LANG['js_languages']['cat_group_disc']  = '优惠券';
+
 /* 虚拟卡 */
 $_LANG['card'] = '查看虚拟卡信息';
 $_LANG['replenish'] = '补货';
