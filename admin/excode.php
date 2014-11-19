@@ -255,11 +255,11 @@ function excode_list()
 
         if ($filter['extension_code'])
         {
-            $where .= " AND og.extension_code  = '$filter[extension_code]' AND og.is_gift  = '$filter[status]' ";
+            $where .= " AND og.extension_code  = '$filter[extension_code]' AND og.exchange_status  = '$filter[status]' ";
 
         }else{
 
-            $where .= " AND og.is_gift IN (1,2)";
+            $where .= " AND og.exchange_status IN (1,2)";
         }
 
         /* 如果管理员属于某个办事处，只列出这个办事处管辖的订单 */
@@ -295,7 +295,7 @@ function excode_list()
         $filter['page_count']     = $filter['record_count'] > 0 ? ceil($filter['record_count'] / $filter['page_size']) : 1;
 
         /* 查询 */
-        $sql = "SELECT og.rec_id, oi.order_id, oi.order_sn, og.goods_id, og.goods_name, og.extension_code, og.is_real, og.is_gift, oi.add_time" .
+        $sql = "SELECT og.rec_id, oi.order_id, oi.order_sn, og.goods_id, og.goods_name, og.extension_code, og.is_real, og.exchange_status, oi.add_time, og.excode_start_time, og.excode_exp_time" .
                 " FROM " . $GLOBALS['ecs']->table('order_goods'). " AS og ,".
                  $GLOBALS['ecs']->table('order_info') . " AS oi " . $where .
                 " ORDER BY oi.add_time $filter[sort_by] ".
@@ -319,7 +319,10 @@ function excode_list()
     /* 格式话数据 */
     foreach ($row AS $key => $value)
     {
+        $row[$key]['status'] = $value['exchange_status'];
         $row[$key]['order_time'] = local_date('Y-m-d H:i', $value['add_time']);
+        $row[$key]['start_time'] = local_date('Y-m-d', $value['excode_start_time']);
+        $row[$key]['exp_time'] = local_date('Y-m-d', $value['excode_exp_time']);
         // if ($value['order_status'] == OS_INVALID || $value['order_status'] == OS_CANCELED)
         // {
         //      如果该订单为无效或取消则显示删除链接 

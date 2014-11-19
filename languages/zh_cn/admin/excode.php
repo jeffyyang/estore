@@ -31,7 +31,8 @@ $_LANG['order_sn']   = '订单号';
 $_LANG['goods_name'] = '商品名称';
 $_LANG['order_time'] = '订购时间';
 $_LANG['exchange_goods'] = '兑换';
-$_LANG['exchange_goods'] = '兑换';
+$_LANG['use_start_date'] = '使用开始日期';
+$_LANG['use_exp_date']   = '使用过期日期';
 
 $_LANG['error_get_goods_info'] = '获取商品信息错误';
 
