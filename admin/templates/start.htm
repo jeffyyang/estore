@@ -6,7 +6,7 @@
 </ul>
 <script type="Text/Javascript" language="JavaScript">
 <!--
-  Ajax.call('cloud.php?is_ajax=1&act=cloud_remind','', cloud_api, 'GET', 'JSON');
+    // Ajax.call('cloud.php?is_ajax=1&act=cloud_remind','', cloud_api, 'GET', 'JSON');
     function cloud_api(result)
     {
       //alert(result.content);
@@ -22,7 +22,7 @@
     } 
    function cloud_close(id)
     {
-      Ajax.call('cloud.php?is_ajax=1&act=close_remind&remind_id='+id,'', cloud_api, 'GET', 'JSON');
+      // Ajax.call('cloud.php?is_ajax=1&act=close_remind&remind_id='+id,'', cloud_api, 'GET', 'JSON');
     }
   //-->
  </script> 
@@ -31,9 +31,9 @@
   <li class="Start315">{$warning}</li>
   {/foreach}
 </ul>
-<ul style="padding:0; margin: 0; list-style-type:none; color: #CC0000;">
- <!-- <script type="text/javascript" src="http://bbs.ecshop.com/notice.php?v=1&n=8&f=ul"></script>-->
-</ul>
+<!-- <ul style="padding:0; margin: 0; list-style-type:none; color: #CC0000;">
+  <script type="text/javascript" src="http://bbs.ecshop.com/notice.php?v=1&n=8&f=ul"></script>
+</ul> -->
 <!-- directory install end -->
 <!-- start personal message -->
 {if $admin_msg}
