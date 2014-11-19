@@ -321,8 +321,8 @@ function excode_list()
     {
         $row[$key]['status'] = $value['exchange_status'];
         $row[$key]['order_time'] = local_date('Y-m-d H:i', $value['add_time']);
-        $row[$key]['start_time'] = local_date('Y-m-d', $value['excode_start_time']);
-        $row[$key]['exp_time']   = local_date('Y-m-d', $value['excode_exp_time']);
+        $row[$key]['start_time'] = local_date('Y-m-d', strtotime($value['excode_start_time']));
+        $row[$key]['exp_time']   = local_date('Y-m-d', strtotime($value['excode_exp_time']));
         // if ($value['order_status'] == OS_INVALID || $value['order_status'] == OS_CANCELED)
         // {
         //      如果该订单为无效或取消则显示删除链接 

@@ -36,8 +36,8 @@
     <td>{$excode.goods_name|escape}<a href="excode.php?act=info&order_id={$excode.order_id}" id="order_{$okey}">[{$excode.goods_id}]</td>
     <td align="center" valign="top" nowrap="nowrap">{$excode.order_sn|escape}</td>
     <td align="center" valign="top" nowrap="nowrap">{$excode.order_time}</td>
-    <td align="center" valign="top" nowrap="nowrap">{$excode.order_time}</td>
-    <td align="center" valign="top" nowrap="nowrap">{$excode.order_time}</td>
+    <td align="center" valign="top">{$excode.start_time}</td>
+    <td align="center" valign="top">{$excode.exp_time}</td>
     <td align="center" valign="top" nowrap="nowrap">{$lang.cd[$excode.status]}</td>
     <td align="center" valign="top"  nowrap="nowrap">
           {if $excode.status == 0}
