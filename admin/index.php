@@ -346,49 +346,47 @@ elseif ($_REQUEST['act'] == 'main')
     $smarty->assign('status', $status);
 
     /* 商品信息 */
-    $goods['total']   = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('goods').
-    ' WHERE is_delete = 0 AND is_alone_sale = 1 AND is_real = 1');
-    $virtual_card['total'] = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('goods').
-    ' WHERE is_delete = 0 AND is_alone_sale = 1 AND is_real=0 AND extension_code=\'virtual_card\'');
+    $group_goods['total']   = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('goods').
+    ' WHERE is_delete = 0 AND goods_type = 1');
 
-    $goods['new']     = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('goods').
-    ' WHERE is_delete = 0 AND is_new = 1 AND is_real = 1');
-    $virtual_card['new']     = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('goods').
-    ' WHERE is_delete = 0 AND is_new = 1 AND is_real=0 AND extension_code=\'virtual_card\'');
+    $group_goods['new']     = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('goods').
+    ' WHERE is_delete = 0 AND is_new = 1 AND goods_type = 1');
 
-    $goods['best']    = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('goods').
-    ' WHERE is_delete = 0 AND is_best = 1 AND is_real = 1');
-    $virtual_card['best']    = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('goods').
-    ' WHERE is_delete = 0 AND is_best = 1 AND is_real=0 AND extension_code=\'virtual_card\'');
+    $group_goods['best']    = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('goods').
+    ' WHERE is_delete = 0 AND is_best = 1 AND goods_type = 1');
 
-    $goods['hot']     = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('goods').
-    ' WHERE is_delete = 0 AND is_hot = 1 AND is_real = 1');
-    $virtual_card['hot']     = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('goods').
-    ' WHERE is_delete = 0 AND is_hot = 1 AND is_real=0 AND extension_code=\'virtual_card\'');
+    $group_goods['hot']     = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('goods').
+    ' WHERE is_delete = 0 AND is_hot = 1 AND goods_type = 1');
 
     $time             = gmtime();
-    $goods['promote'] = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('goods').
-    ' WHERE is_delete = 0 AND promote_price>0' .
-    " AND promote_start_date <= '$time' AND promote_end_date >= '$time' AND is_real = 1");
-    $virtual_card['promote'] = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('goods').
-    ' WHERE is_delete = 0 AND promote_price>0' .
-    " AND promote_start_date <= '$time' AND promote_end_date >= '$time' AND is_real=0 AND extension_code='virtual_card'");
+    $integral_goods['total'] = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('goods').
+    ' WHERE is_delete = 0 AND goods_type = 2');
+
+    $integral_goods['new']     = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('goods').
+    ' WHERE is_delete = 0 AND is_new = 1 AND goods_type = 2');
+
+    $integral_goods['best']    = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('goods').
+    ' WHERE is_delete = 0 AND is_best = 1 AND goods_type = 2');
+
+    $integral_goods['hot']     = $db->GetOne('SELECT COUNT(*) FROM ' .$ecs->table('goods').
+    ' WHERE is_delete = 0 AND is_hot = 1 AND goods_type = 2');
 
     /* 缺货商品 */
     if ($_CFG['use_storage'])
     {
-        $sql = 'SELECT COUNT(*) FROM ' .$ecs->table('goods'). ' WHERE is_delete = 0 AND goods_number <= warn_number AND is_real = 1';
-        $goods['warn'] = $db->GetOne($sql);
-        $sql = 'SELECT COUNT(*) FROM ' .$ecs->table('goods'). ' WHERE is_delete = 0 AND goods_number <= warn_number AND is_real=0 AND extension_code=\'virtual_card\'';
-        $virtual_card['warn'] = $db->GetOne($sql);
+        $sql = 'SELECT COUNT(*) FROM ' .$ecs->table('goods'). ' WHERE is_delete = 0 AND goods_number <= warn_number AND goods_type = 1';
+        $group_goods['warn'] = $db->GetOne($sql);
+
+        $sql = 'SELECT COUNT(*) FROM ' .$ecs->table('goods'). ' WHERE is_delete = 0 AND goods_number <= warn_number AND goods_type = 2';
+        $integral_goods['warn'] = $db->GetOne($sql);
     }
     else
     {
-        $goods['warn'] = 0;
-        $virtual_card['warn'] = 0;
+        $group_goods['warn'] = 0;
+        $integral_goods['warn'] = 0;
     }
-    $smarty->assign('goods', $goods);
-    $smarty->assign('virtual_card', $virtual_card);
+    $smarty->assign('group_goods', $group_goods);
+    $smarty->assign('integral_goods', $integral_goods);
 
     /* 访问统计信息 */
     $today  = local_getdate();

@@ -71,6 +71,10 @@ $_LANG['shipped_part'] = '部分发货订单:';
 
 $_LANG['goods_stat'] = '实体商品统计信息';
 $_LANG['virtual_card_stat'] = '虚拟卡商品统计';
+
+$_LANG['group_goods_stat'] = '团购商品统计信息';
+$_LANG['integral_goods_stat'] = '积分商城商品统计';
+
 $_LANG['goods_count'] = '商品总数:';
 $_LANG['sales_count'] = '促销商品数:';
 $_LANG['new_goods'] = '新品推荐数:';

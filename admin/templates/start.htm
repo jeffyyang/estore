@@ -90,63 +90,63 @@
 </div>
 <!-- end order statistics -->
 <br />
-<!-- start goods statistics -->
+<!-- 团购商城商品统计 -->
 <div class="list-div">
 <table cellspacing='1' cellpadding='3'>
   <tr>
-    <th colspan="4" class="group-title">{$lang.goods_stat}</th>
+    <th colspan="4" class="group-title">{$lang.group_goods_stat}</th>
   </tr>
   <tr>
     <td width="20%">{$lang.goods_count}</td>
-    <td width="30%"><strong>{$goods.total}</strong></td>
+    <td width="30%"><strong>{$group_goods.total}</strong></td>
     <td width="20%"><a href="goods.php?act=list&stock_warning=1">{$lang.warn_goods}</a></td>
-    <td width="30%"><strong style="color: red">{$goods.warn}</strong></td>
+    <td width="30%"><strong style="color: red">{$group_goods.warn}</strong></td>
   </tr>
   <tr>
     <td><a href="goods.php?act=list&amp;intro_type=is_new">{$lang.new_goods}</a></td>
-    <td><strong>{$goods.new}</strong></td>
+    <td><strong>{$group_goods.new}</strong></td>
     <td><a href="goods.php?act=list&amp;intro_type=is_best">{$lang.recommed_goods}</a></td>
-    <td><strong>{$goods.best}</strong></td>
+    <td><strong>{$group_goods.best}</strong></td>
   </tr>
   <tr>
     <td><a href="goods.php?act=list&amp;intro_type=is_hot">{$lang.hot_goods}</a></td>
-    <td><strong>{$goods.hot}</strong></td>
-    <td><a href="goods.php?act=list&amp;intro_type=is_promote">{$lang.sales_count}</a></td>
-    <td><strong>{$goods.promote}</strong></td>
+    <td><strong>{$group_goods.hot}</strong></td>
+    <td><!-- <a href="goods.php?act=list&amp;intro_type=is_promote">{$lang.sales_count}</a> --></td>
+    <td><!-- <strong>{$group_goods.promote}</strong> --></td>
   </tr>
 </table>
 </div>
 <br />
-<!-- Virtual Card -->
+<!-- 积分商城商品统计 -->
 <div class="list-div">
 <table cellspacing='1' cellpadding='3'>
   <tr>
-    <th colspan="4" class="group-title">{$lang.virtual_card_stat}</th>
+    <th colspan="4" class="group-title">{$lang.integral_goods_stat}</th>
   </tr>
   <tr>
     <td width="20%">{$lang.goods_count}</td>
-    <td width="30%"><strong>{$virtual_card.total}</strong></td>
+    <td width="30%"><strong>{$integral_goods.total}</strong></td>
     <td width="20%"><a href="goods.php?act=list&amp;stock_warning=1&amp;extension_code=virtual_card">{$lang.warn_goods}</a></td>
-    <td width="30%"><strong style="color: red">{$virtual_card.warn}</strong></td>
+    <td width="30%"><strong style="color: red">{$integral_goods.warn}</strong></td>
   </tr>
   <tr>
     <td><a href="goods.php?act=list&amp;intro_type=is_new&amp;extension_code=virtual_card">{$lang.new_goods}</a></td>
-    <td><strong>{$virtual_card.new}</strong></td>
+    <td><strong>{$integral_goods.new}</strong></td>
     <td><a href="goods.php?act=list&amp;intro_type=is_best&amp;extension_code=virtual_card">{$lang.recommed_goods}</a></td>
-    <td><strong>{$virtual_card.best}</strong></td>
+    <td><strong>{$integral_goods.best}</strong></td>
   </tr>
   <tr>
     <td><a href="goods.php?act=list&amp;intro_type=is_hot&amp;extension_code=virtual_card">{$lang.hot_goods}</a></td>
-    <td><strong>{$virtual_card.hot}</strong></td>
-    <td><a href="goods.php?act=list&amp;intro_type=is_promote&amp;extension_code=virtual_card">{$lang.sales_count}</a></td>
-    <td><strong>{$virtual_card.promote}</strong></td>
+    <td><strong>{$integral_goods.hot}</strong></td>
+    <td><!-- <a href="goods.php?act=list&amp;intro_type=is_promote&amp;extension_code=virtual_card">{$lang.sales_count} --></a></td>
+    <td><!-- <strong>{$integral_goods.promote}</strong> --></td>
   </tr>
 </table>
 </div>
 <!-- end order statistics -->
 <br />
-<!-- start access statistics -->
-<div class="list-div">
+<!-- 访问统计 -->
+<!-- <div class="list-div">
 <table cellspacing='1' cellpadding='3'>
   <tr>
     <th colspan="4" class="group-title">{$lang.acess_stat}</th>
@@ -164,7 +164,7 @@
     <td><strong>{$comment_number}</strong></td>
   </tr>
 </table>
-</div>
+</div> -->
 <!-- end access statistics -->
 <br />
 <!-- start system information -->
