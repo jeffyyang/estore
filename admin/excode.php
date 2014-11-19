@@ -77,17 +77,17 @@ elseif ($_REQUEST['act'] == 'exchange')
     check_authz_json('order_view');
 
     $id = intval($_REQUEST['id']);
-    $sql = "SELECT rec_id, is_gift
+    $sql = "SELECT rec_id, exchange_status
             FROM " . $ecs->table('order_goods') . "
             WHERE rec_id = '$id'";
     $excode = $db->getRow($sql, TRUE);
 
     if ($excode['rec_id'])
     {
-        $_excode['is_gift'] = 1;
+        $_excode['exchange_status'] = 1;
         $db->autoExecute($ecs->table('order_goods'), $_excode, '', "rec_id = '$id'");
         clear_cache_files();
-        make_json_result($excode['is_gift']);
+        make_json_result($excode['exchange_status']);
     }
     exit;
 }
@@ -321,8 +321,8 @@ function excode_list()
     {
         $row[$key]['status'] = $value['exchange_status'];
         $row[$key]['order_time'] = local_date('Y-m-d H:i', $value['add_time']);
-        $row[$key]['start_time'] = local_date('Y-m-d', strtotime($value['excode_start_time']));
-        $row[$key]['exp_time']   = local_date('Y-m-d', strtotime($value['excode_exp_time']));
+        $row[$key]['start_time'] = local_date('Y-m-d', $value['excode_start_time']);
+        $row[$key]['exp_time']   = local_date('Y-m-d', $value['excode_exp_time']);
         // if ($value['order_status'] == OS_INVALID || $value['order_status'] == OS_CANCELED)
         // {
         //      如果该订单为无效或取消则显示删除链接 
