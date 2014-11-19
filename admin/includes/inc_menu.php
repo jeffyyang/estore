@@ -117,8 +117,8 @@ $modules['10_priv_admin']['agency_list']            = 'agency.php?act=list';    
 // $modules['11_system']['03_shipping_list']           = 'shipping.php?act=list';
 // $modules['11_system']['04_mail_settings']           = 'shop_config.php?act=mail_settings';
 // $modules['11_system']['05_area_list']               = 'area_manage.php?act=list';
-//$modules['11_system']['06_plugins']                 = 'plugins.php?act=list';
-$modules['11_system']['07_cron_schcron']            = 'cron.php?act=list';
+// $modules['11_system']['06_plugins']                 = 'plugins.php?act=list';
+// $modules['11_system']['07_cron_schcron']            = 'cron.php?act=list';   // 定时任务
 // $modules['11_system']['08_friendlink_list']         = 'friend_link.php?act=list';
 // $modules['11_system']['sitemap']                    = 'sitemap.php';
 // $modules['11_system']['check_file_priv']            = 'check_file_priv.php?act=check';
@@ -139,11 +139,11 @@ $modules['11_system']['07_cron_schcron']            = 'cron.php?act=list';
 // $modules['12_template']['mail_template_manage']     = 'mail_template.php?act=list';
 
 // 数据库管理
-$modules['13_backup']['02_db_manage']               = 'database.php?act=backup';
-$modules['13_backup']['03_db_optimize']             = 'database.php?act=optimize';
-$modules['13_backup']['04_sql_query']               = 'sql.php?act=main';
-//$modules['13_backup']['05_synchronous']             = 'integrate.php?act=sync';
-$modules['13_backup']['convert']                    = 'convert.php?act=main';
+// $modules['13_backup']['02_db_manage']               = 'database.php?act=backup';
+// $modules['13_backup']['03_db_optimize']             = 'database.php?act=optimize';
+// $modules['13_backup']['04_sql_query']               = 'sql.php?act=main';
+// $modules['13_backup']['05_synchronous']             = 'integrate.php?act=sync';
+// $modules['13_backup']['convert']                    = 'convert.php?act=main';
 
 //短信管理
 //$modules['14_sms']['02_sms_my_info']                = 'sms.php?act=display_my_info';

@@ -801,7 +801,7 @@ function get_goods_articles($goods_id)
 }
 
 /**
- * 获得商品列表
+ * 获得商品列表(包含虚拟，实体商品)
  *
  * @access  public
  * @params  integer $isdelete
@@ -809,7 +809,7 @@ function get_goods_articles($goods_id)
  * @params  integer $conditions
  * @return  array
  */
-function goods_list($is_delete, $real_goods=1, $conditions = '')
+function goods_list($is_delete, $real_goods=-1, $conditions = '')
 {
     /* 过滤条件 */
     $param_str = '-' . $is_delete . '-' . $real_goods;
@@ -913,6 +913,9 @@ function goods_list($is_delete, $real_goods=1, $conditions = '')
                     " FROM " . $GLOBALS['ecs']->table('goods') . " AS g WHERE is_delete='$is_delete' $where" .
                     " ORDER BY $filter[sort_by] $filter[sort_order] ".
                     " LIMIT " . $filter['start'] . ",$filter[page_size]";
+
+        echo $sql;
+        exit; 
 
         $filter['keyword'] = stripslashes($filter['keyword']);
         set_filter($filter, $sql, $param_str);
