@@ -53,7 +53,7 @@ elseif ($_REQUEST['act'] == 'top')
     $smarty->assign('nav_list', $lst);
     $smarty->assign('admin_id', $_SESSION['admin_id']);
     $smarty->assign('certi', $_CFG['certi']);
-
+    
     $smarty->display('top.htm');
 }
 
