@@ -270,15 +270,16 @@ elseif ($_REQUEST['act'] == 'insert')
     $action_list = '';
     if (!empty($_POST['select_role']))
     {
-        $sql = "SELECT action_list FROM " . $ecs->table('role') . " WHERE role_id = '".$_POST['select_role']."'";
+        $sql = "SELECT action_list, nav_list FROM " . $ecs->table('role') . " WHERE role_id = '".$_POST['select_role']."'";
         $row = $db->getRow($sql);
         $action_list = $row['action_list'];
         $role_id = $_POST['select_role'];
     }
+    // else{
 
-        $sql = "SELECT nav_list FROM " . $ecs->table('admin_user') . " WHERE action_list = 'all'";
-        $row = $db->getRow($sql);
-
+    //     $sql = "SELECT nav_list FROM " . $ecs->table('admin_user') . " WHERE action_list = 'all'";
+    //     $row = $db->getRow($sql);
+    // }
 
     $sql = "INSERT INTO ".$ecs->table('admin_user')." (user_name, email, password, add_time, nav_list, action_list, role_id) ".
            "VALUES ('".trim($_POST['user_name'])."', '".trim($_POST['email'])."', '$password', '$add_time', '$row[nav_list]', '$action_list', '$role_id')";

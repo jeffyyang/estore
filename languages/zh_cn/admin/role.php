@@ -75,6 +75,7 @@ $_LANG['edit_remove_cannot'] = '您不能删除demo这个管理员!';
 $_LANG['remove_self_cannot'] = '您不能删除自己!';
 $_LANG['remove_cannot'] = '此管理员您不能进行删除操作!';
 $_LANG['remove_cannot_user'] = '此角色有管理员在使用，暂时不能删除!';
+$_LANG['remove_cannot_build-in'] = '此角色为系统内置角色，不能删除!';
 
 $_LANG['modif_info'] = '编辑个人资料';
 $_LANG['edit_navi'] = '设置个人导航';

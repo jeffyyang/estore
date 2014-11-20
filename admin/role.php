@@ -264,6 +264,12 @@ elseif ($_REQUEST['act'] == 'remove')
     check_authz_json('admin_drop');
 
     $id = intval($_GET['id']);
+
+    $is_system = $db->getOne("SELECT `is_built-in` FROM " .$ecs->table('role'). " WHERE role_id = '$_GET[id]'");
+    if($is_system){
+        make_json_error($_LANG['remove_cannot_build-in']);
+    }
+
     $num_sql = "SELECT count(*) FROM " .$ecs->table('admin_user'). " WHERE role_id = '$_GET[id]'";
     $remove_num = $db->getOne($num_sql);
     if($remove_num > 0)
