@@ -75,7 +75,7 @@ elseif ($_REQUEST['act'] == 'query')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'exchange')
 {
-    check_authz_json('order_check');
+    check_authz_json('excode_check');
 
     $id = intval($_REQUEST['id']);
     $sql = "SELECT rec_id, exchange_status

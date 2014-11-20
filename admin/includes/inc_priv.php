@@ -108,7 +108,8 @@ if (!defined('IN_ECS'))
     $purview['ad_list']              = 'ad_manage';
 
 //订单管理权限
-    $purview['02_order_list']        = 'order_view';
+    $purview['02_group_order_list']  = 'order_view';
+    $purview['02_integral_order_list']  = 'order_view';
     $purview['03_order_query']       = 'order_view';
     $purview['04_merge_order']       = 'order_os_edit';
     $purview['05_edit_order_print']  = 'order_os_edit';
@@ -116,6 +117,7 @@ if (!defined('IN_ECS'))
     $purview['08_add_order']         = 'order_edit';
     $purview['09_delivery_order']    = 'delivery_view';
     $purview['10_back_order']        = 'back_view';
+    $purview['11_excode_verify']     = 'excode_view';
 
 //报表统计权限
     $purview['flow_stats']           = 'client_flow_stats';
