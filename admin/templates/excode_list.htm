@@ -39,13 +39,7 @@
     <td align="center" valign="top">{$excode.start_time}</td>
     <td align="center" valign="top">{$excode.exp_time}</td>
     <td align="center" valign="top" nowrap="nowrap">{$lang.cd[$excode.status]}</td>
-    <td align="center" valign="top"  nowrap="nowrap">
-          {if $excode.status == 0}
-          <a href="excode.php?act=exchange&id={$excode.rec_id}" title="{$lang.exchange_goods}"><font color="green">{$lang.exchange_goods}</font></a>
-          {else if}
-          <font color="Gray">{$lang.exchange_goods}
-          {/if}
-    </td>
+    <td align="center"><img src="images/{if $excode.status eq 0}yes{else}no{/if}.gif" onclick="exchange(this,{$excode.rec_id});" style="cursor:pointer;"/></td>
   </tr>
   {/foreach}
 </table>
@@ -108,6 +102,24 @@ listTable.filter.{$key} = '{$item}';
         return true;
       }
     }
+
+    /* 兑换物品 */
+    function exchang(obj, rec_id)
+    {
+      var url = excode.php?act=exchange;
+      var val = (obj.src.match(/yes.gif/i)) ? 0 : 1;
+
+      var res = Ajax.call(url, "&id="+ rec_id, null, "POST", "JSON", false);
+      
+      if (res.message)
+      {
+        alert(res.message);
+      }
+      if (res.error == 0)
+      {
+        obj.src = (res.content > 0) ? 'images/yes.gif' : 'images/no.gif';
+      }
+    }    
     /**
      * 显示订单商品及缩图
      */

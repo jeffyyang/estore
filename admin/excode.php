@@ -27,8 +27,7 @@ if ($_REQUEST['act'] == 'list')
 {
     /* 检查权限 */
     admin_priv('excode_view');
-    print_r($_SESSION);
-
+    
     /* 模板赋值 */
     $smarty->assign('ur_here', $_LANG['excode_list']);
     $smarty->assign('status_list', $_LANG['cd']);    // 兑换码状态
@@ -86,6 +85,8 @@ elseif ($_REQUEST['act'] == 'exchange')
     if ($excode['rec_id'])
     {
         $_excode['exchange_status'] = 1;
+        $_excode['exchange_time'] = gmtime();
+        
         $db->autoExecute($ecs->table('order_goods'), $_excode, '', "rec_id = '$id'");
         clear_cache_files();
         make_json_result($excode['exchange_status']);
