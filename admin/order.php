@@ -4846,6 +4846,8 @@ function order_list()
     if ($result === false)
     {
         /* 过滤信息 */
+        $filter['src_type'] = empty($_REQUEST['src_type']) ? '1' : trim($_REQUEST['src_type']);
+
         $filter['order_sn'] = empty($_REQUEST['order_sn']) ? '' : trim($_REQUEST['order_sn']);
         if (!empty($_GET['is_ajax']) && $_GET['is_ajax'] == 1)
         {
@@ -4879,6 +4881,7 @@ function order_list()
         $filter['end_time'] = empty($_REQUEST['end_time']) ? '' : (strpos($_REQUEST['end_time'], '-') > 0 ?  local_strtotime($_REQUEST['end_time']) : $_REQUEST['end_time']);
 
         $where = 'WHERE 1 ';
+
         if ($filter['order_sn'])
         {
             $where .= " AND o.order_sn LIKE '%" . mysql_like_quote($filter['order_sn']) . "%'";
@@ -4959,6 +4962,11 @@ function order_list()
         {
             $where .= " AND o.add_time <= '$filter[end_time]'";
         }
+
+        if ($filter['src_type'])
+        {
+            $where .= " AND o.src_type <= '$filter[src_type]'";
+        }        
 
         //综合状态
         switch($filter['composite_status'])

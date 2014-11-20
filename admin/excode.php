@@ -27,6 +27,7 @@ if ($_REQUEST['act'] == 'list')
 {
     /* 检查权限 */
     admin_priv('excode_view');
+    print_r($_SESSION);
 
     /* 模板赋值 */
     $smarty->assign('ur_here', $_LANG['excode_list']);
@@ -259,7 +260,12 @@ function excode_list()
 
         }else{
 
-            $where .= " AND og.exchange_status IN (1,2)";
+            $where .= " AND og.exchange_status IN (1,2) ";
+        }
+
+        if($_SESSION['admin_name'] != 'admin'){
+
+            $where .= " AND oi.suppliers_id = '$_SESSION[suppliers_id]' ";
         }
 
         /* 如果管理员属于某个办事处，只列出这个办事处管辖的订单 */
