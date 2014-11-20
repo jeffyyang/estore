@@ -57,7 +57,8 @@ $modules['03_promotion']['14_package_list']         = 'package.php?act=list';
 $modules['03_promotion']['15_exchange_goods']       = 'exchange_goods.php?act=list';*/
 
 // 订单管理
-$modules['04_order']['02_order_list']               = 'order.php?act=list';
+$modules['04_order']['02_group_order_list']         = 'order.php?act=list';
+$modules['04_order']['02_integral_order_list']      = 'order.php?act=list&src_type=2';
 $modules['04_order']['03_order_query']              = 'order.php?act=order_query';
 // $modules['04_order']['04_merge_order']              = 'order.php?act=merge'; 
 $modules['04_order']['05_edit_order_print']         = 'order.php?act=templates';

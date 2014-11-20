@@ -4965,7 +4965,7 @@ function order_list()
 
         if ($filter['src_type'])
         {
-            $where .= " AND o.src_type <= '$filter[src_type]'";
+            $where .= " AND o.src_type = '$filter[src_type]'";
         }        
 
         //综合状态
