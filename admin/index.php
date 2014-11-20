@@ -309,7 +309,7 @@ elseif ($_REQUEST['act'] == 'main')
     $smarty->assign('admin_msg', $admin_msg);
 
     /* 取得支持货到付款和不支持货到付款的支付方式 */
-    $ids = get_pay_ids();
+    // $ids = get_pay_ids();
 
     /* 已完成的订单 */
     $order['finished']     = $db->GetOne('SELECT COUNT(*) FROM ' . $ecs->table('order_info').

@@ -218,7 +218,8 @@ $_LANG['08_add_order'] = '添加订单';
 $_LANG['09_delivery_order'] = '发货单列表';
 $_LANG['10_back_order'] = '退货单列表';
 $_LANG['11_excode_verify'] = '兑换码核销';
-
+$_LANG['excode_view']  = '兑换码查看';
+$_LANG['excode_check'] = '兑换码核销';
 /* 广告管理 */
 $_LANG['ad_position'] = '广告位置';
 $_LANG['ad_list'] = '广告列表';

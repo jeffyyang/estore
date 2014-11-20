@@ -26,7 +26,7 @@ require_once(ROOT_PATH . 'includes/lib_goods.php');
 if ($_REQUEST['act'] == 'list')
 {
     /* 检查权限 */
-    admin_priv('order_view');
+    admin_priv('excode_view');
 
     /* 模板赋值 */
     $smarty->assign('ur_here', $_LANG['excode_list']);
@@ -56,7 +56,7 @@ if ($_REQUEST['act'] == 'list')
 elseif ($_REQUEST['act'] == 'query')
 {
     /* 检查权限 */
-    admin_priv('order_view');
+    admin_priv('excode_view');
 
     $excode_list = excode_list();
 
@@ -74,7 +74,7 @@ elseif ($_REQUEST['act'] == 'query')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'exchange')
 {
-    check_authz_json('order_view');
+    check_authz_json('order_check');
 
     $id = intval($_REQUEST['id']);
     $sql = "SELECT rec_id, exchange_status

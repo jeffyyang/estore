@@ -133,7 +133,6 @@ elseif ($_REQUEST['act'] == 'insert')
                 FROM " . $ecs->table('admin_user') . "
                 WHERE user_name = '" . stripslashes($_POST['user_name']) . "' ";
 
-
         if ($db->getOne($sql))
         {
              sys_msg(sprintf($_LANG['user_name_exist'], stripslashes($_POST['user_name'])), 1);
@@ -161,14 +160,14 @@ elseif ($_REQUEST['act'] == 'insert')
     $action_list = '';
     if (!empty($_POST['select_role']))
     {
-        $sql = "SELECT action_list FROM " . $ecs->table('role') . " WHERE role_id = '".$_POST['select_role']."'";
+        $sql = "SELECT action_list, nav_list FROM " . $ecs->table('role') . " WHERE role_id = '".$_POST['select_role']."'";
         $row = $db->getRow($sql);
         $action_list = $row['action_list'];
         $role_id = $_POST['select_role'];
     }
 
 
-    $sql = "SELECT nav_list FROM " . $ecs->table('admin_user') . " WHERE action_list = 'all'";
+    // $sql = "SELECT nav_list FROM " . $ecs->table('admin_user') . " WHERE action_list = 'all'";
     $row = $db->getRow($sql);
   
     $sql = "INSERT INTO ".$ecs->table('admin_user')." (user_name, email, password, add_time, nav_list, action_list, suppliers_id, role_id) ".
