@@ -103,23 +103,23 @@ listTable.filter.{$key} = '{$item}';
       }
     }
 
-    /* 兑换物品 */
-    function exchang(obj, rec_id)
-    {
-      var url = excode.php?act=exchange;
-      var val = (obj.src.match(/yes.gif/i)) ? 0 : 1;
+    // /* 兑换物品 */
+    // function exchang(obj, rec_id)
+    // {
+    //   var url = excode.php?act=exchange;
+    //   var val = (obj.src.match(/yes.gif/i)) ? 0 : 1;
 
-      var res = Ajax.call(url, "&id="+ rec_id, null, "POST", "JSON", false);
+    //   var res = Ajax.call(url, "&id="+ rec_id, null, "POST", "JSON", false);
       
-      if (res.message)
-      {
-        alert(res.message);
-      }
-      if (res.error == 0)
-      {
-        obj.src = (res.content > 0) ? 'images/yes.gif' : 'images/no.gif';
-      }
-    }    
+    //   if (res.message)
+    //   {
+    //     alert(res.message);
+    //   }
+    //   if (res.error == 0)
+    //   {
+    //     obj.src = (res.content > 0) ? 'images/yes.gif' : 'images/no.gif';
+    //   }
+    // }    
     /**
      * 显示订单商品及缩图
      */
