@@ -61,7 +61,7 @@ elseif ($_REQUEST['act'] == 'list')
     admin_priv('order_view');
     
     $src_type = empty($_REQUEST['src_type']) ? '1' : trim($_REQUEST['src_type']);
-
+    echo "src_type:" .src_type;
     /* 模板赋值 */
     $smarty->assign('ur_here', $_LANG['02_order_list']);
     $smarty->assign('action_link', array('href' => 'order.php?act=order_query', 'text' => $_LANG['03_order_query']));
@@ -5051,7 +5051,7 @@ function order_list()
         $filter['page_count']     = $filter['record_count'] > 0 ? ceil($filter['record_count'] / $filter['page_size']) : 1;
 
         /* 查询 */
-        $sql = "SELECT o.order_id, o.order_sn, o.add_time, o.order_status, o.shipping_status, o.order_amount, o.money_paid, o.integral" .
+        $sql = "SELECT o.order_id, o.order_sn, o.add_time, o.order_status, o.shipping_status, o.order_amount, o.money_paid, o.integral, " .
                     "o.pay_status, o.consignee, o.address, o.email, o.tel, o.extension_code, o.extension_id, " .
                     "(" . order_amount_field('o.') . ") AS total_fee, " .
                     "IFNULL(u.user_name, '" .$GLOBALS['_LANG']['anonymous']. "') AS buyer ".
