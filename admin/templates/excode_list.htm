@@ -3,7 +3,7 @@
 {insert_scripts files="../js/utils.js,listtable.js"}
 <!-- 兑换码搜索 -->
 <div class="form-div">
-  <form action="javascript:searchExcode()" name="searchForm">
+  <form action="javascript:searchExcode();" name="searchForm">
     <img src="images/icon_search.gif" width="26" height="22" border="0" alt="SEARCH" />
     {$lang.excode_code}<input name="code" type="text" id="id_code" size="15">
     <input type="submit" value="{$lang.button_verify}" class="button" />
@@ -39,7 +39,9 @@
     <td align="center" valign="top">{$excode.start_time}</td>
     <td align="center" valign="top">{$excode.exp_time}</td>
     <td align="center" valign="top" nowrap="nowrap">{$lang.cd[$excode.status]}</td>
-    <td align="center"><img src="images/{if $excode.status eq 0}yes{else}no{/if}.gif" onclick="exchange(this,{$excode.rec_id});" style="cursor:pointer;"/></td>
+<!--     <td align="center"><img src="images/{if $excode.status eq 0}yes{else}no{/if}.gif" onclick="exchange(this,{$excode.rec_id});" style="cursor:pointer;"/></td> -->
+    <td align="center"><button type="button" class="button"  onclick="exchangeExcode(this,{$excode.rec_id});" {if $excode.status neq 0} disabled {/if} >{$lang.exchange_goods}</button></td>
+    
   </tr>
   {/foreach}
 </table>
@@ -104,11 +106,9 @@ listTable.filter.{$key} = '{$item}';
     }
 
     /* 兑换物品 */
-    function exchang(obj, rec_id)
+    function exchangeExcode(obj, rec_id)
     {
       var url = "excode.php?act=exchange";
-      var val = (obj.src.match(/yes.gif/i)) ? 0 : 1;
-
       var res = Ajax.call(url, "&id="+ rec_id, null, "POST", "JSON", false);
 
       if (res.message)
@@ -117,8 +117,9 @@ listTable.filter.{$key} = '{$item}';
       }
       if (res.error == 0)
       {
-        obj.src = (res.content > 0) ? 'images/yes.gif' : 'images/no.gif';
+        obj.disabled = 'true';
       }
+      
     }    
     /**
      * 显示订单商品及缩图
