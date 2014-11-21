@@ -35,7 +35,7 @@
     {if $src_type eq 1}
     <th><a href="javascript:listTable.sort('total_fee', 'DESC'); ">{$lang.total_fee}</a>{$sort_total_fee}</th>
     <th><a href="javascript:listTable.sort('order_amount', 'DESC'); ">{$lang.order_amount}</a>{$sort_order_amount}</th>
-    {/else}
+    {else}
     <th><a href="javascript:listTable.sort('integral', 'DESC'); ">{$lang.pay_points}</a>{$sort_integral}</th>
     {/if}
     <th>{$lang.all_status}</th>
@@ -49,7 +49,7 @@
     {if $src_type eq 1}
     <td align="right" valign="top" nowrap="nowrap">{$order.formated_total_fee}</td>
     <td align="right" valign="top" nowrap="nowrap">{$order.formated_order_amount}</td>
-    {/else}
+    {else}
     <td align="right" valign="top" nowrap="nowrap">{$order.integral}</td>
     {/if}
 
