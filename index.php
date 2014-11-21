@@ -21,6 +21,17 @@ if ((DEBUG_MODE & 2) != 2)
 {
     $smarty->caching = true;
 }
+
+ $Loaction = 'admin/';
+
+if (!empty($Loaction))
+{
+    ecs_header("Location: $Loaction\n");
+
+    exit;
+}
+    
+
 $ua = strtolower($_SERVER['HTTP_USER_AGENT']);
 
 $uachar = "/(nokia|sony|ericsson|mot|samsung|sgh|lg|philips|panasonic|alcatel|lenovo|cldc|midp|mobile)/i";

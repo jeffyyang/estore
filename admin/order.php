@@ -61,7 +61,9 @@ elseif ($_REQUEST['act'] == 'list')
     admin_priv('order_view');
     
     $src_type = empty($_REQUEST['src_type']) ? '1' : trim($_REQUEST['src_type']);
-    echo "src_type:" .$src_type;
+
+    // echo "src_type:" .$src_type;
+    
     /* 模板赋值 */
     $smarty->assign('ur_here', $_LANG['02_order_list']);
     $smarty->assign('action_link', array('href' => 'order.php?act=order_query', 'text' => $_LANG['03_order_query']));
