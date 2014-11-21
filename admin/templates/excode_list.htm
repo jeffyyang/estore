@@ -39,7 +39,6 @@
     <td align="center" valign="top">{$excode.start_time} - {$excode.exp_time}</td>
     <td align="center" valign="top">{$excode.exchange_time}</td>
     <td align="center" valign="top" nowrap="nowrap">{$lang.cd[$excode.status]}</td>
-<!--     <td align="center"><img src="images/{if $excode.status eq 0}yes{else}no{/if}.gif" onclick="exchange(this,{$excode.rec_id});" style="cursor:pointer;"/></td> -->
     <td align="center"><button type="button" class="button"  onclick="exchangeExcode(this,{$excode.rec_id});" {if $excode.status neq 0} disabled {/if} >{$lang.exchange_goods}</button></td>
     
   </tr>
@@ -77,8 +76,26 @@ listTable.filter.{$key} = '{$item}';
      * 搜索兑换码
      */
     function searchExcode()
-    {
-        listTable.filter['code'] = Utils.trim(document.forms['searchForm'].elements['code'].value);
+    {   
+        var excode = '';
+        var codeFld = document.forms['searchForm'].elements['code'];
+        if(codeFld.value == ''){
+          alert('兑换码不能为空！');
+          codeFld.focus();
+          return;
+        }
+
+        if(codeFld.value.length < 10){
+          alert('兑换码为10位数字！');
+          codeFld.focus();
+          return;
+        }
+
+        // var s = "http://www.jb51.net/page1.htm"; 
+        // excode = codeFld.replace(/(.*/){0,}([^.]+).*/ig,"$2") ; 
+        
+        excode = codeFld.value ;
+        listTable.filter['code'] = Utils.trim(excode);
         listTable.filter['page'] = 1;
         listTable.loadList();
     }
