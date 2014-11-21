@@ -401,7 +401,9 @@ var adminId = "{$admin_id}";
 <div id="menu-div">
   <ul>
     <li class="fix-spacel">&nbsp;</li>
+    {if $admin_id eq 1}
     <li><a href="index.php?act=main" target="main-frame">{$lang.admin_home}</a></li>
+    {/if}
 <!--     <li><a href="privilege.php?act=modif" target="main-frame">{$lang.set_navigator}</a></li>  导航栏设置 -->  
     {foreach from=$nav_list item=item key=key}
     <li><a href="{$key}" target="main-frame">{$item}</a></li>
