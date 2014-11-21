@@ -24,8 +24,8 @@
     <th>{$lang.goods_name}</th>
     <th>{$lang.order_sn}</th>  
     <th><a href="javascript:listTable.sort('add_time', 'DESC'); ">{$lang.order_time}</a>{$sort_order_time}</th>
-    <th>{$lang.use_start_date}</th>
-    <th>{$lang.use_exp_date}</th>
+    <th>{$lang.valid_use_date}</th>
+    <th>{$lang.exchange_time}</th>
     <th>{$lang.all_status}</th>
     <th>{$lang.handler}</th>
   <tr>
@@ -36,8 +36,8 @@
     <td>{$excode.goods_name|escape}<a href="excode.php?act=info&order_id={$excode.order_id}" id="order_{$okey}">[{$excode.goods_id}]</td>
     <td align="center" valign="top" nowrap="nowrap">{$excode.order_sn|escape}</td>
     <td align="center" valign="top" nowrap="nowrap">{$excode.order_time}</td>
-    <td align="center" valign="top">{$excode.start_time}</td>
-    <td align="center" valign="top">{$excode.exp_time}</td>
+    <td align="center" valign="top">{$excode.start_time} - {$excode.exp_time}</td>
+    <td align="center" valign="top">{$excode.exchange_time}</td>
     <td align="center" valign="top" nowrap="nowrap">{$lang.cd[$excode.status]}</td>
 <!--     <td align="center"><img src="images/{if $excode.status eq 0}yes{else}no{/if}.gif" onclick="exchange(this,{$excode.rec_id});" style="cursor:pointer;"/></td> -->
     <td align="center"><button type="button" class="button"  onclick="exchangeExcode(this,{$excode.rec_id});" {if $excode.status neq 0} disabled {/if} >{$lang.exchange_goods}</button></td>
@@ -119,7 +119,7 @@ listTable.filter.{$key} = '{$item}';
       {
         obj.disabled = 'true';
       }
-      
+
     }    
     /**
      * 显示订单商品及缩图
