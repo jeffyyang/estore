@@ -84,6 +84,7 @@ $_LANG['op_to_delivery'] = '去发货';
 /* 订单列表 */
 $_LANG['order_amount'] = '应付金额';
 $_LANG['total_fee'] = '总金额';
+$_LANG['pay_points'] = '消费积分';
 $_LANG['shipping_name'] = '配送方式';
 $_LANG['pay_name'] = '支付方式';
 $_LANG['address'] = '地址';

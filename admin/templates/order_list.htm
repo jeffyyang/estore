@@ -16,6 +16,7 @@
     <a href="order.php?act=list&composite_status={$os_unconfirmed}">{$lang.cs.$os_unconfirmed}</a>
     <a href="order.php?act=list&composite_status={$cs_await_pay}">{$lang.cs.$cs_await_pay}</a>
     <a href="order.php?act=list&composite_status={$cs_await_ship}">{$lang.cs.$cs_await_ship}</a>
+    <input name="src_type" type="hidden" value="{$src_type}"  />
   </form>
 </div>
 
@@ -31,8 +32,12 @@
     </th>
     <th><a href="javascript:listTable.sort('add_time', 'DESC'); ">{$lang.order_time}</a>{$sort_order_time}</th>
     <th><a href="javascript:listTable.sort('consignee', 'DESC'); ">{$lang.consignee}</a>{$sort_consignee}</th>
+    {if $src_type eq 1}
     <th><a href="javascript:listTable.sort('total_fee', 'DESC'); ">{$lang.total_fee}</a>{$sort_total_fee}</th>
     <th><a href="javascript:listTable.sort('order_amount', 'DESC'); ">{$lang.order_amount}</a>{$sort_order_amount}</th>
+    {/else}
+    <th><a href="javascript:listTable.sort('integral', 'DESC'); ">{$lang.pay_points}</a>{$sort_integral}</th>
+    {/if}
     <th>{$lang.all_status}</th>
     <th>{$lang.handler}</th>
   <tr>
@@ -41,8 +46,13 @@
     <td valign="top" nowrap="nowrap"><input type="checkbox" name="checkboxes" value="{$order.order_sn}" /><a href="order.php?act=info&order_id={$order.order_id}" id="order_{$okey}">{$order.order_sn}{if $order.extension_code eq "group_buy"}<br /><div align="center">{$lang.group_buy}</div>{elseif $order.extension_code eq "exchange_goods"}<br /><div align="center">{$lang.exchange_goods}</div>{/if}</a></td>
     <td>{$order.buyer|escape}<br />{$order.short_order_time}</td>
     <td align="left" valign="top"><a href="mailto:{$order.email}"> {$order.consignee|escape}</a>{if $order.tel} [TEL: {$order.tel|escape}]{/if} <br />{$order.address|escape}</td>
+    {if $src_type eq 1}
     <td align="right" valign="top" nowrap="nowrap">{$order.formated_total_fee}</td>
     <td align="right" valign="top" nowrap="nowrap">{$order.formated_order_amount}</td>
+    {/else}
+    <td align="right" valign="top" nowrap="nowrap">{$order.integral}</td>
+    {/if}
+
     <td align="center" valign="top" nowrap="nowrap">{$lang.os[$order.order_status]},{$lang.ps[$order.pay_status]},{$lang.ss[$order.shipping_status]}</td>
     <td align="center" valign="top"  nowrap="nowrap">
      <a href="order.php?act=info&order_id={$order.order_id}">{$lang.detail}</a>
@@ -73,6 +83,7 @@
     <input name="print" type="submit" id="btnSubmit4" value="{$lang.print_order}" class="button" disabled="true" onclick="this.form.target = '_blank'" />
     <input name="batch" type="hidden" value="1" />
     <input name="order_id" type="hidden" value="" />
+    <input name="src_type" type="hidden" value="{$src_type}" />
   </div>
 </form>
 <script language="JavaScript">
