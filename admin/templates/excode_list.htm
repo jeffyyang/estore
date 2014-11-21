@@ -79,23 +79,26 @@ listTable.filter.{$key} = '{$item}';
     {   
         var excode = '';
         var codeFld = document.forms['searchForm'].elements['code'];
+
         if(codeFld.value == ''){
           alert('兑换码不能为空！');
           codeFld.focus();
           return;
         }
 
-        if(codeFld.value.length < 10){
-          alert('兑换码为10位数字！');
-          codeFld.focus();
-          return;
+        var codeFleVal = Utils.trim(codeFld.value); ;
+
+        if(/\d{10}$/.test(codeFleVal)){
+          excode = codeFleVal.replace(/(\d{4})/g,"$1 ").replace(/\s*$/,"");
+          codeFld.value = excode;
+          
+        }else{
+              alert('兑换码为10位数数字！');
+              codeFld.focus();
+              return;
         }
 
-        // var s = "http://www.jb51.net/page1.htm"; 
-        // excode = codeFld.replace(/(.*/){0,}([^.]+).*/ig,"$2") ; 
-        
-        excode = codeFld.value ;
-        listTable.filter['code'] = Utils.trim(excode);
+        listTable.filter['code'] = excode;
         listTable.filter['page'] = 1;
         listTable.loadList();
     }
