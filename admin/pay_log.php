@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ECSHOP 管理中心帐户变动记录
+ * ECSHOP 管理中心付款记录
  * ============================================================================
  * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
@@ -96,7 +96,7 @@ elseif ($_REQUEST['act'] == 'query')
     $smarty->assign('record_count', $account_list['record_count']);
     $smarty->assign('page_count',   $account_list['page_count']);
 
-    make_json_result($smarty->fetch('account_list.htm'), '',
+    make_json_result($smarty->fetch('paylog_list.htm'), '',
         array('filter' => $account_list['filter'], 'page_count' => $account_list['page_count']));
 }
 
@@ -124,7 +124,7 @@ elseif ($_REQUEST['act'] == 'add')
     $smarty->assign('ur_here', $_LANG['add_account']);
     $smarty->assign('action_link', array('href' => 'account_log.php?act=list&user_id=' . $user_id, 'text' => $_LANG['account_list']));
     assign_query_info();
-    $smarty->display('account_info.htm');
+    $smarty->display('paylog_info.htm');
 }
 
 /*------------------------------------------------------ */

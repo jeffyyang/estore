@@ -49,8 +49,10 @@
 <!--       <a href="users.php?act=edit&id={$user.user_id}" title="{$lang.edit}"><img src="images/icon_edit.gif" border="0" height="16" width="16" /></a> -->
 <!--       <a href="users.php?act=address_list&id={$user.user_id}" title="{$lang.address_list}"><img src="images/book_open.gif" border="0" height="16" width="16" /></a> -->
       <a href="order.php?act=list&user_id={$user.user_id}" title="{$lang.view_order}"><img src="images/icon_view.gif" border="0" height="16" width="16" /></a>
-      <a href="account_log.php?act=list&user_id={$user.user_id}" title="{$lang.view_deposit}"><img src="images/icon_account.gif" border="0" height="16" width="16" /></a>
-<!--       <a href="javascript:confirm_redirect('{if $user.user_money ne 0}{$lang.still_accounts}{/if}{$lang.remove_confirm}', 'users.php?act=remove&id={$user.user_id}')" title="{$lang.remove}"><img src="images/icon_drop.gif" border="0" height="16" width="16" /></a> -->
+      <a href="pay_log.php?act=list&user_id={$user.user_id}" title="{$lang.view_paylog}"><img src="images/icon_account.gif" border="0" height="16" width="16" /></a>
+      <a href="score_log.php?act=list&user_id={$user.user_id}" title="{$lang.view_scorelog}"><img src="images/icon_account.gif" border="0" height="16" width="16" /></a>
+<!--  <a href="account_log.php?act=list&user_id={$user.user_id}" title="{$lang.view_deposit}"><img src="images/icon_account.gif" border="0" height="16" width="16" /></a>
+       <a href="javascript:confirm_redirect('{if $user.user_money ne 0}{$lang.still_accounts}{/if}{$lang.remove_confirm}', 'users.php?act=remove&id={$user.user_id}')" title="{$lang.remove}"><img src="images/icon_drop.gif" border="0" height="16" width="16" /></a> -->
     </td>
   </tr>
   {foreachelse}

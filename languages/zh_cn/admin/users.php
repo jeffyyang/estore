@@ -21,6 +21,8 @@ $_LANG['all_option'] = '所有等级';
 
 $_LANG['view_order'] = '查看订单';
 $_LANG['view_deposit'] = '查看账目明细';
+$_LANG['view_paylog']  = '查看付款明细';
+$_LANG['view_sorelog'] = '查看积分明细';
 $_LANG['username'] = '会员名称';
 $_LANG['email'] = '邮件地址';
 $_LANG['is_validated'] = '是否已验证';
