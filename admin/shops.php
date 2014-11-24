@@ -170,8 +170,8 @@ elseif ($_REQUEST['act'] == 'insert')
     // $sql = "SELECT nav_list FROM " . $ecs->table('admin_user') . " WHERE action_list = 'all'";
     $row = $db->getRow($sql);
   
-    $sql = "INSERT INTO ".$ecs->table('admin_user')." (user_name, email, password, add_time, nav_list, action_list, suppliers_id, role_id) ".
-           "VALUES ('".trim($_POST['user_name'])."', '".trim($_POST['email'])."', '$password', '$add_time', '$row[nav_list]', '$action_list', '$suppliers_id', '$role_id')";
+    $sql = "INSERT INTO ".$ecs->table('admin_user')." (user_name, email, password, add_time, nav_list, action_list, shop_id, role_id) ".
+           "VALUES ('".trim($_POST['user_name'])."', '".trim($_POST['email'])."', '$password', '$add_time', '$row[nav_list]', '$action_list', '$shop_id', '$role_id')";
 
 
     $db->query($sql);

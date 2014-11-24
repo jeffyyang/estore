@@ -93,14 +93,20 @@
             </td>
           </tr>
           -->
-         {if $suppliers_exists eq 1}
-          <tr>
-            <td class="label">{$lang.label_suppliers}</td>
-            <td><select name="suppliers_id" id="suppliers_id">
-        <option value="0">{$lang.suppliers_no}</option>
-        {html_options options=$suppliers_list_name selected=$goods.suppliers_id}
-      </select></td>
-          </tr>
+         {if $is_admin eq 1} 
+
+           {if $suppliers_exists eq 1}
+            <tr>
+              <td class="label">{$lang.label_suppliers}</td>
+              <td>
+                  <select name="suppliers_id" id="suppliers_id">
+                  <option value="0">{$lang.suppliers_no}</option>
+                  {html_options options=$suppliers_list_name selected=$goods.suppliers_id}
+                  </select>
+              </td>
+            </tr>
+           {/if}
+
          {/if}
           <tr>
             <td class="label">{$lang.lab_shop_price}</td>

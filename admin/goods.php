@@ -121,16 +121,23 @@ elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit' || $_REQUEST['ac
         admin_priv('goods_manage'); // 检查权限
     }
 
-    /* 供货商名 */
-    $suppliers_list_name = suppliers_list_name();
-    $suppliers_exists = 1;
-    if (empty($suppliers_list_name))
-    {
-        $suppliers_exists = 0;
+    $is_admin = '0';
+    if($_SESSION['admin_name'] == 'admin'){
+
+        $is_admin = '1';
+        /* 供货商名 */
+        $suppliers_list_name = suppliers_list_name();
+        $suppliers_exists = 1;
+        if (empty($suppliers_list_name))
+        {
+            $suppliers_exists = 0;
+        }
+        $smarty->assign('suppliers_exists', $suppliers_exists);
+        $smarty->assign('suppliers_list_name', $suppliers_list_name);
+        unset($suppliers_list_name, $suppliers_exists);
     }
-    $smarty->assign('suppliers_exists', $suppliers_exists);
-    $smarty->assign('suppliers_list_name', $suppliers_list_name);
-    unset($suppliers_list_name, $suppliers_exists);
+
+    $smarty->assign('is_admin', $is_admin);
 
     /* 如果是安全模式，检查目录是否存在 */
     if (ini_get('safe_mode') == 1 && (!file_exists('../' . IMAGE_DIR . '/'.date('Ym')) || !is_dir('../' . IMAGE_DIR . '/'.date('Ym'))))
@@ -831,6 +838,11 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
     $rank_integral = isset($_POST['rank_integral']) ? intval($_POST['rank_integral']) : '-1';
     $suppliers_id = isset($_POST['suppliers_id']) ? intval($_POST['suppliers_id']) : '0';
 
+    if($_SESSION['suppliers_id'] > 0 ){
+
+        $suppliers_id = $_SESSION['suppliers_id'];
+    }
+
     $goods_name_style = $_POST['goods_name_color'] . '+' . $_POST['goods_name_style'];
 
     $catgory_id = empty($_POST['cat_id']) ? '' : intval($_POST['cat_id']);
@@ -862,13 +874,13 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
                     "cat_id, brand_id, shop_price, market_price, is_promote, promote_price, use_start_date, use_end_date," .
                     "promote_start_date, promote_end_date, goods_img, goods_thumb, original_img, keywords, goods_brief, " .
                     "seller_note, goods_weight, goods_number, warn_number, integral, give_integral, is_best, is_new, is_hot, is_real, " .
-                    "is_on_sale, is_alone_sale, is_shipping, goods_desc, add_time, last_update, goods_type, extension_code, rank_integral)" .
+                    "is_on_sale, is_alone_sale, is_shipping, goods_desc, add_time, last_update, goods_type, extension_code, rank_integral, suppliers_id)" .
                 "VALUES ('$_POST[goods_name]', '$goods_name_style', '$goods_sn', '$catgory_id', " .
                     "'$brand_id', '$shop_price', '$market_price', '$is_promote','$promote_price', '$use_start_date', '$use_end_date',".
                     "'$promote_start_date', '$promote_end_date', '$goods_img', '$goods_thumb', '$original_img', ".
                     "'$_POST[keywords]', '$_POST[goods_brief]', '$_POST[seller_note]', '$goods_weight', '$goods_number',".
                     " '$warn_number', '$_POST[integral]', '$give_integral', '$is_best', '$is_new', '$is_hot', 0, '$is_on_sale', '$is_alone_sale', $is_shipping, ".
-                    " '$_POST[goods_desc]', '" . gmtime() . "', '". gmtime() ."', '$goods_type', '$code', '$rank_integral')";
+                    " '$_POST[goods_desc]', '" . gmtime() . "', '". gmtime() ."', '$goods_type', '$code', '$rank_integral', '$suppliers_id')";
         }
     }
     else

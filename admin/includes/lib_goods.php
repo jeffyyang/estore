@@ -827,6 +827,12 @@ function goods_list($is_delete, $real_goods=1, $conditions = '')
         $filter['keyword']          = empty($_REQUEST['keyword']) ? '' : trim($_REQUEST['keyword']);
         $filter['suppliers_id'] = isset($_REQUEST['suppliers_id']) ? (empty($_REQUEST['suppliers_id']) ? '' : trim($_REQUEST['suppliers_id'])) : '';
         $filter['is_on_sale'] = isset($_REQUEST['is_on_sale']) ? ((empty($_REQUEST['is_on_sale']) && $_REQUEST['is_on_sale'] === 0) ? '' : trim($_REQUEST['is_on_sale'])) : '';
+
+        if($_SESSION['suppliers_id'] > 0){
+
+            $filter['suppliers_id'] = $_SESSION['suppliers_id'];
+        }
+
         if (isset($_REQUEST['is_ajax']) && $_REQUEST['is_ajax'] == 1)
         {
             $filter['keyword'] = json_str_iconv($filter['keyword']);
