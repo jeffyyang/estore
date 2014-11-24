@@ -4854,6 +4854,9 @@ function order_list()
         /* 过滤信息 */
         $filter['src_type'] = empty($_REQUEST['src_type']) ? '1' : trim($_REQUEST['src_type']);
 
+        if($_SESSION['suppliers_id'] > 0 ){
+            $filter['suppliers_id'] = $_SESSION['suppliers_id'];
+        }
         $filter['order_sn'] = empty($_REQUEST['order_sn']) ? '' : trim($_REQUEST['order_sn']);
         if (!empty($_GET['is_ajax']) && $_GET['is_ajax'] == 1)
         {
@@ -4968,6 +4971,11 @@ function order_list()
         {
             $where .= " AND o.add_time <= '$filter[end_time]'";
         }
+
+        if ($filter['suppliers_id'])
+        {
+            $where .= " AND o.suppliers_id = '$filter[suppliers_id]'";
+        }        
 
         if ($filter['src_type'])
         {
