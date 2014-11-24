@@ -28,6 +28,8 @@ if ($_REQUEST['act'] == 'list')
      /* 检查权限 */
     admin_priv('suppliers_manage');
 
+    print_r($_SESSION);
+    
     /* 查询 */
     $is_dis_searchbar = true;
     $shop_id = intval($_REQUEST['shop_id']);
