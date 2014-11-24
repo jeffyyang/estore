@@ -38,11 +38,11 @@
         <table width="90%" id="general-table" align="center">
           <tr>
             <td class="label">{$lang.lab_goods_name}</td>
-            <td><input type="text" name="goods_name" value="{$goods.goods_name|escape}" style="float:left;color:{$goods_name_color};" size="30" /><div style="background-color:{$goods_name_color};float:left;margin-left:2px;" id="font_color" onclick="ColorSelecter.Show(this);"><img src="images/color_selecter.gif" style="margin-top:-1px;" /></div><input type="hidden" id="goods_name_color" name="goods_name_color" value="{$goods_name_color}" />&nbsp;
+            <td><input type="text" name="goods_name" value="{$goods.goods_name|escape}" style="float:left;color:{$goods_name_color};" size="30" /><!-- <div style="background-color:{$goods_name_color};float:left;margin-left:2px;" id="font_color" onclick="ColorSelecter.Show(this);"><img src="images/color_selecter.gif" style="margin-top:-1px;" /></div><input type="hidden" id="goods_name_color" name="goods_name_color" value="{$goods_name_color}" />&nbsp;
             <select name="goods_name_style">
               <option value="">{$lang.select_font}</option>
               {html_options options=$lang.font_styles selected=$goods_name_style}
-            </select>
+            </select> -->
             {$lang.require_field}</td>
           </tr>
           <tr>
@@ -54,7 +54,7 @@
           <tr>
             <td class="label">{$lang.lab_goods_cat}</td>
             <td><select name="cat_id" onchange="changeCat(this);" ><option value="0">{$lang.select_please}</option>{$cat_list}</select>
-              {if $is_add}
+              <!-- {if $is_add}
               <a href="javascript:void(0)" onclick="rapidCatAdd()" title="{$lang.rapid_add_cat}" class="special">{$lang.rapid_add_cat}</a>
               <span id="category_add" style="display:none;">
               <input class="text" size="10" name="addedCategoryName" />
@@ -62,7 +62,7 @@
                <a href="javascript:void(0)" onclick="return goCatPage()" title="{$lang.category_manage}" class="special" >{$lang.category_manage}</a>
                <a href="javascript:void(0)" onclick="hideCatDiv()" title="{$lang.hide}" class="special" ><<</a>
                </span>
-               {/if}
+               {/if} -->
                {$lang.require_field}
             </td>
           </tr>
