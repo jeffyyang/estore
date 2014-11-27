@@ -36,29 +36,30 @@ if ($_REQUEST['act'] == 'list')
     }
     $smarty->assign('user', $user);
 
-    if (empty($_REQUEST['account_type']) || !in_array($_REQUEST['account_type'],
-        array('user_money', 'frozen_money', 'rank_points', 'pay_points')))
+    if (empty($_REQUEST['pay_type']) || !in_array($_REQUEST['pay_type'],
+        array('pay', 'refund')))
     {
-        $account_type = '';
+        $pay_type = '';
     }
     else
     {
-        $account_type = $_REQUEST['account_type'];
+        $pay_type = $_REQUEST['pay_type'];
     }
-    $smarty->assign('account_type', $account_type);
+    $smarty->assign('pay_type', $pay_type);
 
-    $smarty->assign('ur_here',      $_LANG['account_list']);
-    $smarty->assign('action_link',  array('text' => $_LANG['add_account'], 'href' => 'account_log.php?act=add&user_id=' . $user_id));
+    $smarty->assign('ur_here',      $_LANG['pay_list']);
+    // $smarty->assign('action_link',  array('text' => $_LANG['add_account'], 'href' => 'pay_log.php?act=add&user_id=' . $user_id));
     $smarty->assign('full_page',    1);
 
-    $account_list = get_accountlist($user_id, $account_type);
-    $smarty->assign('account_list', $account_list['account']);
-    $smarty->assign('filter',       $account_list['filter']);
-    $smarty->assign('record_count', $account_list['record_count']);
-    $smarty->assign('page_count',   $account_list['page_count']);
+    $paylog_list = get_paylog_list($user_id, $pay_type);
+
+    $smarty->assign('paylog_list',  $paylog_list['paylog']);
+    $smarty->assign('filter',       $paylog_list['filter']);
+    $smarty->assign('record_count', $paylog_list['record_count']);
+    $smarty->assign('page_count',   $paylog_list['page_count']);
 
     assign_query_info();
-    $smarty->display('account_list.htm');
+    $smarty->display('paylog_list.htm');
 }
 
 /*------------------------------------------------------ */
@@ -79,21 +80,21 @@ elseif ($_REQUEST['act'] == 'query')
     }
     $smarty->assign('user', $user);
 
-    if (empty($_REQUEST['account_type']) || !in_array($_REQUEST['account_type'],
-        array('user_money', 'frozen_money', 'rank_points', 'pay_points')))
+    if (empty($_REQUEST['pay_type']) || !in_array($_REQUEST['pay_type'],
+        array('payed', 'refund_apply', 'refund_confirm', 'refunded')))
     {
-        $account_type = '';
+        $pay_type = '';
     }
     else
     {
-        $account_type = $_REQUEST['account_type'];
+        $pay_type = $_REQUEST['pay_type'];
     }
-    $smarty->assign('account_type', $account_type);
+    $smarty->assign('pay_type', $pay_type);
 
-    $account_list = get_accountlist($user_id, $account_type);
-    $smarty->assign('account_list', $account_list['account']);
-    $smarty->assign('filter',       $account_list['filter']);
-    $smarty->assign('record_count', $account_list['record_count']);
+    $paylog_list = get_paylog_list($user_id, $pay_type);
+    $smarty->assign('pay_list', $pay_list['account']);
+    $smarty->assign('filter',       $pay_list['filter']);
+    $smarty->assign('record_count', $pay_list['record_count']);
     $smarty->assign('page_count',   $account_list['page_count']);
 
     make_json_result($smarty->fetch('paylog_list.htm'), '',
@@ -175,34 +176,34 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
 }
 
 /**
- * 取得帐户明细
+ * 取得用户的支付记录
  * @param   int     $user_id    用户id
- * @param   string  $account_type   帐户类型：空表示所有帐户，user_money表示可用资金，
- *                  frozen_money表示冻结资金，rank_points表示等级积分，pay_points表示消费积分
+ * @param   string  $pay_type   支付类型：payed表示支付，refund_apply表示退款申请，
+ *                  refund_confirm表示退款确认，refunded表示退款完成
  * @return  array
  */
-function get_accountlist($user_id, $account_type = '')
+function get_paylog_list($user_id, $pay_type = '')
 {
     /* 检查参数 */
     $where = " WHERE user_id = '$user_id' ";
-    if (in_array($account_type, array('user_money', 'frozen_money', 'rank_points', 'pay_points')))
+    if (in_array($pay_type, array('payed', 'refund_apply', 'refund_confirm', 'refunded')))
     {
-        $where .= " AND $account_type <> 0 ";
+        $where .= " AND $process_type <> 0 ";
     }
 
     /* 初始化分页参数 */
     $filter = array(
-        'user_id'       => $user_id,
-        'account_type'  => $account_type
+        'user_id'   => $user_id,
+        'pay_type'  => $pay_type
     );
 
     /* 查询记录总数，计算分页数 */
-    $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('account_log') . $where;
+    $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('pay_log') . $where;
     $filter['record_count'] = $GLOBALS['db']->getOne($sql);
     $filter = page_and_size($filter);
 
     /* 查询记录 */
-    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('account_log') . $where .
+    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('pay_log') . $where .
             " ORDER BY log_id DESC";
     $res = $GLOBALS['db']->selectLimit($sql, $filter['page_size'], $filter['start']);
 
@@ -213,7 +214,7 @@ function get_accountlist($user_id, $account_type = '')
         $arr[] = $row;
     }
 
-    return array('account' => $arr, 'filter' => $filter, 'page_count' => $filter['page_count'], 'record_count' => $filter['record_count']);
+    return array('paylog' => $arr, 'filter' => $filter, 'page_count' => $filter['page_count'], 'record_count' => $filter['record_count']);
 }
 
 ?>
