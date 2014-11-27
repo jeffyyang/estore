@@ -18,56 +18,31 @@
 <form method="post" action="" name="listForm">
 <div class="list-div" id="listDiv">
 {/if}
-
   <table cellpadding="3" cellspacing="1">
     <tr>
       <th width="8%">{$lang.pay_type}</th>
       <th>{$lang.pay_money}</th>
-      <th width="20%">{$lang.pay_time}</th>
-      <th width="30%">{$lang.pay_desc}</th>
+      <th width="15%">{$lang.pay_time}</th>
+      <th width="25%">{$lang.order_sn}</th>
+      <th width="30%">{$lang.pay_note}</th>
       <th>{$lang.pay_status}</th>
     </tr>
     {foreach from=$paylog_list item=paylog}
     <tr>
       <td>{$paylog.pay_type}</td>
-      <td>{$paylog.pay_time}</td>
-      <td>{$paylog.change_desc|escape:html}</td>
       <td align="right">
-        {if $account.user_money gt 0}
-          <span style="color:#0000FF">+{$paylog.user_money}</span>
+        {if $account.order_amount gt 0}
+          <span style="color:#0000FF">+{$paylog.order_amount}</span>
         {elseif $account.user_money lt 0}
-          <span style="color:#FF0000">{$paylog.user_money}</span>
+          <span style="color:#FF0000">{$paylog.order_amount}</span>
         {else}
-          {$account.user_money}
+          {$account.order_amount}
         {/if}
-      </td>
-      <td align="right">
-        {if $account.frozen_money gt 0}
-          <span style="color:#0000FF">+{$paylog.frozen_money}</span>
-        {elseif $account.frozen_money lt 0}
-          <span style="color:#FF0000">{$paylog.frozen_money}</span>
-        {else}
-          {$account.frozen_money}
-        {/if}
-      </td>
-      <td align="right">
-        {if $account.rank_points gt 0}
-          <span style="color:#0000FF">+{$paylog.rank_points}</span>
-        {elseif $account.rank_points lt 0}
-          <span style="color:#FF0000">{$paylog.rank_points}</span>
-        {else}
-          {$account.rank_points}
-        {/if}
-      </td>
-      <td align="right">
-        {if $account.pay_points gt 0}
-          <span style="color:#0000FF">+{$account.pay_points}</span>
-        {elseif $account.pay_points lt 0}
-          <span style="color:#FF0000">{$account.pay_points}</span>
-        {else}
-          {$account.pay_points}
-        {/if}
-      </td>
+      </td>      
+      <td>{$paylog.pay_time}</td>
+      <td>{$paylog.order_amount}</td>
+      <td>{$paylog.user_note|escape:html}</td>
+      <td>{$paylog.status}</td>
     </tr>
     {foreachelse}
     <tr><td class="no-records" colspan="6">{$lang.no_records}</td></tr>

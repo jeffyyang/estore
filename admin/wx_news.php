@@ -33,7 +33,7 @@ if ($_REQUEST['act'] == 'list'){
 
     $news_list = news_list();
 
-    print_r($news_list);
+    // print_r($news_list);
     $smarty->assign('news_list',    $news_list['news_list']);
     $smarty->assign('filter',       $news_list['filter']);
     $smarty->assign('record_count', $news_list['record_count']);

@@ -33,7 +33,7 @@ if ($_REQUEST['act'] == 'list')
 
     $cards_list = cards_list();
 
-    print_r($cards_list)
+    // print_r($cards_list)
     
     $smarty->assign('card_list',    $cards_list['card_list']);
     $smarty->assign('filter',       $cards_list['filter']);

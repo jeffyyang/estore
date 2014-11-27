@@ -18,30 +18,22 @@ $_LANG['add_account'] = '调节会员帐户';
 $_LANG['refund_list'] = '退款记录';
 
 /* 列表页 */
-$_LANG['user_not_exist'] = '该用户不存在';
-$_LANG['all_account'] = '所有帐户';
-$_LANG['label_user_name'] = '当前会员：';
-$_LANG['label_user_money'] = '可用资金帐户：';
-$_LANG['label_frozen_money'] = '冻结资金帐户：';
-$_LANG['label_rank_points'] = '等级积分帐户：';
-$_LANG['label_pay_points'] = '消费积分帐户：';
-$_LANG['label_change_desc'] = '帐户变动原因：';
+$_LANG['order_sn']      = '订单流水号';
+$_LANG['refund_amount'] = '退款金额';
+$_LANG['apply_time']    = '申请时间';
+$_LANG['refund_time']   = '完成时间';
+$_LANG['refund_note']   = '退款原因';
+$_LANG['refund_status'] = '退款状态';
+$_LANG['admin_name']    = '操作员';
+
+$_LANG['action_confirm']   = '确认';
+$_LANG['action_refund']    = '退款';
 
 $_LANG['all_refund']   = '所有记录';
 $_LANG['refund_apply']   = '退款申请';
 $_LANG['refund_confirm'] = '退款确认';
 $_LANG['refunded'] = '退款完成';
 
-$_LANG['label_pay_money'] = '支出金额：';
-$_LANG['formated_pay_money'] = '支出金额：';
-
-$_LANG['order_sn']      = '订单流水号';
-$_LANG['refund_amount'] = '退款金额';
-$_LANG['apply_time']    = '申请时间';
-$_LANG['refund_time']   = '完成时间';
-$_LANG['refund_note']   = '退款原因';
-$_LANG['refund_status']        = '退款状态';
-$_LANG['admin_name']    = '操作员';
 
 $_LANG['add'] = '增加';
 $_LANG['subtract'] = '减少';

@@ -21,12 +21,10 @@ $_LANG['account_list'] = '会员帐户变动明细';
 $_LANG['user_not_exist'] = '该用户不存在';
 $_LANG['all_account'] = '所有帐户';
 $_LANG['label_user_name'] = '当前会员：';
-$_LANG['label_user_money'] = '可用资金帐户：';
-$_LANG['label_frozen_money'] = '冻结资金帐户：';
-$_LANG['label_rank_points'] = '等级积分帐户：';
 $_LANG['label_pay_points'] = '消费积分帐户：';
 $_LANG['label_change_desc'] = '帐户变动原因：';
 
+$_LANG['change_time'] = '帐户变动时间';
 $_LANG['change_time'] = '帐户变动时间';
 $_LANG['change_desc'] = '帐户变动原因';
 $_LANG['user_money'] = '可用资金帐户';

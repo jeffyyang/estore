@@ -15,36 +15,23 @@
 
 /* 菜单 */
 $_LANG['add_account'] = '调节会员帐户';
-$_LANG['pay_list'] = '会员收支明细';
+$_LANG['pay_list'] = '会员消费明细';
 
 /* 列表页 */
 $_LANG['user_not_exist'] = '该用户不存在';
-$_LANG['all_account'] = '所有帐户';
 $_LANG['label_user_name'] = '当前会员：';
-$_LANG['label_user_money'] = '可用资金帐户：';
-$_LANG['label_frozen_money'] = '冻结资金帐户：';
-$_LANG['label_rank_points'] = '等级积分帐户：';
-$_LANG['label_pay_points'] = '消费积分帐户：';
-$_LANG['label_change_desc'] = '帐户变动原因：';
+$_LANG['label_pay_money'] = '消费金额：';
 
 $_LANG['all_pay']     = '所有记录';
 $_LANG['user_pay']    = '付款记录';
 $_LANG['user_refund'] = '退款记录';
 
-$_LANG['label_pay_money'] = '支出金额：';
-$_LANG['formated_pay_money'] = '支出金额：';
-
 $_LANG['pay_type']  = '收支类型';
 $_LANG['pay_money'] = '支付金额';
 $_LANG['pay_time']  = '支付时间';
-$_LANG['pay_note']  = '退款原因';
-
-$_LANG['change_time'] = '帐户变动时间';
-$_LANG['change_desc'] = '帐户变动原因';
-$_LANG['user_money'] = '可用资金帐户';
-$_LANG['frozen_money'] = '冻结资金帐户';
-$_LANG['rank_points'] = '等级积分帐户';
-$_LANG['pay_status']  = '操作状态';
+$_LANG['order_sn']  = '订单流水号';
+$_LANG['pay_note']    = '消费备注';
+$_LANG['pay_status']  = '状态';
 
 
 $_LANG['add'] = '增加';
