@@ -34,24 +34,20 @@
     {foreach from=$refund_list item=refund}
     <tr>
       <td>{$refund.order_sn}</td>
-      <td>{$refund.order_amount}</td>
+      <td align="right"><span style="color:#0000FF">{$refund.order_amount}</span></td>
       <td>{$refund.add_time}</td>
       <td>{$refund.paid_time}</td>
       <td>{$refund.user_note|escape:html}</td>
+      <td>{$refund.status}</td>
       <td>{$refund.admin_user}</td>
       <td align="center">
+        {if refund.status eq '1'}
         <a href="refund.php?act=confirm&id={$refund.log_id}" title="{$lang.refund_confirm}">{$lang.refund_confirm}</a> |
-        <a href="javascript:void(0);" onclick="listTable.remove({$refund.log_id}, '{$lang.drop_confirm}')" title="{$lang.remove}">{$lang.refunded}</a>
-      </td>
-<!--       <td align="right">
-        {if $account.order_amount gt 0}
-          <span style="color:#0000FF">+{$paylog.user_money}</span>
-        {elseif $account.user_money lt 0}
-          <span style="color:#FF0000">{$paylog.user_money}</span>
-        {else}
-          {$account.user_money}
         {/if}
-      </td> -->
+        {if refund.status eq '2'}
+        <a href="javascript:void(0);" onclick="listTable.remove({$refund.log_id}, '{$lang.drop_confirm}')" title="{$lang.remove}">{$lang.refunded}</a>
+        {/if}
+      </td>
     </tr>
     {foreachelse}
     <tr><td class="no-records" colspan="6">{$lang.no_records}</td></tr>
