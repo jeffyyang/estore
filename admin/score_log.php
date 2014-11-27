@@ -47,18 +47,18 @@ if ($_REQUEST['act'] == 'list')
     }
     $smarty->assign('account_type', $account_type);
 
-    $smarty->assign('ur_here',      $_LANG['account_list']);
-    $smarty->assign('action_link',  array('text' => $_LANG['add_account'], 'href' => 'account_log.php?act=add&user_id=' . $user_id));
+    $smarty->assign('ur_here',      $_LANG['score_list']);
+    $smarty->assign('action_link',  array('text' => $_LANG['adjust_score'], 'href' => 'score_log.php?act=adjust&user_id=' . $user_id));
     $smarty->assign('full_page',    1);
 
-    $account_list = get_accountlist($user_id, $account_type);
-    $smarty->assign('account_list', $account_list['account']);
-    $smarty->assign('filter',       $account_list['filter']);
-    $smarty->assign('record_count', $account_list['record_count']);
-    $smarty->assign('page_count',   $account_list['page_count']);
+    $account_list = get_scorelist($user_id, $account_type);
+    $smarty->assign('score_list', $score_list['score']);
+    $smarty->assign('filter',       $score_list['filter']);
+    $smarty->assign('record_count', $score_list['record_count']);
+    $smarty->assign('page_count',   $score_list['page_count']);
 
     assign_query_info();
-    $smarty->display('account_list.htm');
+    $smarty->display('scorelog_list.htm');
 }
 
 /*------------------------------------------------------ */
@@ -90,20 +90,20 @@ elseif ($_REQUEST['act'] == 'query')
     }
     $smarty->assign('account_type', $account_type);
 
-    $account_list = get_accountlist($user_id, $account_type);
-    $smarty->assign('account_list', $account_list['account']);
-    $smarty->assign('filter',       $account_list['filter']);
-    $smarty->assign('record_count', $account_list['record_count']);
-    $smarty->assign('page_count',   $account_list['page_count']);
+    $account_list = get_scorelist($user_id, $account_type);
+    $smarty->assign('score_list', $score_list['score']);
+    $smarty->assign('filter',       $score_list['filter']);
+    $smarty->assign('record_count', $score_list['record_count']);
+    $smarty->assign('page_count',   $score_list['page_count']);
 
-    make_json_result($smarty->fetch('account_list.htm'), '',
+    make_json_result($smarty->fetch('scorelog_list'), '',
         array('filter' => $account_list['filter'], 'page_count' => $account_list['page_count']));
 }
 
 /*------------------------------------------------------ */
 //-- 调节帐户
 /*------------------------------------------------------ */
-elseif ($_REQUEST['act'] == 'add')
+elseif ($_REQUEST['act'] == 'adjust')
 {
     /* 检查权限 */
     admin_priv('account_manage');
@@ -122,9 +122,9 @@ elseif ($_REQUEST['act'] == 'add')
 
     /* 显示模板 */
     $smarty->assign('ur_here', $_LANG['add_account']);
-    $smarty->assign('action_link', array('href' => 'account_log.php?act=list&user_id=' . $user_id, 'text' => $_LANG['account_list']));
+    $smarty->assign('action_link', array('href' => 'score_log.php?act=list&user_id=' . $user_id, 'text' => $_LANG['account_list']));
     assign_query_info();
-    $smarty->display('account_info.htm');
+    $smarty->display('scorelog_info.htm');
 }
 
 /*------------------------------------------------------ */
@@ -169,7 +169,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
 
     /* 提示信息 */
     $links = array(
-        array('href' => 'account_log.php?act=list&user_id=' . $user_id, 'text' => $_LANG['account_list'])
+        array('href' => 'score_log.php?act=list&user_id=' . $user_id, 'text' => $_LANG['account_list'])
     );
     sys_msg($_LANG['log_account_change_ok'], 0, $links);
 }
@@ -181,14 +181,10 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
  *                  frozen_money表示冻结资金，rank_points表示等级积分，pay_points表示消费积分
  * @return  array
  */
-function get_accountlist($user_id, $account_type = '')
+function get_scorelist($user_id, $account_type = '')
 {
     /* 检查参数 */
     $where = " WHERE user_id = '$user_id' ";
-    if (in_array($account_type, array('user_money', 'frozen_money', 'rank_points', 'pay_points')))
-    {
-        $where .= " AND $account_type <> 0 ";
-    }
 
     /* 初始化分页参数 */
     $filter = array(
@@ -197,23 +193,24 @@ function get_accountlist($user_id, $account_type = '')
     );
 
     /* 查询记录总数，计算分页数 */
-    $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('account_log') . $where;
+    $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('user_score_his') . $where;
     $filter['record_count'] = $GLOBALS['db']->getOne($sql);
     $filter = page_and_size($filter);
 
     /* 查询记录 */
-    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('account_log') . $where .
-            " ORDER BY log_id DESC";
+    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('user_score_his') . $where .
+            " ORDER BY id DESC";
     $res = $GLOBALS['db']->selectLimit($sql, $filter['page_size'], $filter['start']);
 
     $arr = array();
     while ($row = $GLOBALS['db']->fetchRow($res))
     {
-        $row['change_time'] = local_date($GLOBALS['_CFG']['time_format'], $row['change_time']);
+        $row['add_time'] = local_date($GLOBALS['_CFG']['time_format'], $row['add_time']);
+        $row['expire_time'] = local_date('Y-m-d', $row['expire_time']);
         $arr[] = $row;
     }
 
-    return array('account' => $arr, 'filter' => $filter, 'page_count' => $filter['page_count'], 'record_count' => $filter['record_count']);
+    return array('score' => $arr, 'filter' => $filter, 'page_count' => $filter['page_count'], 'record_count' => $filter['record_count']);
 }
 
 ?>

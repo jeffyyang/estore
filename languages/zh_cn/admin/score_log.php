@@ -14,23 +14,25 @@
  */
 
 /* 菜单 */
-$_LANG['add_account'] = '调节会员帐户';
-$_LANG['account_list'] = '会员帐户变动明细';
+$_LANG['adjust_score'] = '调节会员积分';
+$_LANG['score_list']   = '会员积分记录';
 
 /* 列表页 */
 $_LANG['user_not_exist'] = '该用户不存在';
-$_LANG['all_account'] = '所有帐户';
+$_LANG['all_score'] = '所有记录';
 $_LANG['label_user_name'] = '当前会员：';
-$_LANG['label_pay_points'] = '消费积分帐户：';
-$_LANG['label_change_desc'] = '帐户变动原因：';
+$_LANG['label_pay_points'] = '可用消费积分：';
+$_LANG['change_type']  = '收支类型';
 
-$_LANG['change_time'] = '帐户变动时间';
-$_LANG['change_time'] = '帐户变动时间';
-$_LANG['change_desc'] = '帐户变动原因';
-$_LANG['user_money'] = '可用资金帐户';
-$_LANG['frozen_money'] = '冻结资金帐户';
-$_LANG['rank_points'] = '等级积分帐户';
-$_LANG['pay_points'] = '消费积分帐户';
+$_LANG['log_id']       = '记录标识';
+$_LANG['score_amount'] = '积分值';
+$_LANG['pay_time']     = '消费时间';
+$_LANG['expire_time']  = '过期日期';
+$_LANG['change_desc']  = '消费描述';
+
+$_LANG['add_points'] = '累积积分';
+$_LANG['pay_points'] = '消费积分';
+
 
 $_LANG['add'] = '增加';
 $_LANG['subtract'] = '减少';
