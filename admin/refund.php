@@ -24,27 +24,12 @@ include_once(ROOT_PATH . 'includes/lib_order.php');
 if ($_REQUEST['act'] == 'list')
 {
     /* 检查参数 */
-    $smarty->assign('user', $user);
-
-    if (empty($_REQUEST['process_type']) || !in_array($_REQUEST['process_type'],
-        array('pay', 'refund')))
-    {
-        $pay_type = '';
-    }
-    else
-    {
-        $pay_type = $_REQUEST['process_type'];
-    }
-    $smarty->assign('pay_type', $process_type);
-
     $smarty->assign('ur_here',      $_LANG['refund_list']);
     // $smarty->assign('action_link',  array('text' => $_LANG['add_account'], 'href' => 'pay_log.php?act=add&user_id=' . $user_id));
     $smarty->assign('full_page',    1);
 
     $refund_list = get_refund_list($user_id, $pay_type);
 
-    print_r($refund_list);
-    
     $smarty->assign('refund_list',  $refund_list['refund']);
     $smarty->assign('filter',       $refund_list['filter']);
     $smarty->assign('record_count', $refund_list['record_count']);
