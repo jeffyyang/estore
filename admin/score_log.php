@@ -165,7 +165,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
     }
 
     /* 保存 */
-    log_account_change($user_id, $user_money, $frozen_money, $rank_points, $pay_points, $change_desc, ACT_ADJUSTING);
+    log_score_change($user_id, $user_money, $frozen_money, $rank_points, $pay_points, $change_desc, ACT_ADJUSTING);
 
     /* 提示信息 */
     $links = array(
@@ -211,6 +211,43 @@ function get_scorelist($user_id, $account_type = '')
     }
 
     return array('score' => $arr, 'filter' => $filter, 'page_count' => $filter['page_count'], 'record_count' => $filter['record_count']);
+}
+
+
+/**
+ * 记录帐户变动
+ * @param   int     $user_id        用户id
+ * @param   float   $user_money     可用余额变动
+ * @param   float   $frozen_money   冻结余额变动
+ * @param   int     $rank_points    等级积分变动
+ * @param   int     $pay_points     消费积分变动
+ * @param   string  $change_desc    变动说明
+ * @param   int     $change_type    变动类型：参见常量文件
+ * @return  void
+ */
+function log_score_change($user_id, $user_money = 0, $frozen_money = 0, $rank_points = 0, $pay_points = 0, $change_desc = '', $change_type = ACT_OTHER)
+{
+    /* 插入帐户变动记录 */
+    $score_log = array(
+        'user_id'       => $user_id,
+        'user_money'    => $user_money,
+        'frozen_money'  => $frozen_money,
+        'rank_points'   => $rank_points,
+        'pay_points'    => $pay_points,
+        'change_time'   => gmtime(),
+        'change_desc'   => $change_desc,
+        'change_type'   => $change_type
+    );
+    $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('user_score_his'), $score_log, 'INSERT');
+
+    /* 更新用户信息 */
+    $sql = "UPDATE " . $GLOBALS['ecs']->table('users') .
+            " SET user_money = user_money + ('$user_money')," .
+            " frozen_money = frozen_money + ('$frozen_money')," .
+            " rank_points = rank_points + ('$rank_points')," .
+            " pay_points = pay_points + ('$pay_points')" .
+            " WHERE user_id = '$user_id' LIMIT 1";
+    $GLOBALS['db']->query($sql);
 }
 
 ?>
