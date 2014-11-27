@@ -80,6 +80,29 @@ elseif ($_REQUEST['act'] == 'query')
         array('filter' => $account_list['filter'], 'page_count' => $account_list['page_count']));
 }
 
+elseif ($_REQUEST['act'] == 'confirm')
+{
+    // check_authz_json('refund_manage');
+
+    $id = intval($_REQUEST['id']);
+    $sql = "SELECT log_id, status
+            FROM " . $ecs->table('pay_log') . "
+            WHERE log_id = '$id'";
+    $refund = $db->getRow($sql, TRUE);
+
+    if ($refund['log_id'])
+    {
+        $_refund['status'] = 2;
+        $_refund['admin_note'] = '已经确认';
+        $_refund['is_best'] = empty($refund['is_best']) ? 1 : 0;
+
+        $db->autoExecute($ecs->table('pay_log'), $_refund, '', "log_id = '$id'");
+        clear_cache_files();
+        make_json_result($_refund['status']);
+    }
+
+    exit;
+}
 /*------------------------------------------------------ */
 //-- 调节帐户
 /*------------------------------------------------------ */
