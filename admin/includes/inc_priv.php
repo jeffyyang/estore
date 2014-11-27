@@ -118,6 +118,7 @@ if (!defined('IN_ECS'))
     $purview['09_delivery_order']    = 'delivery_view';
     $purview['10_back_order']        = 'back_view';
     $purview['11_excode_verify']     = 'excode_view';
+    $purview['11_refund_list']       = 'refund_manage';
 
 //报表统计权限
     $purview['flow_stats']           = 'client_flow_stats';

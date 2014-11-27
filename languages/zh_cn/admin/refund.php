@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ECSHOP 管理中心帐户变动记录语言文件
+ * ECSHOP 管理中心退款记录语言文件
  * ============================================================================
  * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
@@ -10,12 +10,12 @@
  * 使用；不允许对程序代码以任何形式任何目的的再发布。
  * ============================================================================
  * $Author: liubo $
- * $Id: pay_log.php 17217 2011-01-19 06:29:08Z liubo $
+ * $Id: refund.php 17217 2011-01-19 06:29:08Z liubo $
  */
 
 /* 菜单 */
 $_LANG['add_account'] = '调节会员帐户';
-$_LANG['pay_list'] = '会员收支明细';
+$_LANG['refund_list'] = '退款记录';
 
 /* 列表页 */
 $_LANG['user_not_exist'] = '该用户不存在';
@@ -27,25 +27,21 @@ $_LANG['label_rank_points'] = '等级积分帐户：';
 $_LANG['label_pay_points'] = '消费积分帐户：';
 $_LANG['label_change_desc'] = '帐户变动原因：';
 
-$_LANG['all_pay']     = '所有记录';
-$_LANG['user_pay']    = '付款记录';
-$_LANG['user_refund'] = '退款记录';
+$_LANG['all_refund']   = '所有记录';
+$_LANG['refund_apply']   = '退款申请';
+$_LANG['refund_confirm'] = '退款确认';
+$_LANG['refunded'] = '退款完成';
 
 $_LANG['label_pay_money'] = '支出金额：';
 $_LANG['formated_pay_money'] = '支出金额：';
 
-$_LANG['pay_type']  = '收支类型';
-$_LANG['pay_money'] = '支付金额';
-$_LANG['pay_time']  = '支付时间';
-$_LANG['pay_note']  = '退款原因';
-
-$_LANG['change_time'] = '帐户变动时间';
-$_LANG['change_desc'] = '帐户变动原因';
-$_LANG['user_money'] = '可用资金帐户';
-$_LANG['frozen_money'] = '冻结资金帐户';
-$_LANG['rank_points'] = '等级积分帐户';
-$_LANG['pay_status']  = '操作状态';
-
+$_LANG['order_sn']      = '订单流水号';
+$_LANG['refund_amount'] = '退款金额';
+$_LANG['apply_time']    = '申请时间';
+$_LANG['refund_time']   = '完成时间';
+$_LANG['refund_note']   = '退款原因';
+$_LANG['refund_status']        = '退款状态';
+$_LANG['admin_name']    = '操作员';
 
 $_LANG['add'] = '增加';
 $_LANG['subtract'] = '减少';

@@ -4,14 +4,15 @@
 {insert_scripts files="../js/utils.js,listtable.js"}
 
 <div class="form-div">
-<form method="post" action="pay_log.php?act=list&user_id={$smarty.get.user_id}" name="searchForm">
-  <select name="pay_type" onchange="document.forms['searchForm'].submit()">
-    <option value="" {if $pay_type eq ''}selected="selected"{/if}>{$lang.all_pay}</option>
-    <option value="pay" {if $pay_type eq 'pay'}selected="selected"{/if}>{$lang.user_pay}</option>
-    <option value="refund" {if $pay_type eq 'refund'}selected="selected"{/if}>{$lang.user_refund}</option>
+<form method="post" action="refund.php?act=list" name="searchForm">
+  <select name="refund_status" onchange="document.forms['searchForm'].submit()">
+    <option value=""  >{$lang.all_refund}</option>
+    <option value="1" >{$lang.refund_apply}</option>
+    <option value="2" >{$lang.refund_confirm}</option>
+    <option value="3" >{$lang.refunded}</option>  
   </select>
-  <strong>{$lang.label_user_name}</strong>{$user.user_name}
-  <strong>{$lang.label_pay_money}</strong>{$user.formated_user_money}
+<!--   <strong>{$lang.label_user_name}</strong>{$user.user_name}
+  <strong>{$lang.label_pay_money}</strong>{$user.formated_user_money} -->
   </form>
 </div>
 
@@ -21,55 +22,36 @@
 
   <table cellpadding="3" cellspacing="1">
     <tr>
-      <th width="8%">{$lang.pay_type}</th>
-      <th>{$lang.pay_money}</th>
-      <th width="20%">{$lang.pay_time}</th>
-      <th width="30%">{$lang.change_desc}</th>
-      <th>{$lang.frozen_money}</th>
-      <th>{$lang.rank_points}</th>
-      <th>{$lang.pay_status}</th>
+      <th width="8%">{$lang.order_sn}</th>
+      <th>{$lang.refund_amount}</th>
+      <th width="20%">{$lang.apply_time}</th>
+      <th width="20%">{$lang.refund_time}</th>
+      <th width="30%">{$lang.refund_note}</th>
+      <th>{$lang.refund_status}</th>
+      <th>{$lang.admin_name}</th>
+      <th>{$lang.handler}</th>
     </tr>
-    {foreach from=$paylog_list item=paylog}
+    {foreach from=$refund_list item=refund}
     <tr>
-      <td>{$paylog.pay_type}</td>
-      <td>{$paylog.pay_time}</td>
-      <td>{$paylog.change_desc|escape:html}</td>
-      <td align="right">
-        {if $account.user_money gt 0}
+      <td>{$refund.order_sn}</td>
+      <td>{$refund.order_amount}</td>
+      <td>{$refund.add_time}</td>
+      <td>{$refund.paid_time}</td>
+      <td>{$refund.user_note|escape:html}</td>
+      <td>{$refund.admin_user}</td>
+      <td align="center">
+        <a href="refund.php?act=confirm&id={$refund.log_id}" title="{$lang.refund_confirm}">{$lang.refund_confirm}</a> |
+        <a href="javascript:void(0);" onclick="listTable.remove({$refund.log_id}, '{$lang.drop_confirm}')" title="{$lang.remove}">{$lang.refunded}</a>
+      </td>
+<!--       <td align="right">
+        {if $account.order_amount gt 0}
           <span style="color:#0000FF">+{$paylog.user_money}</span>
         {elseif $account.user_money lt 0}
           <span style="color:#FF0000">{$paylog.user_money}</span>
         {else}
           {$account.user_money}
         {/if}
-      </td>
-      <td align="right">
-        {if $account.frozen_money gt 0}
-          <span style="color:#0000FF">+{$paylog.frozen_money}</span>
-        {elseif $account.frozen_money lt 0}
-          <span style="color:#FF0000">{$paylog.frozen_money}</span>
-        {else}
-          {$account.frozen_money}
-        {/if}
-      </td>
-      <td align="right">
-        {if $account.rank_points gt 0}
-          <span style="color:#0000FF">+{$paylog.rank_points}</span>
-        {elseif $account.rank_points lt 0}
-          <span style="color:#FF0000">{$paylog.rank_points}</span>
-        {else}
-          {$account.rank_points}
-        {/if}
-      </td>
-      <td align="right">
-        {if $account.pay_points gt 0}
-          <span style="color:#0000FF">+{$account.pay_points}</span>
-        {elseif $account.pay_points lt 0}
-          <span style="color:#FF0000">{$account.pay_points}</span>
-        {else}
-          {$account.pay_points}
-        {/if}
-      </td>
+      </td> -->
     </tr>
     {foreachelse}
     <tr><td class="no-records" colspan="6">{$lang.no_records}</td></tr>
