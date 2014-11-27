@@ -36,13 +36,13 @@
       <td>{$refund.add_time}</td>
       <td>{$refund.paid_time}</td>
       <td>{$refund.user_note|escape:html}</td>
-      <td>{if refund.status eq 1} {$lang.refund_apply} {elseif refund.status eq 2} {$lang.refund_confirm} {elseif refund.status eq 3 } {$lang.refunded} {/if}</td>
+      <td>{if $refund.status eq 1} {$lang.refund_apply} {elseif $refund.status eq 2} {$lang.refund_confirm} {elseif $refund.status eq 3 } {$lang.refunded} {/if}</td>
       <td>{$refund.admin_user}</td>
       <td align="center">
-        {if refund.status eq 1}
+        {if $refund.status eq 1}
         <a href="refund.php?act=confirm&id={$refund.log_id}" title="{$lang.refund_confirm}">{$lang.action_confirm}</a>
-        {elseif refund.status eq 2}
-        <a href="javascript:void(0);" onclick="listTable.remove({$refund.log_id}, '{$lang.drop_confirm}')" title="{$lang.remove}">{$lang.action_refund}</a>
+        {elseif $refund.status eq 2}
+        <a href="javascript:void(0);" onclick="listTable.remove({$refund.log_id}, '{$lang.refund_confirm}')" title="{$lang.refund_confirm}">{$lang.action_refund}</a>
         {/if}
       </td>
     </tr>
