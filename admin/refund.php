@@ -42,6 +42,9 @@ if ($_REQUEST['act'] == 'list')
     $smarty->assign('full_page',    1);
 
     $refund_list = get_refund_list($user_id, $pay_type);
+
+    print_r($refund_list);
+    
     $smarty->assign('refund_list',  $refund_list['refund']);
     $smarty->assign('filter',       $refund_list['filter']);
     $smarty->assign('record_count', $refund_list['record_count']);
@@ -185,8 +188,6 @@ function get_refund_list($pay_type = '')
     // }
 
     /* 初始化分页参数 */
-
-
 
     /* 查询记录总数，计算分页数 */
     $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('pay_log') . $where;
