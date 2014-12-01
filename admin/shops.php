@@ -58,9 +58,9 @@ elseif ($_REQUEST['act'] == 'add')
     // $smarty->assign('province_list', $province_list);
 
     // 吉林
-    // $city_list = get_regions_list(2,15);
+    $city_list = get_regions_list(2,15);
     // 江苏
-    $city_list = get_regions_list(2,16);
+    // $city_list = get_regions_list(2,16);
     $smarty->assign('city_list', $city_list);    
 
     $is_add = true;
