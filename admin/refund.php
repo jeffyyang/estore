@@ -100,7 +100,7 @@ elseif ($_REQUEST['act'] == 'confirm')
 
         $db->autoExecute($ecs->table('pay_log'), $_refund, '', "log_id = '$id'");
 
-        $_order['order_status'] = OS_REFUNDING;
+        $_order['order_status'] = 8;
         update_order($refund['order_id'], $_order);
         clear_cache_files();
         make_json_result($_refund['status']);
@@ -126,7 +126,7 @@ elseif ($_REQUEST['act'] == 'end')
         $_refund['paid_time'] = gmtime();
         $db->autoExecute($ecs->table('pay_log'), $_refund, '', "log_id = '$id'");
 
-        $_order['order_status'] = OS_REFUNDED;
+        $_order['order_status'] = 9;
         update_order($refund['order_id'], $_order);
 
         clear_cache_files();
