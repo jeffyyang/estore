@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ECSHOP 管理中心退款
+ * ECSHOP 管理中心维权
  * ============================================================================
  * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
  * 网站地址: http://www.ecshop.com；
@@ -19,7 +19,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 include_once(ROOT_PATH . 'includes/lib_order.php');
 
 /*------------------------------------------------------ */
-//-- 退款记录列表
+//-- 维权记录列表
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'list')
 {
@@ -30,15 +30,15 @@ if ($_REQUEST['act'] == 'list')
     // $smarty->assign('action_link',  array('text' => $_LANG['add_account'], 'href' => 'pay_log.php?act=add&user_id=' . $user_id));
     $smarty->assign('full_page',    1);
 
-    $refund_list = get_refund_list($user_id, $pay_type);
+    $complaint_list = get_complaints_list();
 
-    $smarty->assign('refund_list',  $refund_list['refund']);
-    $smarty->assign('filter',       $refund_list['filter']);
-    $smarty->assign('record_count', $refund_list['record_count']);
-    $smarty->assign('page_count',   $refund_list['page_count']);
+    $smarty->assign('complaint_list', $complaint_list['complaint']);
+    $smarty->assign('filter',         $complaint_list['filter']);
+    $smarty->assign('record_count',   $complaint_list['record_count']);
+    $smarty->assign('page_count',     $complaint_list['page_count']);
 
     assign_query_info();
-    $smarty->display('refund_list.htm');
+    $smarty->display('complaints_list.htm');
 }
 
 /*------------------------------------------------------ */
@@ -61,7 +61,7 @@ elseif ($_REQUEST['act'] == 'query')
     // }
     // $smarty->assign('user', $user);
 
-    if (empty($_REQUEST['process_type']) || !in_array($_REQUEST['process_type'],
+/*    if (empty($_REQUEST['process_type']) || !in_array($_REQUEST['process_type'],
         array('payed', 'refund_apply', 'refund_confirm', 'refunded')))
     {
         $pay_type = '';
@@ -69,16 +69,17 @@ elseif ($_REQUEST['act'] == 'query')
     else
     {
         $pay_type = $_REQUEST['pay_type'];
-    }
+    }*/
     $smarty->assign('pay_type', $pay_type);
 
-    $refund_list = get_refund_list($user_id, $pay_type);
-    $smarty->assign('refund_list',  $refund_list['refund']);
-    $smarty->assign('filter',       $refund_list['filter']);
-    $smarty->assign('record_count', $refund_list['record_count']);
-    $smarty->assign('page_count',   $refund_list['page_count']);
+    $complaint_list = get_complaints_list();
 
-    make_json_result($smarty->fetch('refund_list.htm'), '',
+    $smarty->assign('complaint_list', $complaint_list['complaint']);
+    $smarty->assign('filter',         $complaint_list['filter']);
+    $smarty->assign('record_count',   $complaint_list['record_count']);
+    $smarty->assign('page_count',     $complaint_list['page_count']);
+
+    make_json_result($smarty->fetch('complaints_list.htm'), '',
         array('filter' => $account_list['filter'], 'page_count' => $account_list['page_count']));
 }
 
@@ -87,7 +88,7 @@ elseif ($_REQUEST['act'] == 'confirm')
     // check_authz_json('refund_manage');
 
     $id = intval($_REQUEST['id']);
-    $sql = "SELECT log_id, status, order_id,
+    $sql = "SELECT log_id, status
             FROM " . $ecs->table('pay_log') . "
             WHERE log_id = '$id'";
     $refund = $db->getRow($sql, TRUE);
@@ -99,9 +100,6 @@ elseif ($_REQUEST['act'] == 'confirm')
         $_refund['admin_note'] = '已经确认';
 
         $db->autoExecute($ecs->table('pay_log'), $_refund, '', "log_id = '$id'");
-
-        $_order['order_status'] = OS_REFUNDING;
-        update_order($refund['order_id'], $_order);
         clear_cache_files();
         make_json_result($_refund['status']);
     }
@@ -112,9 +110,8 @@ elseif ($_REQUEST['act'] == 'confirm')
 elseif ($_REQUEST['act'] == 'end')
 {
     // check_authz_json('refund_manage');
-
     $id = intval($_REQUEST['id']);
-    $sql = "SELECT log_id, status, order_id,
+    $sql = "SELECT log_id, status
             FROM " . $ecs->table('pay_log') . "
             WHERE log_id = '$id'";
     $refund = $db->getRow($sql, TRUE);
@@ -125,10 +122,6 @@ elseif ($_REQUEST['act'] == 'end')
         $_refund['admin_note'] = '退款完成';
         $_refund['paid_time'] = gmtime();
         $db->autoExecute($ecs->table('pay_log'), $_refund, '', "log_id = '$id'");
-
-        $_order['order_status'] = OS_REFUNDED;
-        update_order($refund['order_id'], $_order);
-
         clear_cache_files();
         make_json_result($_refund['status']);
     }
@@ -136,79 +129,6 @@ elseif ($_REQUEST['act'] == 'end')
     exit;
 }
 
-/*------------------------------------------------------ */
-//-- 调节帐户
-/*------------------------------------------------------ */
-elseif ($_REQUEST['act'] == 'add')
-{
-    /* 检查权限 */
-    admin_priv('account_manage');
-    /* 检查参数 */
-    $user_id = empty($_REQUEST['user_id']) ? 0 : intval($_REQUEST['user_id']);
-    if ($user_id <= 0)
-    {
-        sys_msg('invalid param');
-    }
-    $user = user_info($user_id);
-    if (empty($user))
-    {
-        sys_msg($_LANG['user_not_exist']);
-    }
-    $smarty->assign('user', $user);
-
-    /* 显示模板 */
-    $smarty->assign('ur_here', $_LANG['add_account']);
-    $smarty->assign('action_link', array('href' => 'account_log.php?act=list&user_id=' . $user_id, 'text' => $_LANG['account_list']));
-    assign_query_info();
-    $smarty->display('paylog_info.htm');
-}
-
-/*------------------------------------------------------ */
-//-- 提交添加、编辑办事处
-/*------------------------------------------------------ */
-elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
-{
-    /* 检查权限 */
-    admin_priv('account_manage');
-    $token=trim($_POST['token']);
-    if($token!=$_CFG['token'])
-    {
-        sys_msg($_LANG['no_account_change'], 1);
-    }
-
-    /* 检查参数 */
-    $user_id = empty($_REQUEST['user_id']) ? 0 : intval($_REQUEST['user_id']);
-    if ($user_id <= 0)
-    {
-        sys_msg('invalid param');
-    }
-    $user = user_info($user_id);
-    if (empty($user))
-    {
-        sys_msg($_LANG['user_not_exist']);
-    }
-
-    /* 提交值 */
-    $change_desc    = sub_str($_POST['change_desc'], 255, false);
-    $user_money     = floatval($_POST['add_sub_user_money']) * abs(floatval($_POST['user_money']));
-    $frozen_money   = floatval($_POST['add_sub_frozen_money']) * abs(floatval($_POST['frozen_money']));
-    $rank_points    = floatval($_POST['add_sub_rank_points']) * abs(floatval($_POST['rank_points']));
-    $pay_points     = floatval($_POST['add_sub_pay_points']) * abs(floatval($_POST['pay_points']));
-
-    if ($user_money == 0 && $frozen_money == 0 && $rank_points == 0 && $pay_points == 0)
-    {
-        sys_msg($_LANG['no_account_change']);
-    }
-
-    /* 保存 */
-    log_account_change($user_id, $user_money, $frozen_money, $rank_points, $pay_points, $change_desc, ACT_ADJUSTING);
-
-    /* 提示信息 */
-    $links = array(
-        array('href' => 'account_log.php?act=list&user_id=' . $user_id, 'text' => $_LANG['account_list'])
-    );
-    sys_msg($_LANG['log_account_change_ok'], 0, $links);
-}
 
 /**
  * 取得退款记录
@@ -217,12 +137,10 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
  *                  refund_confirm表示退款确认，refunded表示退款完成
  * @return  array
  */
-function get_refund_list($pay_type = '')
+function get_complaints_list($status = 0)
 {
     /* 检查参数 */
-    //refund_status
-
-    $where = " WHERE process_type <> 0 ";
+    $where = " WHERE status < 2 ";
     // if (in_array($pay_type, array('payed', 'refund_apply', 'refund_confirm', 'refunded')))
     // {
     //     $where .= " AND $process_type <> 0 ";
@@ -231,24 +149,24 @@ function get_refund_list($pay_type = '')
     /* 初始化分页参数 */
 
     /* 查询记录总数，计算分页数 */
-    $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('pay_log') . $where;
+    $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('complaints') . $where;
     $filter['record_count'] = $GLOBALS['db']->getOne($sql);
     $filter = page_and_size($filter);
 
     /* 查询记录 */
-    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('pay_log') . $where .
-            " ORDER BY log_id DESC";
+    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('complaints') . $where .
+            " ORDER BY add_time DESC";
     $res = $GLOBALS['db']->selectLimit($sql, $filter['page_size'], $filter['start']);
 
     $arr = array();
     while ($row = $GLOBALS['db']->fetchRow($res))
     {
         $row['add_time']  = local_date($GLOBALS['_CFG']['time_format'], $row['add_time']);
-        $row['paid_time'] = local_date($GLOBALS['_CFG']['time_format'], $row['paid_time']);
+        $row['update_time'] = local_date($GLOBALS['_CFG']['time_format'], $row['update_time']);
         $arr[] = $row;
     }
 
-    return array('refund' => $arr, 'filter' => $filter, 'page_count' => $filter['page_count'], 'record_count' => $filter['record_count']);
+    return array('complaint' => $arr, 'filter' => $filter, 'page_count' => $filter['page_count'], 'record_count' => $filter['record_count']);
 }
 
 ?>
