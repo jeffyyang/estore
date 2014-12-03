@@ -40,7 +40,7 @@
       <td>{$refund.admin_user}</td>
       <td align="center">
         {if $refund.status eq 1}
-        <a href="refund.php?act=confirm&id={$refund.log_id}">{$lang.action_confirm}</a>
+        <!-- <a href="refund.php?act=confirm&id={$refund.log_id}">{$lang.action_confirm}</a> -->
         <button type="button" class="button"  onclick="confirmRefund(this,{$refund.log_id});" {if $refund.status neq 1} disabled {/if} >{$lang.action_confirm}</button>
         {elseif $refund.status eq 2}
         <button type="button" class="button"  onclick="finishRefund(this,{$refund.log_id});" {if $refund.status neq 2} disabled {/if} >{$lang.action_refund}</button>        
