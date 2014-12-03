@@ -27,11 +27,9 @@ if ($_REQUEST['act'] == 'list')
     // print_r($_SESSION);
     /* 检查参数 */
     $smarty->assign('ur_here',      $_LANG['refund_list']);
-    // $smarty->assign('action_link',  array('text' => $_LANG['add_account'], 'href' => 'pay_log.php?act=add&user_id=' . $user_id));
     $smarty->assign('full_page',    1);
 
-    $refund_list = get_refund_list($user_id, $pay_type);
-
+    $refund_list = refund_list();
     $smarty->assign('refund_list',  $refund_list['refund']);
     $smarty->assign('filter',       $refund_list['filter']);
     $smarty->assign('record_count', $refund_list['record_count']);
@@ -47,32 +45,8 @@ if ($_REQUEST['act'] == 'list')
 elseif ($_REQUEST['act'] == 'query')
 {
     /* 检查参数 */
-    // 查用户
-    // $user_name = empty($_REQUEST['user_name']) ? 0 : intval($_REQUEST['user_name']);
-    // if ($user_id <= 0)
-    // {
-    //     sys_msg('invalid param');
-    // }
-    // $user = user_info($user_id);
 
-    // if (empty($user))
-    // {
-    //     sys_msg($_LANG['user_not_exist']);
-    // }
-    // $smarty->assign('user', $user);
-
-    if (empty($_REQUEST['process_type']) || !in_array($_REQUEST['process_type'],
-        array('payed', 'refund_apply', 'refund_confirm', 'refunded')))
-    {
-        $pay_type = '';
-    }
-    else
-    {
-        $pay_type = $_REQUEST['pay_type'];
-    }
-    $smarty->assign('pay_type', $pay_type);
-
-    $refund_list = get_refund_list($user_id, $pay_type);
+    $refund_list = refund_list($user_id, $pay_type);
     $smarty->assign('refund_list',  $refund_list['refund']);
     $smarty->assign('filter',       $refund_list['filter']);
     $smarty->assign('record_count', $refund_list['record_count']);
@@ -104,6 +78,16 @@ elseif ($_REQUEST['act'] == 'confirm')
 
         if($order['is_separate'] == 0){
             $_order['order_status'] = OS_REFUNDING;
+
+            $order_goods_list = order_goods($refund['order_id']);
+            foreach ($order_goods_list AS $key => $value)
+            {
+                if ($value['exchange_status'] == CD_APPLY_FOR_REFUND)
+                {
+                    $order_goods['exchange_status'] = CD_REFUNDING;
+                    update_excode_goods($value['rec_id'], $order_goods);
+                }
+            }
             update_order($refund['order_id'],$_order);
 
         }else{
@@ -138,6 +122,16 @@ elseif ($_REQUEST['act'] == 'end')
         $order = order_info($refund['order_id']);
         if($order['is_separate'] == 0){
             $_order['order_status'] = OS_REFUNDED;
+
+            $order_goods_list = order_goods($refund['order_id']);
+            foreach ($order_goods_list AS $key => $value)
+            {
+                if ($value['exchange_status'] == CD_REFUNDING)
+                {   
+                    $order_goods['exchange_status'] = CD_REFUNDED;
+                    update_excode_goods($value['rec_id'], $order_goods);
+                }
+            }
             update_order($refund['order_id'],$_order);
 
         }else{
@@ -265,6 +259,123 @@ function get_refund_list($pay_type = '')
     }
 
     return array('refund' => $arr, 'filter' => $filter, 'page_count' => $filter['page_count'], 'record_count' => $filter['record_count']);
+}
+
+
+/**
+ *  获取退款列表信息
+ *
+ * @access  public
+ * @param
+ * @return void
+ */
+function refund_list()
+{
+    $result = get_filter();
+    if ($result === false)
+    {
+        $aiax = isset($_GET['is_ajax']) ? $_GET['is_ajax'] : 0;
+
+        /* 过滤信息 */
+        $filter['order_sn'] = empty($_REQUEST['order_sn']) ? '' : trim($_REQUEST['order_sn']);
+        $filter['status'] = isset($_REQUEST['status']) ? $_REQUEST['status'] : -1;
+
+        $filter['sort_by'] = empty($_REQUEST['sort_by']) ? 'p.add_time' : trim($_REQUEST['sort_by']);
+        $filter['sort_order'] = empty($_REQUEST['sort_order']) ? 'DESC' : trim($_REQUEST['sort_order']);
+
+        $where = 'WHERE 1 ';
+        if ($filter['order_sn'])
+        {
+            $where .= " AND p.order_sn LIKE '%" . mysql_like_quote($filter['order_sn']) . "%'";
+        }
+        if ($filter['status'] >= 0)
+        {
+            $where .= " AND status = '" . mysql_like_quote($filter['status']) . "'";
+        }
+
+        /* 获取管理员信息 */
+        // $admin_info = admin_info();
+
+        /* 如果管理员属于某个办事处，只列出这个办事处管辖的退款单 */
+        // if ($admin_info['agency_id'] > 0)
+        // {
+        //     $where .= " AND agency_id = '" . $admin_info['agency_id'] . "' ";
+        // }
+
+        /* 如果管理员属于某个供货商，只列出这个供货商的退款单 */
+        // if ($admin_info['suppliers_id'] > 0)
+        // {
+        //     $where .= " AND suppliers_id = '" . $admin_info['suppliers_id'] . "' ";
+        // }
+
+        /* 分页大小 */
+        $filter['page'] = empty($_REQUEST['page']) || (intval($_REQUEST['page']) <= 0) ? 1 : intval($_REQUEST['page']);
+
+        if (isset($_REQUEST['page_size']) && intval($_REQUEST['page_size']) > 0)
+        {
+            $filter['page_size'] = intval($_REQUEST['page_size']);
+        }
+        elseif (isset($_COOKIE['ECSCP']['page_size']) && intval($_COOKIE['ECSCP']['page_size']) > 0)
+        {
+            $filter['page_size'] = intval($_COOKIE['ECSCP']['page_size']);
+        }
+        else
+        {
+            $filter['page_size'] = 15;
+        }
+
+        /* 记录总数 */
+        $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('pay_log') . $where;
+        $filter['record_count']   = $GLOBALS['db']->getOne($sql);
+        $filter['page_count']     = $filter['record_count'] > 0 ? ceil($filter['record_count'] / $filter['page_size']) : 1;
+
+        /* 查询 */
+        $sql = "SELECT p.*, o.suppliers_id
+                FROM " . $GLOBALS['ecs']->table('pay_log') . " AS p " .
+                " LEFT JOIN " .$GLOBALS['ecs']->table('order_info'). " AS o ON p.order_id=o.order_id ". $where ."
+                ORDER BY " . $filter['sort_by'] . " " . $filter['sort_order']. "
+                LIMIT " . ($filter['page'] - 1) * $filter['page_size'] . ", " . $filter['page_size'] . " ";
+
+        set_filter($filter, $sql);
+    }
+    else
+    {
+        $sql    = $result['sql'];
+        $filter = $result['filter'];
+    }
+
+    /* 获取供货商列表 */
+    // $suppliers_list = get_suppliers_list();
+    // $_suppliers_list = array();
+    // foreach ($suppliers_list as $value)
+    // {
+    //     $_suppliers_list[$value['suppliers_id']] = $value['suppliers_name'];
+    // }
+
+    $row = $GLOBALS['db']->getAll($sql);
+
+    /* 格式化数据 */
+    foreach ($row AS $key => $value)
+    {
+        $row[$key]['add_time'] = local_date($GLOBALS['_CFG']['time_format'], $value['add_time']);
+        $row[$key]['paid_time'] = local_date($GLOBALS['_CFG']['time_format'], $value['paid_time']);
+        if ($value['status'] == 1)
+        {
+            $row[$key]['status_name'] = $GLOBALS['_LANG']['delivery_status'][1];
+        }
+        elseif ($value['status'] == 2)
+        {
+            $row[$key]['status_name'] = $GLOBALS['_LANG']['delivery_status'][2];
+        }
+        else
+        {
+        $row[$key]['status_name'] = $GLOBALS['_LANG']['delivery_status'][0];
+        }
+        // $row[$key]['suppliers_name'] = isset($_suppliers_list[$value['suppliers_id']]) ? $_suppliers_list[$value['suppliers_id']] : '';
+    }
+    $arr = array('refund' => $row, 'filter' => $filter, 'page_count' => $filter['page_count'], 'record_count' => $filter['record_count']);
+
+    return $arr;
 }
 
 ?>

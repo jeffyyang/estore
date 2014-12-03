@@ -16,10 +16,10 @@
 /* 菜单 */
 $_LANG['add_account'] = '调节会员帐户';
 $_LANG['refund_list'] = '退款记录';
-
+$_LANG['label_refund_status'] = '退款单状态';
 /* 列表页 */
 $_LANG['order_sn']      = '订单流水号';
-$_LANG['refund_amount'] = '退款金额';
+$_LANG['refund_amount'] = '退款金额(元)';
 $_LANG['apply_time']    = '申请时间';
 $_LANG['refund_time']   = '完成时间';
 $_LANG['refund_note']   = '退款原因';
