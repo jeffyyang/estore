@@ -110,7 +110,7 @@ elseif ($_REQUEST['act'] == 'confirm')
         }else{
             // 处理虚拟物品分单退货
             $_order_goods['exchange_status'] = CD_REFUNDING;
-            update_order_goods($refund['order_item_id'],$_order_goods);
+            update_excode_goods($refund['order_item_id'], $_order_goods);
 
         }
         clear_cache_files();
@@ -145,7 +145,7 @@ elseif ($_REQUEST['act'] == 'end')
         }else{
             // 处理虚拟物品分单退货
             $_order_goods['exchange_status'] = CD_REFUNDED;
-            update_order_goods($refund['order_item_id'],$_order_goods);
+            update_excode_goods($refund['order_item_id'], $_order_goods);
 
         }
         clear_cache_files();
