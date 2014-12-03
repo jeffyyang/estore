@@ -92,7 +92,6 @@ elseif ($_REQUEST['act'] == 'confirm')
             WHERE log_id = '$id'";
     $refund = $db->getRow($sql, TRUE);
 
-
     if ($refund['log_id'])
     {
         $_refund['status'] = 2;
@@ -111,7 +110,6 @@ elseif ($_REQUEST['act'] == 'confirm')
             // 处理虚拟物品分单退货
             $_order_goods['exchange_status'] = CD_REFUNDING;
             update_excode_goods($refund['order_item_id'], $_order_goods);
-
         }
         clear_cache_files();
         make_json_result($_refund['status']);

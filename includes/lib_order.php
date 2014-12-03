@@ -849,7 +849,7 @@ function update_order($order_id, $order)
 function update_excode_goods($rec_id, $order_goods)
 {
     return $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('order_goods'),
-        $order, 'UPDATE', "rec_id = '$rec_id'");
+        $order_goods, 'UPDATE', "rec_id = '$rec_id'");
 }
 
 /**
