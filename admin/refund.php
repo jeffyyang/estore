@@ -87,10 +87,11 @@ elseif ($_REQUEST['act'] == 'confirm')
     // check_authz_json('refund_manage');
 
     $id = intval($_REQUEST['id']);
-    $sql = "SELECT log_id, status, order_id,
+    $sql = "SELECT log_id, status, order_id
             FROM " . $ecs->table('pay_log') . "
             WHERE log_id = '$id'";
     $refund = $db->getRow($sql, TRUE);
+
 
     if ($refund['log_id'])
     {
@@ -100,8 +101,12 @@ elseif ($_REQUEST['act'] == 'confirm')
 
         $db->autoExecute($ecs->table('pay_log'), $_refund, '', "log_id = '$id'");
 
-        $_order['order_status'] = 8;
-        update_order($refund['order_id'], $_order);
+        $order = order_info($refund['order_id']);
+
+        if($order['is_separate'] == 0){
+            $_order['order_status'] = OS_REFUNDING ;
+            update_order($refund['order_id'],$_order);
+        }
         clear_cache_files();
         make_json_result($_refund['status']);
     }
@@ -114,7 +119,7 @@ elseif ($_REQUEST['act'] == 'end')
     // check_authz_json('refund_manage');
 
     $id = intval($_REQUEST['id']);
-    $sql = "SELECT log_id, status, order_id,
+    $sql = "SELECT log_id, status, order_id
             FROM " . $ecs->table('pay_log') . "
             WHERE log_id = '$id'";
     $refund = $db->getRow($sql, TRUE);
@@ -126,9 +131,11 @@ elseif ($_REQUEST['act'] == 'end')
         $_refund['paid_time'] = gmtime();
         $db->autoExecute($ecs->table('pay_log'), $_refund, '', "log_id = '$id'");
 
-        $_order['order_status'] = 9;
-        update_order($refund['order_id'], $_order);
-
+        $order = order_info($refund['order_id']);
+        if($order['is_separate'] == 0){
+            $_order['order_status'] = OS_REFUNDED;
+            update_order($refund['order_id'],$_order);
+        }
         clear_cache_files();
         make_json_result($_refund['status']);
     }

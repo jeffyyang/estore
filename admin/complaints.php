@@ -55,13 +55,8 @@ elseif ($_REQUEST['act'] == 'query')
     // }
     // $user = user_info($user_id);
 
-    // if (empty($user))
-    // {
-    //     sys_msg($_LANG['user_not_exist']);
-    // }
-    // $smarty->assign('user', $user);
-
-/*    if (empty($_REQUEST['process_type']) || !in_array($_REQUEST['process_type'],
+    /* 
+    if (empty($_REQUEST['process_type']) || !in_array($_REQUEST['process_type'],
         array('payed', 'refund_apply', 'refund_confirm', 'refunded')))
     {
         $pay_type = '';
@@ -70,6 +65,7 @@ elseif ($_REQUEST['act'] == 'query')
     {
         $pay_type = $_REQUEST['pay_type'];
     }*/
+    
     $smarty->assign('pay_type', $pay_type);
 
     $complaint_list = get_complaints_list();
