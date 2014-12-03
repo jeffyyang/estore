@@ -139,12 +139,11 @@ elseif ($_REQUEST['act'] == 'end')
         if($order['is_separate'] == 0){
             $_order['order_status'] = OS_REFUNDED;
             update_order($refund['order_id'],$_order);
-        
+
         }else{
             // 处理虚拟物品分单退货
             $_order_goods['exchange_status'] = CD_REFUNDED;
             update_excode_goods($refund['order_item_id'], $_order_goods);
-
         }
         clear_cache_files();
         make_json_result($_refund['status']);
