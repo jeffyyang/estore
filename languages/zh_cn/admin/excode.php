@@ -24,6 +24,9 @@ $_LANG['excode_list'] = '兑换码列表';
 $_LANG['cd'][CD_UNUSED]    = '未使用';
 $_LANG['cd'][CD_USED]      = '已使用';
 $_LANG['cd'][CD_OVERDUE]   = '已过期';
+$_LANG['cd'][CD_APPLY_FOR_REFUND]  = '退款申请中';
+$_LANG['cd'][CD_REFUNDING]         = '退款中';
+$_LANG['cd'][CD_REFUNDED]          = '已退款';
 
 /* 兑换码列表 */
 $_LANG['rec_id'] = '记录号';

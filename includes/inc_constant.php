@@ -79,6 +79,9 @@ define('OS_REFUNDED',          	    9); // 已退款
 define('CD_UNUSED',            		0); // 未使用
 define('CD_USED',              		1); // 已使用
 define('CD_OVERDUE',                2); // 已过期
+define('CD_APPLY_FOR_REFUND',       3); // 退款申请中
+define('CD_REFUNDING',          	4); // 退款中
+define('CD_REFUNDED',          	    5); // 已退款
 
 /* 支付类型 */
 define('PAY_ORDER',                 0); // 订单支付

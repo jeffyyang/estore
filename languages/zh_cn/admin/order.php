@@ -34,8 +34,11 @@ $_LANG['os'][OS_CONFIRMED] = '已确认';
 $_LANG['os'][OS_CANCELED] = '<font color="red"> 取消</font>';
 $_LANG['os'][OS_INVALID] = '<font color="red">无效</font>';
 $_LANG['os'][OS_RETURNED] = '<font color="red">退货</font>';
-$_LANG['os'][OS_SPLITED] = '已分单';
+$_LANG['os'][OS_SPLITED] = '已派单';  // '已分单';   
 $_LANG['os'][OS_SPLITING_PART] = '部分分单';
+$_LANG['os'][OS_APPLY_FOR_REFUND] = '<font color="red">退款申请中</font>';
+$_LANG['os'][OS_REFUNDING] = '<font color="red">退款中</font>';
+$_LANG['os'][OS_REFUNDED]  = '<font color="red">已退款</font>';
 
 $_LANG['ss'][SS_UNSHIPPED] = '未发货';
 $_LANG['ss'][SS_PREPARING] = '配货中';

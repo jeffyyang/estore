@@ -487,6 +487,7 @@ function order_goods($order_id)
     return $goods_list;
 }
 
+
 /**
  * 取得订单总金额
  * @param   int     $order_id   订单id
@@ -837,6 +838,18 @@ function update_order($order_id, $order)
 {
     return $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('order_info'),
         $order, 'UPDATE', "order_id = '$order_id'");
+}
+
+/**
+ * 修改订单商品(虚拟商品的兑换状态)
+ * @param   int     $order_id   订单id
+ * @param   array   $order      key => value
+ * @return  bool
+ */
+function update_order_goods($rec_id, $order_goods)
+{
+    return $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('order_goods'),
+        $order, 'UPDATE', "rec_id = '$rec_id'");
 }
 
 /**
