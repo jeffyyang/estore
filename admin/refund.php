@@ -45,15 +45,15 @@ if ($_REQUEST['act'] == 'list')
 elseif ($_REQUEST['act'] == 'query')
 {
     /* 检查参数 */
+    $refund_list = refund_list();
 
-    $refund_list = refund_list($user_id, $pay_type);
     $smarty->assign('refund_list',  $refund_list['refund']);
     $smarty->assign('filter',       $refund_list['filter']);
     $smarty->assign('record_count', $refund_list['record_count']);
     $smarty->assign('page_count',   $refund_list['page_count']);
 
     make_json_result($smarty->fetch('refund_list.htm'), '',
-        array('filter' => $account_list['filter'], 'page_count' => $account_list['page_count']));
+        array('filter' => $refund_list['filter'], 'page_count' => $refund_list['page_count']));
 }
 
 elseif ($_REQUEST['act'] == 'confirm')
@@ -220,50 +220,9 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
     sys_msg($_LANG['log_account_change_ok'], 0, $links);
 }
 
-/**
- * 取得退款记录
- * @param   int     $user_id    用户id
- * @param   string  $pay_type   支付类型：payed表示支付，refund_apply表示退款申请，
- *                  refund_confirm表示退款确认，refunded表示退款完成
- * @return  array
- */
-function get_refund_list($pay_type = '')
-{
-    /* 检查参数 */
-    //refund_status
-
-    $where = " WHERE process_type <> 0 ";
-    // if (in_array($pay_type, array('payed', 'refund_apply', 'refund_confirm', 'refunded')))
-    // {
-    //     $where .= " AND $process_type <> 0 ";
-    // }
-
-    /* 初始化分页参数 */
-
-    /* 查询记录总数，计算分页数 */
-    $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('pay_log') . $where;
-    $filter['record_count'] = $GLOBALS['db']->getOne($sql);
-    $filter = page_and_size($filter);
-
-    /* 查询记录 */
-    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('pay_log') . $where .
-            " ORDER BY log_id DESC";
-    $res = $GLOBALS['db']->selectLimit($sql, $filter['page_size'], $filter['start']);
-
-    $arr = array();
-    while ($row = $GLOBALS['db']->fetchRow($res))
-    {
-        $row['add_time']  = local_date($GLOBALS['_CFG']['time_format'], $row['add_time']);
-        $row['paid_time'] = local_date($GLOBALS['_CFG']['time_format'], $row['paid_time']);
-        $arr[] = $row;
-    }
-
-    return array('refund' => $arr, 'filter' => $filter, 'page_count' => $filter['page_count'], 'record_count' => $filter['record_count']);
-}
-
 
 /**
- *  获取退款列表信息
+ *  获取退款列表
  *
  * @access  public
  * @param
@@ -288,13 +247,13 @@ function refund_list()
         {
             $where .= " AND p.order_sn LIKE '%" . mysql_like_quote($filter['order_sn']) . "%'";
         }
-        if ($filter['status'] >= 0)
+        if ($filter['status'] > 0)
         {
             $where .= " AND p.status = '" . mysql_like_quote($filter['status']) . "'";
         }
 
         /* 获取管理员信息 */
-        // $admin_info = admin_info();
+        $admin_info = admin_info();
 
         /* 如果管理员属于某个办事处，只列出这个办事处管辖的退款单 */
         // if ($admin_info['agency_id'] > 0)
@@ -303,10 +262,10 @@ function refund_list()
         // }
 
         /* 如果管理员属于某个供货商，只列出这个供货商的退款单 */
-        // if ($admin_info['suppliers_id'] > 0)
-        // {
-        //     $where .= " AND suppliers_id = '" . $admin_info['suppliers_id'] . "' ";
-        // }
+        if ($admin_info['suppliers_id'] > 0)
+        {
+            $where .= " AND o.suppliers_id = '" . $admin_info['suppliers_id'] . "' ";
+        }
 
         /* 分页大小 */
         $filter['page'] = empty($_REQUEST['page']) || (intval($_REQUEST['page']) <= 0) ? 1 : intval($_REQUEST['page']);
@@ -325,9 +284,12 @@ function refund_list()
         }
 
         /* 记录总数 */
-        $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('pay_log') . " AS p " . $where;
+        $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('pay_log') . " AS p " .
+        " LEFT JOIN " .$GLOBALS['ecs']->table('order_info'). " AS o ON p.order_id=o.order_id ". $where;
+
         $filter['record_count']   = $GLOBALS['db']->getOne($sql);
         $filter['page_count']     = $filter['record_count'] > 0 ? ceil($filter['record_count'] / $filter['page_size']) : 1;
+
 
         /* 查询 */
         $sql = "SELECT p.*, o.suppliers_id
@@ -359,18 +321,18 @@ function refund_list()
     {
         $row[$key]['add_time'] = local_date($GLOBALS['_CFG']['time_format'], $value['add_time']);
         $row[$key]['paid_time'] = local_date($GLOBALS['_CFG']['time_format'], $value['paid_time']);
-        if ($value['status'] == 1)
-        {
-            $row[$key]['status_name'] = $GLOBALS['_LANG']['delivery_status'][1];
-        }
-        elseif ($value['status'] == 2)
-        {
-            $row[$key]['status_name'] = $GLOBALS['_LANG']['delivery_status'][2];
-        }
-        else
-        {
-        $row[$key]['status_name'] = $GLOBALS['_LANG']['delivery_status'][0];
-        }
+        // if ($value['status'] == 1)
+        // {
+        //     $row[$key]['status_name'] = $GLOBALS['_LANG']['delivery_status'][1];
+        // }
+        // elseif ($value['status'] == 2)
+        // {
+        //     $row[$key]['status_name'] = $GLOBALS['_LANG']['delivery_status'][2];
+        // }
+        // else
+        // {
+        // $row[$key]['status_name'] = $GLOBALS['_LANG']['delivery_status'][0];
+        // }
         // $row[$key]['suppliers_name'] = isset($_suppliers_list[$value['suppliers_id']]) ? $_suppliers_list[$value['suppliers_id']] : '';
     }
     $arr = array('refund' => $row, 'filter' => $filter, 'page_count' => $filter['page_count'], 'record_count' => $filter['record_count']);

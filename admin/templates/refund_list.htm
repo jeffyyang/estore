@@ -4,12 +4,12 @@
 {insert_scripts files="../js/utils.js,listtable.js"}
 <!-- 搜索 -->
 <div class="form-div">
-  <form action="javascript:searchOrder()" name="searchForm">
-    <img src="images/icon_search.gif" width="26" height="22" border="0" alt="SEARCH" />
+  <form action="javascript:searchRefund()" name="searchForm">
+    <img src="images/icon_search.gif" width="35" height="22" border="0" alt="SEARCH" />
     {$lang.order_sn}<input name="order_sn" type="text" id="order_sn" size="15">
     {$lang.label_refund_status}
-    <select name="refund_status" onchange="document.forms['searchForm'].submit()">
-      <option value=""  >{$lang.all_refund}</option>
+    <select name="refund_status">
+      <option value="0"  >{$lang.all_refund}</option>
       <option value="1" >{$lang.refund_apply}</option>
       <option value="2" >{$lang.refund_confirm}</option>
       <option value="3" >{$lang.refunded}</option>  
@@ -25,7 +25,7 @@
     <tr>
       <th width="8%">{$lang.order_sn}</th>
       <th>{$lang.refund_amount}</th>
-      <th width="20%">{$lang.apply_time}</th>
+      <th width="20%"><a href="javascript:listTable.sort('add_time', 'DESC'); ">{$lang.apply_time}</a></th>
       <th width="20%">{$lang.refund_time}</th>
       <th width="30%">{$lang.refund_note}</th>
       <th>{$lang.refund_status}</th>
@@ -43,7 +43,6 @@
       <td>{$refund.admin_user}</td>
       <td align="center">
         {if $refund.status eq 1}
-        <!-- <a href="refund.php?act=confirm&id={$refund.log_id}">{$lang.action_confirm}</a> -->
         <button type="button" class="button"  onclick="confirmRefund(this,{$refund.log_id});" {if $refund.status neq 1} disabled {/if} >{$lang.action_confirm}</button>
         {elseif $refund.status eq 2}
         <button type="button" class="button"  onclick="finishRefund(this,{$refund.log_id});" {if $refund.status neq 2} disabled {/if} >{$lang.action_refund}</button>        
@@ -83,6 +82,18 @@
   }
   {/literal}
 
+  /**
+   * 搜索退款记录
+   */
+  function searchRefund()
+  {
+      listTable.filter['order_sn'] = Utils.trim(document.forms['searchForm'].elements['order_sn'].value);
+      listTable.filter['status'] = document.forms['searchForm'].elements['refund_status'].value;
+      listTable.filter['page'] = 1;
+      listTable.query = "query";
+      listTable.loadList();
+  }
+
   /* 商户确认退款 */
   function confirmRefund(obj, rec_id)
   {
@@ -114,7 +125,6 @@
     {
       obj.disabled = 'true';
     }
-
   }    
   //-->
 </script>
