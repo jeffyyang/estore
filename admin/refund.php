@@ -325,7 +325,7 @@ function refund_list()
         }
 
         /* 记录总数 */
-        $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('pay_log') . $where;
+        $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('pay_log') . " AS p " . $where;
         $filter['record_count']   = $GLOBALS['db']->getOne($sql);
         $filter['page_count']     = $filter['record_count'] > 0 ? ceil($filter['record_count'] / $filter['page_size']) : 1;
 
