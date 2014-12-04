@@ -283,14 +283,14 @@ function refund_list()
         $filter['sort_by'] = empty($_REQUEST['sort_by']) ? 'p.add_time' : trim($_REQUEST['sort_by']);
         $filter['sort_order'] = empty($_REQUEST['sort_order']) ? 'DESC' : trim($_REQUEST['sort_order']);
 
-        $where = 'WHERE 1 ';
+        $where = 'WHERE p.process_type > 0 ';
         if ($filter['order_sn'])
         {
             $where .= " AND p.order_sn LIKE '%" . mysql_like_quote($filter['order_sn']) . "%'";
         }
-        if ($filter['status'] >= 1)
+        if ($filter['status'] >= 0)
         {
-            $where .= " AND status = '" . mysql_like_quote($filter['status']) . "'";
+            $where .= " AND p.status = '" . mysql_like_quote($filter['status']) . "'";
         }
 
         /* 获取管理员信息 */
