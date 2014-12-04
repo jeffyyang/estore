@@ -288,7 +288,7 @@ function refund_list()
         {
             $where .= " AND p.order_sn LIKE '%" . mysql_like_quote($filter['order_sn']) . "%'";
         }
-        if ($filter['status'] >= 0)
+        if ($filter['status'] >= 1)
         {
             $where .= " AND status = '" . mysql_like_quote($filter['status']) . "'";
         }
