@@ -23,14 +23,14 @@
 {/if}
   <table cellpadding="3" cellspacing="1">
     <tr>
-      <th width="8%">{$lang.order_sn}</th>
-      <th>{$lang.refund_amount}</th>
-      <th width="20%"><a href="javascript:listTable.sort('add_time', 'DESC'); ">{$lang.apply_time}</a></th>
-      <th width="20%">{$lang.refund_time}</th>
-      <th width="30%">{$lang.refund_note}</th>
-      <th>{$lang.refund_status}</th>
-      <th>{$lang.admin_name}</th>
-      <th>{$lang.handler}</th>
+      <th width="12%">{$lang.order_sn}</th>
+      <th width="8%">{$lang.refund_amount}</th>
+      <th width="12%"><a href="javascript:listTable.sort('add_time', 'DESC'); ">{$lang.apply_time}</a>{$sort_apply_time}</th>
+      <th width="12%">{$lang.refund_time}</th>
+      <th >{$lang.refund_note}</th>
+      <th width="8%">{$lang.refund_status}</th>
+      <th width="8%">{$lang.admin_name}</th>
+      <th width="5%">{$lang.handler}</th>
     </tr>
     {foreach from=$refund_list item=refund}
     <tr>

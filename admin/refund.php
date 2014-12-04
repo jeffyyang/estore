@@ -34,7 +34,7 @@ if ($_REQUEST['act'] == 'list')
     $smarty->assign('filter',       $refund_list['filter']);
     $smarty->assign('record_count', $refund_list['record_count']);
     $smarty->assign('page_count',   $refund_list['page_count']);
-
+    $smarty->assign('sort_apply_time', '<img src="images/sort_desc.gif">');
     assign_query_info();
     $smarty->display('refund_list.htm');
 }

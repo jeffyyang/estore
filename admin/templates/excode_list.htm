@@ -18,7 +18,8 @@
 <table cellpadding="3" cellspacing="1">
   <tr>
     <th>
-      <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" /><a href="javascript:listTable.sort('rec_id', 'DESC'); ">{$lang.rec_id}</a>
+      <!-- <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" /> -->
+      <a href="javascript:listTable.sort('rec_id', 'DESC'); ">{$lang.rec_id}</a>
     </th>
     <th>{$lang.excode_code}</th>
     <th>{$lang.goods_name}</th>
@@ -31,12 +32,15 @@
   <tr>
   {foreach from=$excode_list item=excode key=okey}
   <tr>
-    <td valign="top" nowrap="nowrap"><input type="checkbox" name="checkboxes" value="{$o.rec_id}" />{$excode.rec_id}</td>
+    <td valign="top" nowrap="nowrap">
+      <!-- <input type="checkbox" name="checkboxes" value="{$o.rec_id}" /> -->
+    {$excode.rec_id}
+    </td>
     <td><font size="3" color="red"> {$excode.extension_code|escape} </font></td>
     <td>{$excode.goods_name|escape}<a href="excode.php?act=info&order_id={$excode.order_id}" id="order_{$okey}">[{$excode.goods_id}]</td>
     <td align="center" valign="top" nowrap="nowrap">{$excode.order_sn|escape}</td>
     <td align="center" valign="top" nowrap="nowrap">{$excode.order_time}</td>
-    <td align="center" valign="top">{$excode.start_time} - {$excode.exp_time}</td>
+    <td align="center" valign="top">{$excode.start_time} - - {$excode.exp_time}</td>
     <td align="center" valign="top">{$excode.exchange_time}</td>
     <td align="center" valign="top" nowrap="nowrap">{$lang.cd[$excode.status]}</td>
     <td align="center"><button type="button" class="button"  onclick="exchangeExcode(this,{$excode.rec_id});" {if $excode.status neq 0} disabled {/if} >{$lang.exchange_goods}</button></td>
