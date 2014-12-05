@@ -5,10 +5,10 @@
 
 <div class="form-div">
 <form method="post" action="pay_log.php?act=list&user_id={$smarty.get.user_id}" name="searchForm">
-  <select name="pay_type" onchange="document.forms['searchForm'].submit()">
-    <option value="" {if $pay_type eq ''}selected="selected"{/if}>{$lang.all_pay}</option>
-    <option value="pay" {if $pay_type eq 'pay'}selected="selected"{/if}>{$lang.user_pay}</option>
-    <option value="refund" {if $pay_type eq 'refund'}selected="selected"{/if}>{$lang.user_refund}</option>
+  <select name="pay_type" onchange="document.forms['searchForm'].submit();">
+    <option value="-1" {if $pay_type eq -1 } selected="selected" {/if}> {$lang.all_pay}</option>
+    <option value="0"  {if $pay_type eq 0 }  selected="selected" {/if}> {$lang.user_pay}</option>
+    <option value="1"  {if $pay_type eq 1 }  selected="selected" {/if}> {$lang.user_refund}</option>
   </select>
   <strong>{$lang.label_user_name}</strong>{$user.user_name}
   <strong>{$lang.label_pay_money}</strong>{$user.formated_user_money}
@@ -20,29 +20,29 @@
 {/if}
   <table cellpadding="3" cellspacing="1">
     <tr>
-      <th width="8%">{$lang.pay_type}</th>
-      <th>{$lang.pay_money}</th>
-      <th width="15%">{$lang.pay_time}</th>
-      <th width="25%">{$lang.order_sn}</th>
-      <th width="30%">{$lang.pay_note}</th>
-      <th>{$lang.pay_status}</th>
+      <th width="8%">{$lang.label_pay_type}</th>
+      <th width="12%">{$lang.label_pay_money}</th>
+      <th width="12%">{$lang.label_pay_time}</th>
+      <th width="15%">{$lang.label_order_sn}</th>
+      <th>{$lang.label_pay_note}</th>
+      <th width="8%">{$lang.label_pay_status}</th>
     </tr>
     {foreach from=$paylog_list item=paylog}
     <tr>
-      <td>{$paylog.pay_type}</td>
-      <td align="right">
-        {if $account.order_amount gt 0}
-          <span style="color:#0000FF">+{$paylog.order_amount}</span>
-        {elseif $account.user_money lt 0}
+      <td align="center">
+        {if $paylog.process_type eq 0 }支付{/if} {if $paylog.process_type eq 1 }退款{/if} 
+      </td>
+      <td align="right" >
+        {if $paylog.order_amount gt 0}
           <span style="color:#FF0000">{$paylog.order_amount}</span>
-        {else}
-          {$account.order_amount}
+        {elseif $paylog.order_amount lt 0}
+          <span style="color:#00FF59">{$paylog.order_amount}</span>
         {/if}
       </td>      
-      <td>{$paylog.pay_time}</td>
-      <td>{$paylog.order_amount}</td>
-      <td>{$paylog.user_note|escape:html}</td>
-      <td>{$paylog.status}</td>
+      <td align='center'>{$paylog.paid_time}</td>
+      <td>{$paylog.order_sn}</td>
+      <td></td>
+      <td>{$paylog.status_name}</td>
     </tr>
     {foreachelse}
     <tr><td class="no-records" colspan="6">{$lang.no_records}</td></tr>

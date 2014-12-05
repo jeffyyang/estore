@@ -447,7 +447,11 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
         /* 取得地区 */
         // $province_list = get_regions(1,1);
         // $smarty->assign('province_list', $province_list);
+        $city = get_region($suppliers['region_cities']); 
+        $smarty->assign('city', $city);
 
+        $district = get_region($suppliers['region_districts']); 
+        $smarty->assign('district', $district);
         // 吉林
         $city_list = get_regions_list(2,15);
         // 江苏

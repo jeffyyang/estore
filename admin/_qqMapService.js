@@ -60,7 +60,6 @@ var qqMapService = {
 		var city = selCities.options[selCities.selectedIndex].text;
 		var district = selDistricts.options[selDistricts.selectedIndex].text;
 		var address = document.getElementById("address").value;
-		// alert('city:' + city + ' district:' + district);
 		var marker = "";
 		if(selDistricts == ''){
 			marker = city + ',' + address;

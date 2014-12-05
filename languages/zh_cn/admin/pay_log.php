@@ -15,7 +15,7 @@
 
 /* 菜单 */
 $_LANG['add_account'] = '调节会员帐户';
-$_LANG['pay_list'] = '会员消费明细';
+$_LANG['pay_list'] = '会员支付明细';
 
 /* 列表页 */
 $_LANG['user_not_exist'] = '该用户不存在';
@@ -26,13 +26,18 @@ $_LANG['all_pay']     = '所有记录';
 $_LANG['user_pay']    = '付款记录';
 $_LANG['user_refund'] = '退款记录';
 
-$_LANG['pay_type']  = '收支类型';
-$_LANG['pay_money'] = '支付金额';
-$_LANG['pay_time']  = '支付时间';
-$_LANG['order_sn']  = '订单流水号';
-$_LANG['pay_note']    = '消费备注';
-$_LANG['pay_status']  = '状态';
+$_LANG['label_pay_type']    = '收支类型';
+$_LANG['label_pay_money']   = '支付金额(元)';
+$_LANG['label_pay_time']    = '支付时间';
+$_LANG['label_order_sn']    = '订单流水号';
+$_LANG['label_pay_note']    = '消费备注';
+$_LANG['label_pay_status']  = '状态';
 
+
+$_LANG['pay_status'][0] = '已支付';
+$_LANG['pay_status'][1] = '退款申请中';
+$_LANG['pay_status'][2] = '退款确认';
+$_LANG['pay_status'][3] = '退款完成';
 
 $_LANG['add'] = '增加';
 $_LANG['subtract'] = '减少';

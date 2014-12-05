@@ -165,6 +165,20 @@ function region_result($parent, $sel_name, $type)
 }
 
 /**
+ * 获得指定地名
+ *
+ * @access      public
+ * @param       int     region_id   地名编号
+ * @return      array
+ */
+function get_region($region_id = 0)
+{
+    $sql = 'SELECT region_id, region_name FROM ' . $GLOBALS['ecs']->table('region') .
+            " WHERE region_id = '$region_id'";
+    return $GLOBALS['db']->GetAll($sql);
+}
+
+/**
  * 获得指定国家的所有省份
  *
  * @access      public

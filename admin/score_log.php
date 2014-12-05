@@ -19,7 +19,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 include_once(ROOT_PATH . 'includes/lib_order.php');
 
 /*------------------------------------------------------ */
-//-- 办事处列表
+//-- 积分记录列表
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'list')
 {
