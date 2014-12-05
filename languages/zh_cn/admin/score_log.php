@@ -10,7 +10,7 @@
  * 使用；不允许对程序代码以任何形式任何目的的再发布。
  * ============================================================================
  * $Author: liubo $
- * $Id: account_log.php 17217 2011-01-19 06:29:08Z liubo $
+ * $Id: score_log.php 17217 2011-01-19 06:29:08Z liubo $
  */
 
 /* 菜单 */
@@ -25,12 +25,12 @@ $_LANG['label_pay_points'] = '可用消费积分：';
 $_LANG['change_type']  = '收支类型';
 
 $_LANG['log_id']       = '记录标识';
-$_LANG['score_amount'] = '积分值';
-$_LANG['pay_time']     = '消费时间';
+$_LANG['score_amount'] = '积分点数';
+$_LANG['pay_time']     = '积分时间';
 $_LANG['expire_time']  = '过期日期';
 $_LANG['change_desc']  = '消费描述';
 
-$_LANG['add_points'] = '累积积分';
+$_LANG['add_points'] = '赠送积分';
 $_LANG['pay_points'] = '消费积分';
 
 

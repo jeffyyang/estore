@@ -36,23 +36,16 @@ if ($_REQUEST['act'] == 'list')
     }
     $smarty->assign('user', $user);
 
-    if (empty($_REQUEST['account_type']) || !in_array($_REQUEST['account_type'],
-        array('user_money', 'frozen_money', 'rank_points', 'pay_points')))
-    {
-        $account_type = '';
-    }
-    else
-    {
-        $account_type = $_REQUEST['account_type'];
-    }
-    $smarty->assign('account_type', $account_type);
+    $change_type = empty($_REQUEST['change_type']) ? -1 : intval($_REQUEST['change_type']);
+    $smarty->assign('change_type', $change_type);
 
     $smarty->assign('ur_here',      $_LANG['score_list']);
     $smarty->assign('action_link',  array('text' => $_LANG['adjust_score'], 'href' => 'score_log.php?act=adjust&user_id=' . $user_id));
     $smarty->assign('full_page',    1);
 
-    $account_list = get_scorelist($user_id, $account_type);
-    $smarty->assign('score_list', $score_list['score']);
+    $score_list = scorelog_list($user_id);
+
+    $smarty->assign('score_list',   $score_list['score']);
     $smarty->assign('filter',       $score_list['filter']);
     $smarty->assign('record_count', $score_list['record_count']);
     $smarty->assign('page_count',   $score_list['page_count']);
@@ -105,6 +98,8 @@ elseif ($_REQUEST['act'] == 'query')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'adjust')
 {
+    print_r($_SESSION);
+    
     /* 检查权限 */
     admin_priv('account_manage');
     /* 检查参数 */
@@ -121,14 +116,14 @@ elseif ($_REQUEST['act'] == 'adjust')
     $smarty->assign('user', $user);
 
     /* 显示模板 */
-    $smarty->assign('ur_here', $_LANG['add_account']);
-    $smarty->assign('action_link', array('href' => 'score_log.php?act=list&user_id=' . $user_id, 'text' => $_LANG['account_list']));
+    $smarty->assign('ur_here', $_LANG['adjust_score']);
+    $smarty->assign('action_link', array('href' => 'score_log.php?act=list&user_id=' . $user_id, 'text' => $_LANG['score_list']));
     assign_query_info();
     $smarty->display('scorelog_info.htm');
 }
 
 /*------------------------------------------------------ */
-//-- 提交添加、编辑办事处
+//-- 提交添加、编辑积分记录
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
 {
@@ -154,98 +149,141 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
 
     /* 提交值 */
     $change_desc    = sub_str($_POST['change_desc'], 255, false);
-    $user_money     = floatval($_POST['add_sub_user_money']) * abs(floatval($_POST['user_money']));
-    $frozen_money   = floatval($_POST['add_sub_frozen_money']) * abs(floatval($_POST['frozen_money']));
-    $rank_points    = floatval($_POST['add_sub_rank_points']) * abs(floatval($_POST['rank_points']));
     $pay_points     = floatval($_POST['add_sub_pay_points']) * abs(floatval($_POST['pay_points']));
 
-    if ($user_money == 0 && $frozen_money == 0 && $rank_points == 0 && $pay_points == 0)
+    if ($pay_points == 0)
     {
         sys_msg($_LANG['no_account_change']);
     }
 
     /* 保存 */
-    log_score_change($user_id, $user_money, $frozen_money, $rank_points, $pay_points, $change_desc, ACT_ADJUSTING);
+    log_score_change($user_id, $pay_points, $change_desc);
 
     /* 提示信息 */
     $links = array(
-        array('href' => 'score_log.php?act=list&user_id=' . $user_id, 'text' => $_LANG['account_list'])
+        array('href' => 'score_log.php?act=list&user_id=' . $user_id, 'text' => $_LANG['score_list'])
     );
     sys_msg($_LANG['log_account_change_ok'], 0, $links);
 }
 
+
+
+
 /**
- * 取得帐户明细
- * @param   int     $user_id    用户id
- * @param   string  $account_type   帐户类型：空表示所有帐户，user_money表示可用资金，
- *                  frozen_money表示冻结资金，rank_points表示等级积分，pay_points表示消费积分
- * @return  array
+ *  获取用户积分列表
+ *
+ * @access  public
+ * @param
+ * @return void
  */
-function get_scorelist($user_id, $account_type = '')
+function scorelog_list($user_id = 0)
 {
-    /* 检查参数 */
-    $where = " WHERE user_id = '$user_id' ";
-
-    /* 初始化分页参数 */
-    $filter = array(
-        'user_id'       => $user_id,
-        'account_type'  => $account_type
-    );
-
-    /* 查询记录总数，计算分页数 */
-    $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('user_score_his') . $where;
-    $filter['record_count'] = $GLOBALS['db']->getOne($sql);
-    $filter = page_and_size($filter);
-
-    /* 查询记录 */
-    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('user_score_his') . $where .
-            " ORDER BY id DESC";
-    $res = $GLOBALS['db']->selectLimit($sql, $filter['page_size'], $filter['start']);
-
-    $arr = array();
-    while ($row = $GLOBALS['db']->fetchRow($res))
+    $result = get_filter();
+    if ($result === false)
     {
-        $row['add_time'] = local_date($GLOBALS['_CFG']['time_format'], $row['add_time']);
-        $row['expire_time'] = local_date('Y-m-d', $row['expire_time']);
-        $arr[] = $row;
+        $aiax = isset($_GET['is_ajax']) ? $_GET['is_ajax'] : 0;
+
+        /* 过滤信息 */
+        $filter['pay_type'] = isset($_REQUEST['pay_type']) ? $_REQUEST['pay_type'] : -1;
+
+        $filter['sort_by'] = empty($_REQUEST['sort_by']) ? 'add_time' : trim($_REQUEST['sort_by']);
+        $filter['sort_order'] = empty($_REQUEST['sort_order']) ? 'DESC' : trim($_REQUEST['sort_order']);
+
+        $where = 'WHERE user_id =' .$user_id ;
+
+        if ($filter['pay_type'] > -1)
+        {
+            $where .= " AND p.process_type = '" . $filter['pay_type'] . "'";
+        }
+
+        if ($filter['status'] > 0)
+        {
+            $where .= " AND p.status = '" . mysql_like_quote($filter['status']) . "'";
+        }
+
+        /* 分页大小 */
+        $filter['page'] = empty($_REQUEST['page']) || (intval($_REQUEST['page']) <= 0) ? 1 : intval($_REQUEST['page']);
+
+        if (isset($_REQUEST['page_size']) && intval($_REQUEST['page_size']) > 0)
+        {
+            $filter['page_size'] = intval($_REQUEST['page_size']);
+        }
+        elseif (isset($_COOKIE['ECSCP']['page_size']) && intval($_COOKIE['ECSCP']['page_size']) > 0)
+        {
+            $filter['page_size'] = intval($_COOKIE['ECSCP']['page_size']);
+        }
+        else
+        {
+            $filter['page_size'] = 15;
+        }
+
+        /* 记录总数 */
+        $sql = "SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('user_score_his') . $where;
+        $filter['record_count']   = $GLOBALS['db']->getOne($sql);
+        $filter['page_count']     = $filter['record_count'] > 0 ? ceil($filter['record_count'] / $filter['page_size']) : 1;
+
+        /* 查询 */
+        $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('user_score_his') . $where ."
+                ORDER BY " . $filter['sort_by'] . " " . $filter['sort_order']. "
+                LIMIT " . ($filter['page'] - 1) * $filter['page_size'] . ", " . $filter['page_size'] . " ";      
+        set_filter($filter, $sql);        
+    }
+    else
+    {
+        $sql    = $result['sql'];
+        $filter = $result['filter'];
     }
 
-    return array('score' => $arr, 'filter' => $filter, 'page_count' => $filter['page_count'], 'record_count' => $filter['record_count']);
-}
+    $row = $GLOBALS['db']->getAll($sql);
 
+    /* 格式化数据 */
+    foreach ($row AS $key => $value)
+    {
+        $row[$key]['add_time'] = local_date($GLOBALS['_CFG']['time_format'], $value['add_time']);
+        $row[$key]['expire_time'] = local_date($GLOBALS['_CFG']['date_format'], $value['expire_time']);
+
+        if($value['operator'] == '_BUY_GOODS_'){
+            $row[$key]['change_type'] = '赠送';
+            $row[$key]['src_dec'] = '消费赠送积分';
+        }elseif ($value['operator'] == '_SCORE_GIFT_') {
+            $row[$key]['change_type'] = '消费';
+            $row[$key]['src_dec'] = '积分兑换消费';
+        }else{
+            $row[$key]['change_type'] = '赠送';
+            $row[$key]['src_dec'] = '消费赠送积分';
+        }
+    }
+    $arr = array('score' => $row, 'filter' => $filter, 'page_count' => $filter['page_count'], 'record_count' => $filter['record_count']);
+
+    return $arr;
+}
 
 /**
  * 记录帐户变动
  * @param   int     $user_id        用户id
- * @param   float   $user_money     可用余额变动
- * @param   float   $frozen_money   冻结余额变动
- * @param   int     $rank_points    等级积分变动
  * @param   int     $pay_points     消费积分变动
  * @param   string  $change_desc    变动说明
  * @param   int     $change_type    变动类型：参见常量文件
  * @return  void
  */
-function log_score_change($user_id, $user_money = 0, $frozen_money = 0, $rank_points = 0, $pay_points = 0, $change_desc = '', $change_type = ACT_OTHER)
+function log_score_change($user_id, $pay_points = 0, $change_desc = '')
 {
+
     /* 插入帐户变动记录 */
     $score_log = array(
         'user_id'       => $user_id,
-        'user_money'    => $user_money,
-        'frozen_money'  => $frozen_money,
-        'rank_points'   => $rank_points,
+        'add_type'      => 1,
         'pay_points'    => $pay_points,
-        'change_time'   => gmtime(),
-        'change_desc'   => $change_desc,
-        'change_type'   => $change_type
+        'add_time'      => gmtime(),
+        'admin_user'    => $_SESSION['admin_name'],
+        'admin_note'    => $change_desc,
+        'operator'      => 'ACT_ADJUST'
     );
     $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('user_score_his'), $score_log, 'INSERT');
 
     /* 更新用户信息 */
     $sql = "UPDATE " . $GLOBALS['ecs']->table('users') .
-            " SET user_money = user_money + ('$user_money')," .
-            " frozen_money = frozen_money + ('$frozen_money')," .
-            " rank_points = rank_points + ('$rank_points')," .
-            " pay_points = pay_points + ('$pay_points')" .
+            " SET　pay_points = pay_points + ('$pay_points')" .
             " WHERE user_id = '$user_id' LIMIT 1";
     $GLOBALS['db']->query($sql);
 }
