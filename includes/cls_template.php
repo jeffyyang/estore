@@ -297,7 +297,8 @@ class cls_template
                  $source= str_replace('%%%SMARTYSP'.$curr_sp.'%%%', '<?php echo \''.str_replace("'", "\'", $sp_match[1][$curr_sp]).'\'; ?>'."\n", $source);
             }
          }
-         return preg_replace("/{([^\}\{\n]*)}/e", "\$this->select('\\1');", $source);
+         // return preg_replace("/{([^\}\{\n]*)}/e", "\$this->select('\\1');", $source); // php5.2~5.3
+         return preg_replace_callback("/{([^\}\{\n]*)}/", function($r) { return $this->select($r[1]); }, $source);  // php5.4以上
     }
 
     /**
@@ -419,7 +420,9 @@ class cls_template
         }
         else
         {
-            $tag_sel = array_shift(explode(' ', $tag));
+            // $tag_sel = array_shift(explode(' ', $tag));   // PHP 5.2
+            $tag_tmp = (explode(' ', $tag));
+            $tag_sel = array_shift($tag_tmp);
             switch ($tag_sel)
             {
                 case 'if':
@@ -549,7 +552,9 @@ class cls_template
     {
         if (strrpos($val, '[') !== false)
         {
-            $val = preg_replace("/\[([^\[\]]*)\]/eis", "'.'.str_replace('$','\$','\\1')", $val);
+            // $val = preg_replace("/\[([^\[\]]*)\]/eis", "'.'.str_replace('$','\$','\\1')", $val);  PHP5.2 ~ PHP5.3
+
+                $val = preg_replace_callback("/\[([^\[\]]*)\]/is", function($ro) {return '.'.str_replace('$','\$',$ro[1]);}, $val); // PHP5.4
         }
 
         if (strrpos($val, '|') !== false)
@@ -1066,9 +1071,14 @@ class cls_template
         if ($file_type == '.dwt')
         {
             /* 将模板中所有library替换为链接 */
-            $pattern     = '/<!--\s#BeginLibraryItem\s\"\/(.*?)\"\s-->.*?<!--\s#EndLibraryItem\s-->/se';
+/*            $pattern     = '/<!--\s#BeginLibraryItem\s\"\/(.*?)\"\s-->.*?<!--\s#EndLibraryItem\s-->/se';
             $replacement = "'{include file='.strtolower('\\1'). '}'";
-            $source      = preg_replace($pattern, $replacement, $source);
+            $source      = preg_replace($pattern, $replacement, $source);  PHP 5.3*/
+
+            // Start PHP5.4
+            $pattern = '/<!--\s#BeginLibraryItem\s\"\/(.*?)\"\s-->.*?<!--\s#EndLibraryItem\s-->/s';
+            $source = preg_replace_callback($pattern, function($ro){return '{include file='.strtolower($ro[1]). '}';}, $source);
+            // End PHP5.4 
 
             /* 检查有无动态库文件，如果有为其赋值 */
             $dyna_libs = get_dyna_libs($GLOBALS['_CFG']['template'], $this->_current_file);
