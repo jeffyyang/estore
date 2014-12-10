@@ -34,7 +34,7 @@
     <td><input value="{$comment.comment_id}" name="checkboxes[]" type="checkbox">{$comment.comment_id}</td>
     <td>{if $comment.user_name}{$comment.user_name}{else}{$lang.anonymous}{/if}</td>
     <td>{$lang.type[$comment.comment_type]}</td>
-    <td><a href="../{if $comment.comment_type eq '0'}goods{else}article{/if}.php?id={$comment.id_value}" target="_blank">{$comment.title}</td>
+    <td><!-- <a href="../{if $comment.comment_type eq '0'}goods{else}article{/if}.php?id={$comment.id_value}" target="_blank"> -->{$comment.title}</td>
     <td>{$comment.ip_address}</td>
     <td align="center">{$comment.add_time}</td>
     <td align="center">{if $comment.status eq 0}{$lang.hidden}{else}{$lang.display}{/if}</td>

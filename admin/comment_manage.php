@@ -353,9 +353,23 @@ function get_comment_list()
 
     while ($row = $GLOBALS['db']->fetchRow($res))
     {
-        $sql = ($row['comment_type'] == 0) ?
-            "SELECT goods_name FROM " .$GLOBALS['ecs']->table('goods'). " WHERE goods_id='$row[id_value]'" :
-            "SELECT title FROM ".$GLOBALS['ecs']->table('article'). " WHERE article_id='$row[id_value]'";
+        $sql = "SELECT goods_name FROM " .$GLOBALS['ecs']->table('goods'). " WHERE goods_id='$row[id_value]'";
+        // $sql = ($row['comment_type'] == 0) ?
+        //     "SELECT goods_name FROM " .$GLOBALS['ecs']->table('goods'). " WHERE goods_id='$row[id_value]'" :
+        //     "SELECT title FROM ".$GLOBALS['ecs']->table('article'). " WHERE article_id='$row[id_value]'";
+        // $row['title'] = $GLOBALS['db']->getOne($sql);
+
+        if($row['comment_type'] == 0){
+
+            $sql = "SELECT goods_name FROM " .$GLOBALS['ecs']->table('goods'). " WHERE goods_id='$row[id_value]'";
+        }elseif ($row['comment_type'] == 1) {
+
+            $sql = "SELECT suppliers_name FROM " .$GLOBALS['ecs']->table('suppliers'). " WHERE suppliers_id='$row[id_value]'" ;
+        }else{
+
+            $sql = "SELECT title FROM ".$GLOBALS['ecs']->table('article'). " WHERE article_id='$row[id_value]'";
+        }
+
         $row['title'] = $GLOBALS['db']->getOne($sql);
 
         /* 标记是否回复过 */
