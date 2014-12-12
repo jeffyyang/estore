@@ -1,0 +1,102 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader.htm"}
+{insert_scripts files="validator.js,../js/transport.js,../js/region.js"}
+<div class="main-div">
+<form method="post" name="theForm" enctype="multipart/form-data" onsubmit="return validate();">
+<table cellspacing="1" cellpadding="3" width="100%">
+  <tr>
+    <td class="label">{$lang.label_suppliers_name}</td>
+    <td><input type="text" name="agency_name" maxlength="60" value="{$agency.agency_name}" />{$lang.require_field}</td>
+  </tr>
+  <tr>
+    <td class="label">{$lang.label_suppliers_phone}</td>
+    <td><input type="text" name="office_phone" maxlength="60" value="{$agency.office_phone}" />{$lang.require_field}</td>
+  </tr>
+  <tr>
+    <td class="label">{$lang.label_suppliers_opening_hours}</td>
+    <td><input type="text" name="opening_hours" maxlength="60" size ="45" value="{$agency.opening_hours}" onfocus="if (this.value == ''){this.value='9:00~21:00';}"
+      />{$lang.require_field}</td>
+  </tr>  
+  <tr>
+    <td class="label">{$lang.label_region}</td>
+    <td>
+          <!-- 省份      
+          <span class="label">{$lang.label_province}</span>
+          <select name="province" id="selProvinces" onChange="region.changed(this, 2, 'selCities')" >
+            <option value="">{$lang.select_please}</option>
+            {html_options options=$province_list selected=$suppliers.brand_id}
+          </select>
+          -->
+          <span class="label">{$lang.label_city}</span>
+          <select name="city" id="selCities" onChange="region.isAdmin= true;region.changed(this, 3, 'selDistricts');" >
+            <option value="">{$lang.select_please}</option>
+            {html_options options=$city_list selected=$agency.region_cities}
+          </select>
+          <span class="label">{$lang.label_district}</span>
+          <select name="district" id="selDistricts" onChange="">
+            <option value="">{$lang.select_please}</option>
+          </select>
+           {$lang.require_field}            
+    </td>
+  </tr>      
+  <tr>
+    <td class="label">{$lang.label_suppliers_address}</td>
+    <td><input type="text" name="suppliers_address" maxlength="120" size="60" value="{$agency.address}" />{$lang.require_field}</td>
+<!--     <td><textarea  name="suppliers_address" cols="60" rows="3"  >{$suppliers.address}</textarea></td> -->
+  </tr>
+  <tr>
+    <td class="label">{$lang.label_suppliers_traffic_info}</td>
+    <td><textarea  name="traffic_info" cols="60" rows="3"  >{$agency.traffic_info}</textarea></td>
+  </tr>  
+  <tr>
+    <td class="label">{$lang.label_suppliers_location}</td>
+    <td>
+    <!-- <iframe src="_qqMap.html"  frameborder="0" scrolling="no" style="border:solid 1px #DADADA;width:320px;height:330px;"></iframe> -->
+    <iframe src="_qqMap.html"  frameborder="0" scrolling="no" style="border:solid 1px #DADADA;width:320px;height:330px;"></iframe>
+    </td>
+  </tr>        
+  <tr>
+    <td class="label">{$lang.label_suppliers_desc}</td>
+    <td><textarea  name="suppliers_desc" cols="60" rows="6"  >{$agency.agency_desc}</textarea></td>
+  </tr>
+</table>
+<table align="center">
+  <tr>
+    <td colspan="2" align="center">
+      <input type="submit" class="button" value="{$lang.button_submit}" />
+      <input type="reset" class="button" value="{$lang.button_reset}" />
+      <input type="hidden" name="act" value="{$form_action}" />
+      <input type="hidden" name="id" value="{$agency.agency_id}" />
+      <input type="hidden" id="h_map_lat" name="map_lat" value="{$agency.map_lat}" />
+      <input type="hidden" id="h_map_lng" name="map_lng" value="{$agency.map_lng}" />      
+    </td>
+  </tr>
+</table>
+</form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+<script language="JavaScript">
+<!--
+document.forms['theForm'].elements['agency_name'].focus();
+
+onload = function()
+{
+  // 开始检查订单
+  startCheckOrder();
+}
+/**
+ * 检查表单输入的数据
+ */
+function validate()
+{
+    validator = new Validator("theForm");
+    validator.required("agency_name", no_agency_name);
+    validator.required("office_phone", no_phone);
+    validator.required("suppliers_address", no_address);
+    return validator.passed();
+}
+//-->
+</script>
+{/literal}
+{include file="pagefooter.htm"}

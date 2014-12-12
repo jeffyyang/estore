@@ -33,18 +33,15 @@
 <script language="JavaScript">
     function searchSuppliers()
     {
-{/literal}
         listTable.filter['pcat_id'] = document.forms['searchForm'].elements['pcat_id'].value;
         listTable.filter['cat_id'] = document.forms['searchForm'].elements['cat_id'].value;
         listTable.filter['intro_type'] = document.forms['searchForm'].elements['intro_type'].value;
-          {if $shop_exists eq 1}
-          listTable.filter['shop_id'] = document.forms['searchForm'].elements['shop_id'].value;
-          {/if}
+        {if $shop_exists eq 1}
+        listTable.filter['shop_id'] = document.forms['searchForm'].elements['shop_id'].value;
+        {/if}
         listTable.filter['is_on_check'] = document.forms['searchForm'].elements['is_on_check'].value;
-{literal}
         listTable.filter['keyword'] = Utils.trim(document.forms['searchForm'].elements['keyword'].value);
         listTable.filter['page'] = 1;
-
         listTable.loadList();
     }
 
@@ -99,7 +96,6 @@ function shopcateResponse(result, text_result)
   }
 }
 
-/*处理商户分类*/ 
-   
+/*处理商户分类*/
 </script>
 {/literal}

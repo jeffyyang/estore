@@ -268,7 +268,7 @@ $_LANG['admin_add_role'] = '添加角色';
 $_LANG['admin_edit_role'] = '修改角色';
 $_LANG['admin_logs'] = '管理员日志';
 $_LANG['agency_list'] = '办事处列表';
-
+$_LANG['bank_agency_list'] = '银行营业网点';
 
 /* 系统设置 */
 $_LANG['01_shop_config'] = '商店设置';
