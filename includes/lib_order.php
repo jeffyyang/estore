@@ -2944,6 +2944,18 @@ function get_delivery_sn()
 }
 
 /**
+ * 得到退款单号
+ * @return  string
+ */
+function get_refund_sn()
+{
+    /* 选择一个随机的方案 */
+    mt_srand((double) microtime() * 1000000);
+
+    return date('YmdHi') . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);
+}
+
+/**
  * 检查礼包内商品的库存
  * @return  boolen
  */

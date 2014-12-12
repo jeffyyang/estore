@@ -17,8 +17,6 @@ if (!defined('IN_ECS'))
 {
     die('Hacking attempt');
 }
-// define('APP_ID', 'wx90ca82453d6227f2');
-// define('APP_SECRET', 'eb91103cdfb7bab591ae1660ee1d5ad5');
 
 define('APP_ID', 'wxba08a98647000606');
 define('APP_SECRET', '5a75902adcedc48fdd9d472152bdb841');
@@ -235,9 +233,7 @@ class wechat
 
     //获得微信公众号access_token
     function get_cached_access_token(){
-
         static $res = NULL;
-
         if ($res === NULL)
         {
             $data = read_static_cache('wx_access_token_pid_releate');
@@ -292,7 +288,6 @@ class wechat
         {
             return false;
         }
-
         return $url;
     }
     /**
