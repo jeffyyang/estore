@@ -24,7 +24,7 @@ $image = new cls_image($_CFG['bgcolor']);
 if ($_REQUEST['act'] == 'list')
 {
      /* 检查权限 */
-    admin_priv('suppliers_manage');
+    admin_priv('admin_manage');
     $result = bank_agency_list();
     /* 模板赋值 */
     $smarty->assign('ur_here', $_LANG['bank_agency_list']); // 当前导航
@@ -46,7 +46,7 @@ if ($_REQUEST['act'] == 'list')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'query')
 {
-    check_authz_json('suppliers_manage');
+    check_authz_json('admin_manage');
 
     $result = bank_agency_list();
     $smarty->assign('agency_list',  $result['result']);
@@ -67,7 +67,7 @@ elseif ($_REQUEST['act'] == 'query')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'edit_agency_name')
 {
-    check_authz_json('suppliers_manage');
+    check_authz_json('admin_manage');
 
     $id     = intval($_POST['id']);
     $name   = json_str_iconv(trim($_POST['val']));
@@ -106,7 +106,7 @@ elseif ($_REQUEST['act'] == 'edit_agency_name')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'remove')
 {
-    check_authz_json('suppliers_manage');
+    check_authz_json('admin_manage');
 
     $id = intval($_REQUEST['id']);
     $sql = "SELECT *
@@ -138,7 +138,7 @@ elseif ($_REQUEST['act'] == 'remove')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'is_check')
 {
-    check_authz_json('suppliers_manage');
+    check_authz_json('admin_manage');
 
     $id = intval($_REQUEST['id']);
     $sql = "SELECT agency_id, is_check
@@ -151,7 +151,7 @@ elseif ($_REQUEST['act'] == 'is_check')
         $_agency['is_check'] = empty($agency['is_check']) ? 1 : 0;
         $db->autoExecute($ecs->table('bank_agency'), $_agency, '', "agency_id = '$id'");
         clear_cache_files();
-        make_json_result($_suppliers['is_check']);
+        make_json_result($_agency['is_check']);
     }
     exit;
 }
@@ -169,7 +169,7 @@ elseif ($_REQUEST['act'] == 'batch')
     else
     {
         /* 检查权限 */
-        admin_priv('shop_manage');
+        admin_priv('admin_manage');
 
         $ids = $_POST['checkboxes'];
         if (isset($_POST['remove']))
@@ -209,7 +209,7 @@ elseif ($_REQUEST['act'] == 'batch')
 elseif (in_array($_REQUEST['act'], array('add', 'edit')))
 {
     /* 检查权限 */
-    admin_priv('suppliers_manage');
+    admin_priv('admin_manage');
     // print_r($_SESSION);
     if ($_REQUEST['act'] == 'add')
     {
@@ -273,7 +273,7 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
 elseif (in_array($_REQUEST['act'], array('insert', 'update')))
 {
     /* 检查权限 */
-    admin_priv('suppliers_manage');
+    admin_priv('admin_manage');
 
     if ($_REQUEST['act'] == 'insert')
     {
@@ -373,7 +373,7 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'drop_image')
 {
-    check_authz_json('suppliers_manage');
+    check_authz_json('admin_manage');
 
     $img_id = empty($_REQUEST['img_id']) ? 0 : intval($_REQUEST['img_id']);
 

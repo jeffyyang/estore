@@ -15,7 +15,7 @@
   <tr>
     <td class="label">{$lang.label_suppliers_opening_hours}</td>
     <td><input type="text" name="opening_hours" maxlength="60" size ="45" value="{$agency.opening_hours}" onfocus="if (this.value == ''){this.value='9:00~21:00';}"
-      />{$lang.require_field}</td>
+      /><!-- {$lang.require_field} --></td>
   </tr>  
   <tr>
     <td class="label">{$lang.label_region}</td>
@@ -36,7 +36,7 @@
           <select name="district" id="selDistricts" onChange="">
             <option value="">{$lang.select_please}</option>
           </select>
-           {$lang.require_field}            
+<!--            {$lang.require_field}   -->          
     </td>
   </tr>      
   <tr>

@@ -110,7 +110,7 @@ $modules['08_members']['10_user_account_manage']    = 'user_account_manage.php?a
 $modules['10_priv_admin']['admin_logs']             = 'admin_logs.php?act=list';
 $modules['10_priv_admin']['admin_list']             = 'privilege.php?act=list';
 $modules['10_priv_admin']['admin_role']             = 'role.php?act=list';
-$modules['10_priv_admin']['bank_agency_list']       = 'bank_agency.php?act=list';    // 银行网点
+// $modules['10_priv_admin']['bank_agency_list']       = 'bank_agency.php?act=list';    // 银行网点
 // $modules['10_priv_admin']['agency_list']            = 'agency.php?act=list';    // 办事处
 // $modules['10_priv_admin']['suppliers_list']         = 'suppliers.php?act=list'; // 供货商
 
@@ -133,6 +133,7 @@ $modules['10_priv_admin']['bank_agency_list']       = 'bank_agency.php?act=list'
 // $modules['11_system']['file_check']                 = 'filecheck.php';
 // $modules['11_system']['fckfile_manage']             = 'fckfile_manage.php?act=list';
 // $modules['11_system']['021_reg_fields']             = 'reg_fields.php?act=list';
+$modules['11_system']['bank_agency_list']              = 'bank_agency.php?act=list';    // 银行网点
 
 // 模板管理
 // $modules['12_template']['02_template_select']       = 'template.php?act=list';
