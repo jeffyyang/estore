@@ -230,62 +230,9 @@ document.forms['theForm'].elements['suppliers_name'].focus();
 
 onload = function()
 {
-  loadScript();
   // 开始检查订单
   startCheckOrder();
 }
-
-var citylocation,map,marker = null;
-var markerStatus = false;
-
-function init() {
-  var myLatlng = new qq.maps.LatLng(39.916527,116.397128);
-  var myOptions = {
-    zoom: 13,
-    center: myLatlng,
-    mapTypeId: qq.maps.MapTypeId.ROADMAP
-  }
-  var map = new qq.maps.Map(document.getElementById("container"), myOptions);
-
-  qq.maps.event.addListener(map, 'click', function(event) {
-      if(markerStatus){
-        document.getElementById("h_map_lat").value = event.latLng.getLat();
-        document.getElementById("h_map_lng").value = event.latLng.getLng();
-      }
-  });
-
-  citylocation = new qq.maps.CityService({
-      complete : function(results){
-          map.setCenter(results.detail.latLng);
-          city.style.display = 'inline';
-          city.innerHTML = '所在位置: ' + results.detail.name;
-          if (marker != null) {
-              marker.setMap(null);
-          }
-          marker = new qq.maps.Marker({
-              map: map,
-              position: results.detail.latLng
-          });
-      }
-  });
-}
-  
-function geolocation_cityname() {
-    var selCities = document.getElementById("selCities");
-    var index = selCities.selectedIndex; // 选中索引
-    var cityname = selCities.options[index].text; // 选中文本
-    citylocation.searchCityByName(cityname);
-    markerStatus = true;
-}
-
-function loadScript() {
-  var script = document.createElement("script");
-  script.type = "text/javascript";
-  script.src = "http://map.qq.com/api/js?v=2.exp&callback=init";
-  document.body.appendChild(script);
-}
-  
-// window.onload = loadScript;
 
 
 /**
