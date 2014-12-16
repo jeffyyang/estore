@@ -173,7 +173,6 @@ elseif ($_REQUEST['act'] == 'insert')
     $sql = "INSERT INTO ".$ecs->table('admin_user')." (user_name, email, password, add_time, nav_list, action_list, shop_id, role_id) ".
            "VALUES ('".trim($_POST['user_name'])."', '".trim($_POST['email'])."', '$password', '$add_time', '$row[nav_list]', '$action_list', '$shop_id', '$role_id')";
 
-
     $db->query($sql);
     /* 转入权限分配列表 */
     $new_id = $db->Insert_ID();
@@ -205,12 +204,12 @@ elseif ($_REQUEST['act'] == 'edit')
     $smarty->assign('ur_here',     $_LANG['shop_edit']);
     $smarty->assign('action_link', array('text' => $_LANG['shop_list'], 'href' => 'shops.php?act=list&' . list_link_postfix()));
     $smarty->assign('shop',       $shop);
-    $smarty->assign('form_action', 'updata');
+    $smarty->assign('form_action', 'update');
 
     assign_query_info();
     $smarty->display('shops_info.htm');
 }
-elseif ($_REQUEST['act'] == 'updata')
+elseif ($_REQUEST['act'] == 'update')
 {
     admin_priv('shop_manage');
     if ($_POST['shop_name'] != $_POST['old_shopname'])
@@ -311,6 +310,101 @@ elseif ($_REQUEST['act'] == 'edit_shop_name')
     }
 }
 
+/*------------------------------------------------------ */
+//-- 编辑商户管理员密码
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'edit_shop_admin_passwd')
+{
+    /* 权限判断 */
+    admin_priv('shop_manage');
+    $sql = "SELECT shop_id, shop_name, is_show ".
+            "FROM " .$ecs->table('shop'). " WHERE shop_id='$_REQUEST[id]'";
+    $shop = $db->GetRow($sql);
+
+    $sql = "SELECT * ".
+            "FROM " .$ecs->table('admin_user'). " WHERE shop_id='$_REQUEST[id]' AND suppliers_id=0 ";
+    $shop_admin = $db->GetRow($sql);
+
+    $smarty->assign('ur_here',     $_LANG['tip_edit_admin_passwd']);
+    $smarty->assign('action_link', array('text' => $_LANG['shop_list'], 'href' => 'shops.php?act=list&' . list_link_postfix()));
+    $smarty->assign('shop',       $shop);
+    $smarty->assign('user',       $shop_admin);
+    $smarty->assign('form_action', 'change_shop_admin_passwd');
+    assign_query_info();
+    $smarty->display('shops_info.htm');
+}
+/*------------------------------------------------------ */
+//-- 编辑商户管理员密码
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'change_shop_admin_passwd')
+{
+    admin_priv('shop_manage');
+    //如果要修改密码
+    $pwd_modified = false;
+
+    $ec_salt=rand(1,9999);
+    $password = !empty($_POST['password']) ? ", password = '".md5(md5($_POST['password']).$ec_salt)."'"    : '';
+    $admin_id = $_REQUEST['admin_id'];
+    if (!empty($_POST['password']))
+    {
+        /* 查询旧密码并与输入的旧密码比较是否相同 */
+        /* 
+        $sql = "SELECT password FROM ".$ecs->table('admin_user')." WHERE user_id = '$admin_id'";
+        $old_password = $db->getOne($sql);
+
+        $sql ="SELECT ec_salt FROM ".$ecs->table('admin_user')." WHERE user_id = '$admin_id'";
+        $old_ec_salt= $db->getOne($sql);
+        if(empty($old_ec_salt))
+        {
+            $old_ec_password=md5($_POST['old_password']);
+        }
+        else
+        {
+            $old_ec_password=md5(md5($_POST['old_password']).$old_ec_salt);
+        }
+        if ($old_password <> $old_ec_password)
+        {
+           $link[] = array('text' => $_LANG['go_back'], 'href'=>'javascript:history.back(-1)');
+           sys_msg($_LANG['pwd_error'], 0, $link);
+        }*/
+
+        /* 比较新密码和确认密码是否相同 */
+        if ($_POST['password'] <> $_POST['pwd_confirm'])
+        {
+           $link[] = array('text' => $_LANG['go_back'], 'href'=>'javascript:history.back(-1)');
+           sys_msg($_LANG['js_languages']['password_error'], 0, $link);
+        }
+        else
+        {
+            $pwd_modified = true;
+        }
+    }
+
+    //更新管理员密码
+    if($pwd_modified){
+        $sql = "UPDATE " .$ecs->table('admin_user'). " SET ".
+               "ec_salt = '$ec_salt' ".
+               $password .
+               "WHERE user_id = '$admin_id'";
+
+        $db->query($sql);
+        /* 清除缓存 */
+        clear_cache_files();
+        admin_log($_POST['shop_name'], 'edit', 'shop');
+        $link[0]['text'] = $_LANG['back_list'];
+        $link[0]['href'] = 'shops.php?act=list&' . list_link_postfix();
+        $note = vsprintf($_LANG['shopedit_succed'], $_POST['shop_name']);
+        sys_msg($note, 0, $link);
+
+    }else{
+        // 没有修改管理员密码
+
+        $link[0]['text'] = $_LANG['back_list'];
+        $link[0]['href'] = 'shops.php?act=list&' . list_link_postfix();
+        $note = vsprintf($_LANG['shopedit_succed'], $_POST['shop_name']);
+        sys_msg($note, 0, $link);
+    }
+}
 /*------------------------------------------------------ */
 //-- 编辑排序序号
 /*------------------------------------------------------ */

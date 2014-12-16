@@ -22,10 +22,11 @@
     <tr>
       <th width="8%"> <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" />
           <a href="javascript:listTable.sort('suppliers_id'); ">{$lang.record_id}</a>{$sort_suppliers_id} </th>
-      <th width="32%"><a href="javascript:listTable.sort('suppliers_name'); ">{$lang.suppliers_name}</a>{$sort_suppliers_name}</th>
-      <th width="5%" >{$lang.suppliers_comm_rank}</th>
+      <th width="22%"><a href="javascript:listTable.sort('suppliers_name'); ">{$lang.suppliers_name}</a>{$sort_suppliers_name}</th>
+      <th width="5%" >{$lang.suppliers_type}</th>
       <th width="12%" >{$lang.suppliers_phone}</th>
       <th>{$lang.suppliers_desc}</th>
+      <th width="8%">{$lang.suppliers_time}</th>
       <th width="5%" >{$lang.suppliers_check}</th>
       <th width="8%" >{$lang.handler}</th>
     </tr>
@@ -36,9 +37,10 @@
       <td class="first-cell">
         <span onclick="javascript:listTable.edit(this, 'edit_agency_name', {$agency.agency_id})">{$agency.agency_name}</span>
       </td>
-      <td align="center">{$agency.comment_rank}</td>
+      <td align="center">{$agency.type_name}</td>
       <td align="right">{$agency.office_phone}</td>
       <td>{$agency.agency_desc|nl2br}</td>
+      <td>{$agency.add_time}</td>
 			<td align="center"><img src="images/{if $agency.is_check eq 1}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'is_check', {$agency.agency_id})" style="cursor:pointer;"/></td>
       <td align="center">
         <a href="bank_agency.php?act=edit&id={$agency.agency_id}" title="{$lang.edit}">{$lang.edit}</a> |

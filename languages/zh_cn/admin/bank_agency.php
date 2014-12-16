@@ -29,6 +29,8 @@ $_LANG['suppliers_opening_hours'] = '营业时间';
 $_LANG['suppliers_desc'] = '网点描述';
 $_LANG['suppliers_best'] = '精品推荐';
 $_LANG['suppliers_check'] = '状态';
+$_LANG['suppliers_time']  = '添加时间';
+$_LANG['suppliers_type']  = '网点类型';
 
 /* 门店搜索 */
 $_LANG['shops_cate'] = '所有分类';

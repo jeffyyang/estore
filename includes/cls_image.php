@@ -95,8 +95,6 @@ class cls_image
             }
         }
 
-        echo $dir;
-
         if (empty($img_name))
         {
             $img_name = $this->unique_name($dir);

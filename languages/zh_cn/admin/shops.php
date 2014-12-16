@@ -53,6 +53,9 @@ $_LANG['place_manage']    = '商圈管理';
 $_LANG['rapid_add_place'] = '添加商圈';
 
 $_LANG['suppliers_manage'] = '门店管理';
+$_LANG['edit_shop_admin_passwd'] = '修改密码';
+$_LANG['tip_edit_admin_passwd']  = '修改商户管理员密码';
+
 
 $_LANG['drop_shop_logo'] = '删除图标';
 $_LANG['confirm_drop_logo'] = '你确认要删除该图标吗？';

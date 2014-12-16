@@ -554,7 +554,7 @@ function bank_agency_list()
         $filter['page_count']     = $filter['record_count'] > 0 ? ceil($filter['record_count'] / $filter['page_size']) : 1;
 
         /* 查询 */
-        $sql = "SELECT agency_id, agency_name, region_cities, comment_rank, office_phone, agency_desc, is_check
+        $sql = "SELECT agency_id, agency_name, region_cities, comment_rank, office_phone, agency_desc, is_check, agency_type 
                 FROM " . $GLOBALS['ecs']->table("bank_agency") . "
                 $where
                 ORDER BY " . $filter['sort_by'] . " " . $filter['sort_order']. "
@@ -569,7 +569,17 @@ function bank_agency_list()
     }
 
     $row = $GLOBALS['db']->getAll($sql);
-
+    
+    /* 格式化数据 */
+    foreach ($row AS $key => $value)
+    {
+        $row[$key]['add_time'] = local_date($GLOBALS['_CFG']['time_format'], $value['add_time']);
+        if($value['agency_type'] == '1'){
+            $row[$key]['type_name'] = '自助银行';
+        }else{
+            $row[$key]['type_name'] = '营业网点';
+        }
+    }    
     $arr = array('result' => $row, 'filter' => $filter, 'page_count' => $filter['page_count'], 'record_count' => $filter['record_count']);
 
     return $arr;
