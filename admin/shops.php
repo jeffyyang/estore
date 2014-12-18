@@ -53,9 +53,9 @@ elseif ($_REQUEST['act'] == 'add')
     $cate_list = get_shop_cat_list();
     $smarty->assign('cat_list', $cate_list);
 
-    /* 取得地区 */
-    // $province_list = get_regions(1,1);
-    // $smarty->assign('province_list', $province_list);
+    /* 取得省份 */
+    $province_list = get_regions_list(1,1);
+    $smarty->assign('province_list', $province_list);
 
     // 吉林
     $city_list = get_regions_list(2,15);

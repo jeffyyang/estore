@@ -378,8 +378,8 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
         $smarty->assign('cat_list', $cate_list);
 
         /* 取得地区 */
-        // $province_list = get_regions(1,1);
-        // $smarty->assign('province_list', $province_list);
+        $province_list = get_regions_list(1,1);
+        $smarty->assign('province_list', $province_list);
 
         // 吉林
         $city_list = get_regions_list(2,15);
@@ -444,9 +444,11 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
         $cate_list = get_shop_cat_list();
         $smarty->assign('cat_list', $cate_list);
 
+        /* 取得省份列表 */
+        $province_list = get_regions_list(1,1);
+        $smarty->assign('province_list', $province_list);
+
         /* 取得地区 */
-        // $province_list = get_regions(1,1);
-        // $smarty->assign('province_list', $province_list);
         $city = get_region($suppliers['region_cities']); 
         $smarty->assign('city', $city);
 

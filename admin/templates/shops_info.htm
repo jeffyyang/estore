@@ -74,13 +74,13 @@
   <tr>
     <td class="label">{$lang.label_region}</td>
     <td>
-          <!-- 省份      
+          <!-- 省份 -->    
           <span class="label">{$lang.label_province}</span>
-          <select name="province" id="selProvinces" onChange="region.changed(this, 2, 'selCities')" >
+          <select name="province" id="selProvinces" onChange="region.isAdmin= true;region.changed(this, 2, 'selCities')" >
             <option value="">{$lang.select_please}</option>
-            {html_options options=$province_list selected=$suppliers.brand_id}
+            {html_options options=$province_list }
           </select>
-          -->
+          
           <span class="label">{$lang.label_city}</span>
           <select name="city" id="selCities" onChange="region.isAdmin= true;region.changed(this, 3, 'selDistricts');" >
             <option value="">{$lang.select_please}</option>
