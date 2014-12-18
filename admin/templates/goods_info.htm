@@ -54,7 +54,7 @@
           <tr>
             <td class="label">{$lang.lab_goods_cat}</td>
             <td><select name="cat_id" onchange="changeCat(this);" ><option value="0">{$lang.select_please}</option>{$cat_list}</select>
-              <!-- {if $is_add}
+<!--               {if $is_add}
               <a href="javascript:void(0)" onclick="rapidCatAdd()" title="{$lang.rapid_add_cat}" class="special">{$lang.rapid_add_cat}</a>
               <span id="category_add" style="display:none;">
               <input class="text" size="10" name="addedCategoryName" />
@@ -292,7 +292,9 @@
                 <select name="goods_type" onchange="getAttrList({$goods.goods_id})">
                   <option value="0">{$lang.sel_goods_type}</option>
                   {$goods_type_list}
-                </select><br />
+                </select>
+                {$lang.require_field}
+                <br/>
               <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeGoodsType">{$lang.notice_goods_type}</span></td>
           </tr>
           <tr>
@@ -500,7 +502,10 @@
       {
           validator.addErrorMsg(goods_cat_not_null);
       }
-
+      if (document.forms['theForm'].elements['goods_type'].value == 0)
+      {
+          validator.addErrorMsg(goods_type_not_null);
+      }
       checkVolumeData("1",validator);
 
       validator.required('shop_price', shop_price_not_null);
@@ -830,7 +835,7 @@
   // 改变商品类别 
   function changeCat(obj)
   {
-    hideCatDiv();
+    // hideCatDiv();
     
     var use_date_div = document.getElementById("use_date");
     var group_date_div = document.getElementById("promote_4");

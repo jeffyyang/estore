@@ -225,6 +225,7 @@ $_LANG['goods_not_in_recycle_bin'] = '该商品尚未放入回收站，不能删
 
 $_LANG['js_languages']['goods_name_not_null'] = '商品名称不能为空。';
 $_LANG['js_languages']['goods_cat_not_null'] = '商品分类必须选择。';
+$_LANG['js_languages']['goods_type_not_null'] = '商品属性->商品类型必须选择。';
 $_LANG['js_languages']['category_cat_not_null'] = '分类名称不能为空';
 $_LANG['js_languages']['brand_cat_not_null'] = '品牌名称不能为空';
 $_LANG['js_languages']['goods_cat_not_leaf'] = '您选择的商品分类不是底级分类，请选择底级分类。';
