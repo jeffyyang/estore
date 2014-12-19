@@ -156,10 +156,8 @@ class wxpay
         if ($downloadBillResult['return_code'] == "FAIL") {
             echo "通信出错：".$downloadBillResult['return_msg'];
         }else{
-             print_r('<pre>');
-             echo "【对账单详情】"."</br>";
-             print_r($downloadBill->response);
-             print_r('</pre>');
+            
+             return $downloadBill->response;
         }
     }
     /*

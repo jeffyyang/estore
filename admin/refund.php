@@ -18,6 +18,7 @@ define('IN_ECS', true);
 require(dirname(__FILE__) . '/includes/init.php');
 include_once(ROOT_PATH . 'includes/lib_order.php');
 include_once(ROOT_PATH . 'includes/lib_wxpay.php');
+include_once(ROOT_PATH . 'includes/cls_wxpay.php');
 
 $wxpay = new wxpay();
 /*------------------------------------------------------ */
@@ -25,6 +26,12 @@ $wxpay = new wxpay();
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'list')
 {
+
+   // $result = $wxpay->queryWXPayment('141203185138OM9TWU2');
+   $result = $wxpay->queryWXPayment('141203185138OM9TWU2');
+   $result = $wxpay->downloadWXBill('141203185138OM9TWU2');
+
+    print_r($result);
 
     // print_r($_SESSION);
     /* 检查参数 */
@@ -119,29 +126,31 @@ elseif ($_REQUEST['act'] == 'end')
         $_refund['status'] = 3;
         $_refund['admin_note'] = '退款完成';
         $_refund['paid_time'] = gmtime();
-        // $db->autoExecute($ecs->table('pay_log'), $_refund, '', "log_id = '$id'");
+        $db->autoExecute($ecs->table('pay_log'), $_refund, '', "log_id = '$id'");
 
         $order = order_info($refund['order_id']);
-        // if($order['is_separate'] == 0){
-        //     $_order['order_status'] = OS_REFUNDED;
+        if($order['is_separate'] == 0){
+            $_order['order_status'] = OS_REFUNDED;
 
-        //     $order_goods_list = order_goods($refund['order_id']);
-        //     foreach ($order_goods_list AS $key => $value)
-        //     {
-        //         if ($value['exchange_status'] == CD_REFUNDING)
-        //         {   
-        //             $order_goods['exchange_status'] = CD_REFUNDED;
-        //             update_excode_goods($value['rec_id'], $order_goods);
-        //         }
-        //     }
-        //     update_order($refund['order_id'],$_order);
+            $order_goods_list = order_goods($refund['order_id']);
+            foreach ($order_goods_list AS $key => $value)
+            {
+                if ($value['exchange_status'] == CD_REFUNDING)
+                {   
+                    $order_goods['exchange_status'] = CD_REFUNDED;
+                    update_excode_goods($value['rec_id'], $order_goods);
+                }
+            }
+            update_order($refund['order_id'],$_order);
 
-        // }else{
-        //     // 处理虚拟物品分单退货
-        //     $_order_goods['exchange_status'] = CD_REFUNDED;
-        //     update_excode_goods($refund['order_item_id'], $_order_goods);
-        // }
-        // $wxpay->applyWXRefund($order['order_sn'], get_refund_sn(), $order['order_amount'], $refund['order_amount']);
+        }else{
+            // 处理虚拟物品分单退货
+            $_order_goods['exchange_status'] = CD_REFUNDED;
+            update_excode_goods($refund['order_item_id'], $_order_goods);
+        }
+
+        // 发起微信支付请求
+        // $result = $wxpay->applyWXRefund($order['order_sn'], get_refund_sn(), $order['order_amount'], $refund['order_amount']);
 
         clear_cache_files();
         make_json_result($_refund['status']);
