@@ -31,16 +31,14 @@ $_LANG['menu_top'] = '顶级菜单';
 $_LANG['notice_url'] = '该Url值表示点击菜单将要跳转到一个网页地址，通常http://为开头。';
 $_LANG['notice_key'] = '该Key值表示点击菜单触发的事件值，应在事件定义管理里中预定义，否则无效。';
 
-$_LANG['index_new'] = '最新';
-$_LANG['index_best'] = '精品';
-$_LANG['index_hot'] = '热门';
-
 $_LANG['back_list'] = '返回菜单列表';
 $_LANG['continue_add'] = '继续添加菜单';
 
 /* 操作提示信息 */
 $_LANG['wx_menu_name_empty'] = '菜单名称不能为空!';
 $_LANG['wx_menu_name_exist'] = '已存在相同的菜单名称!';
+$_LANG['wx_top_menu_exceed']  = '顶级菜单不能大于3个!';
+$_LANG['wx_leaf_menu_exceed'] = '子菜单不能大于10个!';
 $_LANG["parent_isleaf"]  = '所选菜单不能是末级菜单!';
 $_LANG["wx_menu_isleaf"] = '不是末级菜单,您不能删除!';
 $_LANG["wx_menu_noleaf"] = '底下还有其它子菜单,不能修改为末级菜单!';
@@ -53,7 +51,7 @@ $_LANG['wx_menu_drop_succed'] = '微信菜单删除成功!';
 
 /*JS 语言项*/
 $_LANG['js_languages']['wx_menu_name_empty'] = '菜单名称不能为空!';
-$_LANG['js_languages']['is_leafmenu'] = '您选定的是一个叶子菜单。\r\n新菜单的上级菜单不能是一个末级菜单';
-$_LANG['js_languages']['not_leafmenu'] = '您选定的菜单不是一个末级菜单。\r\n商品的分类转移只能在末级分类之间才可以操作。';
+$_LANG['js_languages']['is_leafmenu']  = '您选定的是一个子菜单。\r\n新菜单的上级菜单不能是一个子菜单';
+$_LANG['js_languages']['not_leafmenu'] = '您选定的菜单不是一个子菜单。\r\n子菜单才可以操作。';
 
 ?>

@@ -95,6 +95,25 @@ if ($_REQUEST['act'] == 'insert')
     $wx_menu['menu_desc']    = !empty($_POST['menu_desc'])    ? trim($_POST['menu_desc'])    : '';
     $wx_menu['is_leaf']      = !empty($_POST['is_leaf'])      ? intval($_POST['is_leaf'])    : 1;
 
+    if($wx_menu['parent_id'] == 0){
+    /* 顶级菜单不能超过3个 */
+        $menu_count = $db->getOne('SELECT COUNT(*) FROM ' .$ecs->table('wx_menu'). " WHERE parent_id=0 ");
+        if($menu_count >= 3){
+            $link[] = array('text' => $_LANG['go_back'], 'href' => 'javascript:history.back(-1)');
+            sys_msg($_LANG['wx_top_menu_exceed'], 0, $link);
+        }
+    }
+
+    if($wx_menu['parent_id'] > 0){
+        /* 子菜单不能超过10个 */
+        $parent_id = $wx_menu['parent_id'];
+        $menu_count = $db->getOne('SELECT COUNT(*) FROM ' .$ecs->table('wx_menu'). " WHERE parent_id='$parent_id' ");
+        if($menu_count >= 10){
+            $link[] = array('text' => $_LANG['go_back'], 'href' => 'javascript:history.back(-1)');
+            sys_msg($_LANG['wx_leaf_menu_exceed'], 0, $link);
+        }
+    }
+
     if (wx_menu_exists($wx_menu['menu_name'], $wx_menu['parent_id']))
     {
         /* 同级别下不能有重复的菜单名称 */
@@ -192,6 +211,24 @@ if ($_REQUEST['act'] == 'update')
     $wx_menu['menu_desc']    = !empty($_POST['menu_desc'])    ? trim($_POST['menu_desc'])    : '';
     $wx_menu['is_leaf']      = !empty($_POST['is_leaf'])      ? intval($_POST['is_leaf'])    : 1;
 
+    if($wx_menu['parent_id'] == 0){
+    /* 顶级菜单不能超过3个 */
+        $menu_count = $db->getOne('SELECT COUNT(*) FROM ' .$ecs->table('wx_menu'). " WHERE parent_id=0 ");
+        if($menu_count > 3){
+            $link[] = array('text' => $_LANG['go_back'], 'href' => 'javascript:history.back(-1)');
+            sys_msg($_LANG['wx_top_menu_exceed'], 0, $link);
+        }
+    }
+
+    if($wx_menu['parent_id'] > 0){
+        /* 子菜单不能超过10个 */
+        $parent_id = $wx_menu['parent_id'];
+        $menu_count = $db->getOne('SELECT COUNT(*) FROM ' .$ecs->table('wx_menu'). " WHERE parent_id='$parent_id' ");
+        if($menu_count >= 10){
+            $link[] = array('text' => $_LANG['go_back'], 'href' => 'javascript:history.back(-1)');
+            sys_msg($_LANG['wx_leaf_menu_exceed'], 0, $link);
+        }
+    }
 
     /* 判断菜单名是否重复 */
     if ($wx_menu['menu_name'] != $old_wx_menu_name)
@@ -203,22 +240,11 @@ if ($_REQUEST['act'] == 'update')
         }
     }
 
-    /* 判断上级目录是否合法 */
-    $children = array_keys(cat_list($cat_id, 0, false));     // 获得当前菜单的所有下级分类
-    if (in_array($cat['parent_id'], $children))
-    {
-        /* 选定的父类是当前分类或当前分类的下级分类 */
-       $link[] = array('text' => $_LANG['go_back'], 'href' => 'javascript:history.back(-1)');
-       sys_msg($_LANG["is_leaf_error"], 0, $link);
-    }
-
     if($wx_menu['menu_sort']  > 10 || $wx_menu['menu_sort']  < 0)
     {
        $link[] = array('text' => $_LANG['go_back'], 'href' => 'javascript:history.back(-1)');
        sys_msg($_LANG['sort_order_error'], 0, $link);
     }
-
-    $dat = $db->getRow("SELECT menu_name FROM ". $ecs->table('wx_menu') . " WHERE menu_id = '$wx_menu_id'");
 
     if ($db->autoExecute($ecs->table('wx_menu'), $wx_menu, 'UPDATE', "menu_id='$wx_menu_id'"))
     {
