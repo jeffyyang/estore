@@ -195,11 +195,11 @@ if ($_REQUEST['act'] == 'remove')
     check_authz_json('wx_manage');
 
     /* 初始化分类ID并取得分类名称 */
-    $keyword_id   = intval($_GET['keyword_id']);
+    $keyword_id   = intval($_GET['id']);
     
     $keywords = $db->getOne('SELECT keywords FROM ' .$ecs->table('wx_keyword'). " WHERE keyword_id='$keyword_id'");
 
-    /* 删除分类 */
+    /* 删除微信关键字 */
     $sql = 'DELETE FROM ' .$ecs->table('wx_keyword'). " WHERE keyword_id = '$keyword_id'";
     if ($db->query($sql))
     {

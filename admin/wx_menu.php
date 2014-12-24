@@ -153,25 +153,22 @@ if ($_REQUEST['act'] == 'edit')
 
 elseif($_REQUEST['act'] == 'add_wx_menu')
 {
-    $parent_id = empty($_REQUEST['parent_id']) ? 0 : intval($_REQUEST['parent_id']);
-    $category  = empty($_REQUEST['cat']) ? '' : json_str_iconv(trim($_REQUEST['cat']));
+    $parent_id  = empty($_REQUEST['parent_id']) ? 0 : intval($_REQUEST['parent_id']);
+    $menu_name  = empty($_REQUEST['menu_name']) ? '' : json_str_iconv(trim($_REQUEST['menu_name']));
 
-    if(cat_exists($category, $parent_id))
+    if(menu_exists($menu_name, $parent_id))
     {
-        make_json_error($_LANG['catname_exist']);
+        make_json_error($_LANG['wx_menu_name_exist']);
     }
     else
     {
-        $sql = "INSERT INTO " . $ecs->table('category') . "(cat_name, parent_id, is_show)" .
-               "VALUES ( '$category', '$parent_id', 1)";
+        $sql = "INSERT INTO " . $ecs->table('wx_menu') . "(menu_name, parent_id, is_show)" .
+               "VALUES ( '$menu_name', '$parent_id', 1)";
 
         $db->query($sql);
-        $category_id = $db->insert_id();
-
-        $arr = array("parent_id"=>$parent_id, "id"=>$category_id, "cat"=>$category);
-
+        $menu_id = $db->insert_id();
+        $arr = array("parent_id"=>$parent_id, "id"=>$menu_id, "cat"=>$wx_menu);
         clear_cache_files();    // 清除缓存
-
         make_json_result($arr);
     }
 }
@@ -185,16 +182,15 @@ if ($_REQUEST['act'] == 'update')
     admin_priv('wx_manage');
 
     /* 初始化变量 */
-    $wx_menu_id              = !empty($_POST['menu_id'])   ? intval($_POST['menu_id']) : 0;
+    $wx_menu_id              = !empty($_POST['menu_id'])      ? intval($_POST['menu_id']) : 0;
     $old_wx_menu_name        = $_POST['old_menu_name']; 
-    $wx_menu['parent_id']    = !empty($_POST['parent_id'])    ? intval($_POST['parent_id'])  : 0;
     $wx_menu['menu_name']    = !empty($_POST['menu_name'])    ? trim($_POST['menu_name'])    : '';
-    $wx_menu['menu_type']    = !empty($_POST['menu_type']) ? trim($_POST['menu_type']) : '';
-    $wx_menu['event_key']    = !empty($_POST['event_key'])  ? trim($_POST['web_url'])  : '';
-    $wx_menu['web_url']      = !empty($_POST['web_url'])  ? trim($_POST['wx_menu_url'])  : '';
-    $wx_menu['menu_sort']    = !empty($_POST['menu_sort'])   ? trim($_POST['menu_sort'])   : 0;
-    $wx_menu['menu_desc']    = !empty($_POST['menu_desc']) ? $_POST['menu_desc']       : '';
-    $wx_menu['is_leaf']      = !empty($_POST['is_leaf'])      ? intval($_POST['is_leaf'])    : 0;
+    $wx_menu['menu_type']    = !empty($_POST['menu_type'])    ? trim($_POST['menu_type'])    : '';
+    $wx_menu['event_key']    = !empty($_POST['event_key'])    ? trim($_POST['event_key'])    : '';
+    $wx_menu['web_url']      = !empty($_POST['web_url'])      ? trim($_POST['web_url'])      : '';
+    $wx_menu['menu_sort']    = !empty($_POST['menu_sort'])    ? intval($_POST['menu_sort'])  : 0;
+    $wx_menu['menu_desc']    = !empty($_POST['menu_desc'])    ? trim($_POST['menu_desc'])    : '';
+    $wx_menu['is_leaf']      = !empty($_POST['is_leaf'])      ? intval($_POST['is_leaf'])    : 1;
 
 
     /* 判断菜单名是否重复 */
@@ -208,7 +204,7 @@ if ($_REQUEST['act'] == 'update')
     }
 
     /* 判断上级目录是否合法 */
-    $children = array_keys(cat_list($cat_id, 0, false));     // 获得当前分类的所有下级分类
+    $children = array_keys(cat_list($cat_id, 0, false));     // 获得当前菜单的所有下级分类
     if (in_array($cat['parent_id'], $children))
     {
         /* 选定的父类是当前分类或当前分类的下级分类 */
@@ -218,7 +214,6 @@ if ($_REQUEST['act'] == 'update')
 
     if($wx_menu['menu_sort']  > 10 || $wx_menu['menu_sort']  < 0)
     {
-        /* 价格区间数超过范围 */
        $link[] = array('text' => $_LANG['go_back'], 'href' => 'javascript:history.back(-1)');
        sys_msg($_LANG['sort_order_error'], 0, $link);
     }
