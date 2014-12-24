@@ -166,7 +166,7 @@ $modules['10_priv_admin']['admin_role']             = 'role.php?act=list';
 //修改 $modules['16_email_manage']['view_sendlist']        = 'view_sendlist.php?act=list';
 
 //微信平台管理
-/*
+
 $modules['17_wxmp']['02_wx_menu']                  = 'wx_menu.php?act=list';              // 菜单管理
 $modules['17_wxmp']['03_wx_keyword']               = 'wx_keyword.php?act=list';           // 关键字管理
 $modules['17_wxmp']['04_wx_event']                 = 'wx_event.php?act=list';             // 事件管理  
@@ -174,7 +174,5 @@ $modules['17_wxmp']['05_wx_media']                 = 'wx_media.php?act=list';   
 $modules['17_wxmp']['051_wx_news']                 = 'wx_news.php?act=list';              // 图文管理
 $modules['17_wxmp']['06_wx_msg_send']              = 'wx_message.php?act=display_send_ui';
 $modules['17_wxmp']['07_wx_msg_send_history']      = 'wx_message.php?act=display_send_history_ui';
-
-*/
 
 ?>

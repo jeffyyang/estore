@@ -64,7 +64,6 @@ if ($_REQUEST['act'] == 'add')
 {
     /* 权限检查 */
     admin_priv('wx_manage');
-
     /* 模板赋值 */
     $smarty->assign('ur_here',      $_LANG['02_wx_menu_add']);
     $smarty->assign('action_link',  array('href' => 'wx_menu.php?act=list', 'text' => $_LANG['02_wx_menu_list']));
@@ -87,35 +86,35 @@ if ($_REQUEST['act'] == 'insert')
     admin_priv('wx_manage');
 
     /* 初始化变量 */
-    // $wx_menu['menu_id']   = !empty($_POST['menu_id'])      ? intval($_POST['menu_id'])    : 0;
     $wx_menu['parent_id']    = !empty($_POST['parent_id'])    ? intval($_POST['parent_id'])  : 0;
     $wx_menu['menu_name']    = !empty($_POST['menu_name'])    ? trim($_POST['menu_name'])    : '';
-    $wx_menu['menu_type']    = !empty($_POST['menu_type']) ? trim($_POST['menu_type']) : '';
-    $wx_menu['event_key']    = !empty($_POST['event_key'])  ? trim($_POST['event_key'])  : '';
-    $wx_menu['web_url']      = !empty($_POST['web_url'])  ? trim($_POST['web_url'])  : '';
-    $wx_menu['menu_sort']    = !empty($_POST['menu_sort'])   ? trim($_POST['menu_sort'])   : 0;
-    $wx_menu['menu_desc']    = !empty($_POST['menu_desc']) ? $_POST['menu_desc']       : '';
-    $wx_menu['is_leaf']      = !empty($_POST['is_leaf'])      ? intval($_POST['is_leaf'])    : 0;
+    $wx_menu['menu_type']    = !empty($_POST['menu_type'])    ? trim($_POST['menu_type'])    : '';
+    $wx_menu['event_key']    = !empty($_POST['event_key'])    ? trim($_POST['event_key'])    : '';
+    $wx_menu['web_url']      = !empty($_POST['web_url'])      ? trim($_POST['web_url'])      : '';
+    $wx_menu['menu_sort']    = !empty($_POST['menu_sort'])    ? intval($_POST['menu_sort'])  : 0;
+    $wx_menu['menu_desc']    = !empty($_POST['menu_desc'])    ? trim($_POST['menu_desc'])    : '';
+    $wx_menu['is_leaf']      = !empty($_POST['is_leaf'])      ? intval($_POST['is_leaf'])    : 1;
 
     if (wx_menu_exists($wx_menu['menu_name'], $wx_menu['parent_id']))
     {
-        /* 同级别下不能有重复的分类名称 */
+        /* 同级别下不能有重复的菜单名称 */
        $link[] = array('text' => $_LANG['go_back'], 'href' => 'javascript:history.back(-1)');
        sys_msg($_LANG['wx_menu_name_exist'], 0, $link);
     }
 
-    if($wx_menu['menu_sort'] > 10 || $wx_menu['pri'] < 0)
+    if($wx_menu['menu_sort'] > 10)
     {
-        /* 价格区间数超过范围 */
        $link[] = array('text' => $_LANG['go_back'], 'href' => 'javascript:history.back(-1)');
        sys_msg($_LANG['sort_order_error'], 0, $link);
     }
-
+    // 修改父菜单的is_leaf属性
+    if($wx_menu['parent_id'] > 0){
+        wx_menu_update($wx_menu['parent_id'], array('is_leaf' => 0));
+    } 
     /* 入库的操作 */
     if ($db->autoExecute($ecs->table('wx_menu'), $wx_menu) !== false)
     {
         $wx_menu_id = $db->insert_id();
-
         admin_log($_POST['menu_name'], 'add', 'wx_menu');   // 记录管理员操作
         clear_cache_files();    // 清除缓存
 
@@ -137,7 +136,7 @@ if ($_REQUEST['act'] == 'edit')
 {
     admin_priv('wx_manage');   // 权限检查
     $wx_menu_id = intval($_REQUEST['wx_menu_id']);
-    $wx_menu_info = get_wx_menu_info($wx_menu_id);  // 查询分类信息数据
+    $wx_menu_info = get_wx_menu_info($wx_menu_id);  // 查询菜单数据
 
     /* 模板赋值 */
     $smarty->assign('ur_here',     $_LANG['wx_menu_edit']);
@@ -238,17 +237,17 @@ if ($_REQUEST['act'] == 'update')
 }
 
 /*------------------------------------------------------ */
-//-- 编辑排序序号
+//-- 编辑菜单排序序号
 /*------------------------------------------------------ */
 
 if ($_REQUEST['act'] == 'edit_sort_order')
 {
     check_authz_json('wx_manage');
 
-    $id = intval($_POST['id']);
+    $id  = intval($_POST['id']);
     $val = intval($_POST['val']);
 
-    if (cat_update($id, array('sort_order' => $val)))
+    if (wx_menu_update($id, array('sort_order' => $val)))
     {
         clear_cache_files(); // 清除缓存
         make_json_result($val);
@@ -267,34 +266,30 @@ if ($_REQUEST['act'] == 'remove')
 {
     check_authz_json('wx_manage');
 
-    /* 初始化分类ID并取得分类名称 */
-    $cat_id   = intval($_GET['id']);
-    $cat_name = $db->getOne('SELECT cat_name FROM ' .$ecs->table('category'). " WHERE cat_id='$cat_id'");
+    /* 初始化分类ID并取得菜单名称 */
+    $menu_id   = intval($_GET['id']);
+    $menu_name = $db->getOne('SELECT menu_name FROM ' .$ecs->table('wx_menu'). " WHERE menu_id='$menu_id'");
 
-    /* 当前分类下是否有子分类 */
-    $cat_count = $db->getOne('SELECT COUNT(*) FROM ' .$ecs->table('category'). " WHERE parent_id='$cat_id'");
-
-    /* 当前分类下是否存在商品 */
-    $goods_count = $db->getOne('SELECT COUNT(*) FROM ' .$ecs->table('goods'). " WHERE cat_id='$cat_id'");
+    /* 当前分类下是否有子菜单 */
+    $menu_count = $db->getOne('SELECT COUNT(*) FROM ' .$ecs->table('wx_menu'). " WHERE parent_id='$menu_id'");
 
     /* 如果不存在下级子分类和商品，则删除之 */
-    if ($cat_count == 0 && $goods_count == 0)
+    if ($menu_count == 0)
     {
-        /* 删除分类 */
-        $sql = 'DELETE FROM ' .$ecs->table('category'). " WHERE cat_id = '$cat_id'";
+        /* 删除菜单 */
+        $sql = 'DELETE FROM ' .$ecs->table('wx_menu'). " WHERE menu_id = '$menu_id'";
         if ($db->query($sql))
         {
-            $db->query("DELETE FROM " . $ecs->table('nav') . "WHERE ctype = 'c' AND cid = '" . $cat_id . "' AND type = 'middle'");
             clear_cache_files();
-            admin_log($cat_name, 'remove', 'category');
+            admin_log($menu_name, 'remove', 'wx_menu');
         }
     }
     else
     {
-        make_json_error($cat_name .' '. $_LANG['cat_isleaf']);
+        make_json_error($menu_name .' '. $_LANG['cat_isleaf']);
     }
 
-    $url = 'category.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
+    $url = 'wx_menu.php?act=query&' . str_replace('act=remove', '', $_SERVER['QUERY_STRING']);
 
     ecs_header("Location: $url\n");
     exit;
@@ -361,7 +356,7 @@ function wx_menu_update($wx_menu_id, $args)
  */
 function wx_menu_list($menu_id = 0)
 {
-    $sql = "SELECT m.menu_id, m.menu_name, m.parent_id, m.menu_type, m.event_key, m.web_url, m.menu_sort, COUNT(s.menu_id) AS has_children ".
+    $sql = "SELECT m.menu_id, m.menu_name, m.parent_id, m.menu_type, m.event_key, m.web_url, m.menu_sort, m.menu_desc, COUNT(s.menu_id) AS has_children ".
         'FROM ' . $GLOBALS['ecs']->table('wx_menu') . " AS m ".
         "LEFT JOIN " . $GLOBALS['ecs']->table('wx_menu') . " AS s ON s.parent_id=m.menu_id ".
         "GROUP BY m.menu_id ".
@@ -392,12 +387,12 @@ function parent_wx_menu_list($parent_id = 0, $selected = -1){
         $data = read_static_cache('wx_menu_pid_releate');
         if ($data === false)
         {
-            $sql = 'SELECT m.menu_id, m.menu_name, m.parent_id '.
-                'FROM ' . $GLOBALS['ecs']->table('wx_menu') . ' AS m '.
-                'WHERE m.parent_id='. $parent_id . ' AND m.is_leaf = 1 ' .
-                'ORDER BY m.parent_id ASC';
-            $res = $GLOBALS['db']->getAll($sql);
+            $sql = 'SELECT m.menu_id, m.menu_name, m.parent_id'.
+                ' FROM ' . $GLOBALS['ecs']->table('wx_menu') . ' AS m '.
+                ' WHERE m.parent_id='. $parent_id .
+                ' ORDER BY m.parent_id ASC';
 
+            $res = $GLOBALS['db']->getAll($sql);
             //如果数组过大，不采用静态缓存方式
             if (count($res) <= 1000)
             {

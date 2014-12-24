@@ -465,9 +465,7 @@ class OrderQuery_pub extends Wxpay_client_pub
             $this->parameters["mch_id"] = WxPayConf_pub::MCHID;//商户号
             $this->parameters["nonce_str"] = $this->createNoncestr();//随机字符串
             $this->parameters["sign"] = $this->getSign($this->parameters);//签名
-            print_r($this->parameters);
             $xmlString = $this->arrayToXml($this->parameters);
-            echo "xml:" . $xmlString;
             return  $xmlString;
         }catch (SDKRuntimeException $e)
         {

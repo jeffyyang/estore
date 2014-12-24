@@ -28,11 +28,8 @@ if ($_REQUEST['act'] == 'list')
 {
 
    // $result = $wxpay->queryWXPayment('141203185138OM9TWU2');
-   $result = $wxpay->queryWXPayment('141203185138OM9TWU2');
-   $result = $wxpay->downloadWXBill('141203185138OM9TWU2');
-
-    print_r($result);
-
+   // $result = $wxpay->queryWXPayment('141203185138OM9TWU2');
+   // $result = $wxpay->downloadWXBill('141203185138OM9TWU2');
     // print_r($_SESSION);
     /* 检查参数 */
     $smarty->assign('ur_here',      $_LANG['refund_list']);

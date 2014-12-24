@@ -41,10 +41,10 @@ $_LANG['continue_add'] = '继续添加菜单';
 /* 操作提示信息 */
 $_LANG['wx_menu_name_empty'] = '菜单名称不能为空!';
 $_LANG['wx_menu_name_exist'] = '已存在相同的菜单名称!';
-$_LANG["parent_isleaf"] = '所选分类不能是末级分类!';
-$_LANG["cat_isleaf"] = '不是末级分类或者此分类下还存在有商品,您不能删除!';
-$_LANG["cat_noleaf"] = '底下还有其它子分类,不能修改为末级分类!';
-$_LANG["is_leaf_error"] = '所选择的上级分类不能是当前分类或者当前分类的下级分类!';
+$_LANG["parent_isleaf"]  = '所选菜单不能是末级菜单!';
+$_LANG["wx_menu_isleaf"] = '不是末级菜单,您不能删除!';
+$_LANG["wx_menu_noleaf"] = '底下还有其它子菜单,不能修改为末级菜单!';
+$_LANG["is_leaf_error"]  = '所选择的上级菜单不能是当前菜单或者当前菜单的子菜单!';
 $_LANG['sort_order_error'] = '顺序号不合法';
 
 $_LANG['wx_menu_add_succed']  = '新微信菜单添加成功!';

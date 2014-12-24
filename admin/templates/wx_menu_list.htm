@@ -16,11 +16,12 @@
     <th>{$lang.wx_menu_type_event}</th>
     <th>{$lang.wx_menu_type_url}</th>
     <th>{$lang.sort_order}</th>
+    <th>{$lang.wx_menu_desc}</th>
     <th>{$lang.handler}</th>
   </tr>
   { foreach from=$menu_list item=menu}
   <tr align="center" class="{$cat.level}" id="{$cat.level}_{$cat.cat_id}">
-    <td align="left" class="first-cell" >
+    <td width="8%" align="left" class="first-cell" >
       {if $cat.is_leaf neq 1}
       <img src="images/menu_minus.gif" id="icon_{$cat.level}_{$cat.cat_id}" width="9" height="9" border="0" style="margin-left:{$cat.level}em" onclick="rowClicked(this)" />
       {else}
@@ -31,12 +32,13 @@
       <img src="../{$cat.cat_image}" border="0" style="vertical-align:middle;" width="60px" height="21px">
     {/if}
     </td>
-    <td width="10%">{$menu.menu_name}</td>
-    <td width="10%">{$menu.menu_type}</td>
-    <td width="10%">{$menu.event_key}</td>
-    <td width="10%">{$menu.web_url}</td>
-    <td width="10%" align="right"><span onclick="listTable.edit(this, 'edit_sort_order', {$menu.menu_sort})">{$menu.menu_sort}</span></td>
-    <td width="24%" align="center">
+    <td width="15%">{$menu.menu_name}</td>
+    <td width="7%">{$menu.menu_type}</td>
+    <td width="8%">{$menu.event_key}</td>
+    <td width="25%">{$menu.web_url}</td>
+    <td width="3%" align="center"><span onclick="listTable.edit(this, 'edit_sort_order', {$menu.menu_sort})">{$menu.menu_sort}</span></td>
+    <td align="left">{$menu.menu_desc}</td>
+    <td width="8%" align="center">
       <a href="wx_menu.php?act=edit&amp;wx_menu_id={$menu.menu_id}">{$lang.edit}</a> |
       <a href="javascript:;" onclick="listTable.remove({$menu.menu_id}, '{$lang.drop_confirm}')" title="{$lang.remove}">{$lang.remove}</a>
     </td>
