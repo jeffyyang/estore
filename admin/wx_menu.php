@@ -94,7 +94,7 @@ if ($_REQUEST['act'] == 'insert')
     $wx_menu['menu_sort']    = !empty($_POST['menu_sort'])    ? intval($_POST['menu_sort'])  : 0;
     $wx_menu['menu_desc']    = !empty($_POST['menu_desc'])    ? trim($_POST['menu_desc'])    : '';
     $wx_menu['is_leaf']      = !empty($_POST['is_leaf'])      ? intval($_POST['is_leaf'])    : 1;
-
+    $wx_menu['create_time']  = time();
     if($wx_menu['parent_id'] == 0){
     /* 顶级菜单不能超过3个 */
         $menu_count = $db->getOne('SELECT COUNT(*) FROM ' .$ecs->table('wx_menu'). " WHERE parent_id=0 ");

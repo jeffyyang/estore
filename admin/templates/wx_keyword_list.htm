@@ -21,16 +21,14 @@
   </tr>
   { foreach from=$keyword_list item=keyword}
   <tr align="center" id="{$keyword.keyword_id}">
-    <td align="left" class="first-cell" >
-      <span><a href="wx_keyword.php?act=list&wx_keyword_id={$keyword.keyword_id}">{$keyword.keyword_id}</a></span>
-    </td>
-    <td width="5%">{$keyword.keywords}</td>
-    <td width="10%">{if $keyword.msg_type eq 'text' } 纯文本消息 {else}  图文消息 {/if} </td>
-    <td width="5%">{if $keyword.article_id > 0 } {$keyword.article_id} {/if} </td>
-    <td width="30%">{$keyword.content}</td>
-    <td width="10%">{if $keyword.status == 1 } 已生效 {else}  未生效 {/if}</td>
-    <td width="15%">{$keyword.create_time|date_format:"%Y-%m-%d %H:%M:%S"}</td>
-    <td width="24%" align="center">
+    <td align="left" width="5%">{$keyword.keyword_id}</td>
+    <td align="left" width="10%">{$keyword.keywords}</td>
+    <td width="8%">{if $keyword.msg_type eq 'text' } 纯文本消息 {else}  图文消息 {/if} </td>
+    <td align="left" width="15%">{if $keyword.article_id > 0 } {$keyword.article_id} {/if} </td>
+    <td align="left" >{$keyword.content}</td>
+    <td width="5%">{if $keyword.status == 1 } 已生效 {else}  未生效 {/if}</td>
+    <td width="8%">{$keyword.create_time|date_format:"%Y-%m-%d %H:%M:%S"}</td>
+    <td width="10%" align="center">
       <a href="wx_keyword.php?act=edit&amp;keyword_id={$keyword.keyword_id}">{$lang.edit}</a> |
       <a href="javascript:;" onclick="listTable.remove({$keyword.keyword_id},'{$lang.drop_confirm}')" title="{$lang.remove}">{$lang.remove}</a>
     </td>

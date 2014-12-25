@@ -7,21 +7,25 @@
       <tr>
         <td class="label">{$lang.wx_keyword_keywords}:</td>
         <td>
-          <input type='text' name='keywords' maxlength="20" value='{$keyword_info.keywords|escape:html}' size='27' /> <font color="red">*</font>
+          <input type='text' name='keywords' maxlength="20" value='{$wx_keyword.keywords|escape:html}' size='27' /> {$lang.require_field}
         </td>
       </tr>
       <tr>
         <td class="label">{$lang.wx_keyword_content_type}</td>
         <td>
-          <input type="radio" name="msg_type" value="text" {if $keyword_info.msg_type== "text"} checked="checked"{/if} />{$lang.wx_msg_text} 
-          <input type="radio" name="msg_type" value="article" {if $keyword_info.msg_type == "article"} checked="checked"{/if} />{$lang.wx_msg_article} 
+          <input type="radio" name="msg_type" id="r_text" value="text"  {if $wx_keyword.msg_type== "text" || $wx_keyword.msg_type== ""} checked="checked"{/if} />{$lang.wx_msg_text} 
+          <input type="radio" name="msg_type" id="r_news" value="news" {if $wx_keyword.msg_type == "news"} checked="checked"{/if} />{$lang.wx_msg_article} 
+          {$lang.require_field}
         </td>
       </tr>
       <tr>
-        <td class="label">{$lang.wx_keyword_article}</td>
+        <td class="label">{$lang.wx_keyword_news}</td>
         <td>
-           <select name="article_id" ><option value="0">{$lang.select_please}</option>{$article_list}</select>
-<!--      <select name="cat_id" onchange="hideCatDiv()" ><option value="0">{$lang.select_please}</option>{$cat_list}</select>
+          <select name="news_id" >
+            <option value="0">{$lang.select_please}</option>{$news_list}
+          </select>
+          <!--      
+          <select name="cat_id" onchange="hideCatDiv()" ><option value="0">{$lang.select_please}</option>{$cat_list}</select>
           {if $is_add}
           <a href="javascript:void(0)" onclick="rapidCatAdd()" title="{$lang.rapid_add_cat}" class="special">{$lang.rapid_add_cat}</a>
           <span id="category_add" style="display:none;">
@@ -31,23 +35,24 @@
            <a href="javascript:void(0)" onclick="hideCatDiv()" title="{$lang.hide}" class="special" ><< </a>
            </span>
            {/if}
-           {$lang.require_field} -->
+            -->
+           {$lang.require_field}
         </td>
       </tr>            
       <tr>
         <td class="label">{$lang.wx_keyword_content}:</td>
         <td>
-          <textarea name='content' rows="6" cols="48">{$keyword_info.content}</textarea>
+          <textarea name='content' rows="6" cols="48">{$wx_keyword.content}</textarea>{$lang.require_field}
         </td>
       </tr>
       </table>
       <div class="button-div">
         <input type="submit" value="{$lang.button_submit}" />
-        <input type="reset" value="{$lang.button_reset}" />
+        <input type="reset"  value="{$lang.button_reset}" />
       </div>
     <input type="hidden" name="act" value="{$form_act}" />
-    <input type="hidden" name="old_keywords" value="{$$keyword_info.keywords}" />
-    <input type="hidden" name="keyword_id"   value="{$keyword_info.keyword_id}" />
+    <input type="hidden" name="old_keywords" value="{$wx_keyword.keywords}" />
+    <input type="hidden" name="keyword_id"   value="{$wx_keyword.keyword_id}" />
   </form>
 </div>
 {insert_scripts files="../js/utils.js,validator.js"}
@@ -61,11 +66,12 @@ document.forms['theForm'].elements['keywords'].focus();
 function validate()
 {
   validator = new Validator("theForm");
-  validator.required("keywords", "{$lang.wx_keyword_keywords_empty}");
-  // if (parseInt(document.forms['theForm'].elements['grade'].value) >10 || parseInt(document.forms['theForm'].elements['grade'].value) < 0)
-  // {
-  //   validator.addErrorMsg('{$lang.grade_error}');
-  // }
+  validator.required("keywords", "{$lang.keywords_empty}");
+
+  if(document.getElementById('r_text').checked){
+
+    validator.required("content", "{$lang.content_empty}");
+  }
   return validator.passed();
 }
 onload = function()
@@ -74,54 +80,6 @@ onload = function()
   startCheckOrder();
 }
 
-/**
- * 新增一个筛选属性
- */
-function addFilterAttr(obj)
-{
-  var src = obj.parentNode.parentNode;
-  var tbl = document.getElementById('tbody-attr');
-
-  var validator  = new Validator('theForm');
-  var filterAttr = document.getElementsByName("filter_attr[]");
-
-  if (filterAttr[filterAttr.length-1].selectedIndex == 0)
-  {
-    validator.addErrorMsg(filter_attr_not_selected);
-  }
-  
-  for (i = 0; i < filterAttr.length; i++)
-  {
-    for (j = i + 1; j <filterAttr.length; j++)
-    {
-      if (filterAttr.item(i).value == filterAttr.item(j).value)
-      {
-        validator.addErrorMsg(filter_attr_not_repeated);
-      } 
-    } 
-  }
-
-  if (!validator.passed())
-  {
-    return false;
-  }
-
-  var row  = tbl.insertRow(tbl.rows.length);
-  var cell = row.insertCell(-1);
-  cell.innerHTML = src.cells[0].innerHTML.replace(/(.*)(addFilterAttr)(.*)(\[)(\+)/i, "$1removeFilterAttr$3$4-");
-  filterAttr[filterAttr.length-1].selectedIndex = 0;
-}
-
-/**
- * 删除一个筛选属性
- */
-function removeFilterAttr(obj)
-{
-  var row = rowindex(obj.parentNode.parentNode);
-  var tbl = document.getElementById('tbody-attr');
-
-  tbl.deleteRow(row);
-}
 //-->
 </script>
 {/literal}

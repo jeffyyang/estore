@@ -92,13 +92,11 @@ if ($_REQUEST['act'] == 'insert')
     /* 初始化变量 */
     $wx_keyword['keywords']     = !empty($_POST['keywords'])     ? trim($_POST['keywords'])     : '';
     $wx_keyword['msg_type']     = !empty($_POST['msg_type'])     ? $_POST['msg_type']           : '';
-    $wx_keyword['article_id']   = !empty($_POST['article_id'])   ? intval($_POST['article_id']) : 0;
+    $wx_keyword['news_id']      = !empty($_POST['news_id'])      ? intval($_POST['news_id']) : 0;
     $wx_keyword['content']      = !empty($_POST['content'])      ? trim($_POST['content'])      : '';
     $wx_keyword['status']       = !empty($_POST['status'])       ? intval($_POST['status'])     : 1;
     $wx_keyword['create_time']  =  time();
-
-    echo $wx_keyword['create_time'];
-
+    
     if (wx_keyword_exists($wx_keyword['keywords']))
     {
         /* 同级别下不能有重复的分类名称 */
@@ -132,14 +130,15 @@ if ($_REQUEST['act'] == 'edit')
     admin_priv('wx_manage');   // 权限检查
     $keyword_id = intval($_REQUEST['keyword_id']);
 
-    $sql = "SELECT keyword_id, keywords, msg_type, article_id, content, status, create_time FROM " .$ecs->table('wx_keyword'). " WHERE keyword_id='$keyword_id'";
+    $sql = "SELECT keyword_id, keywords, msg_type, news_id, content, status, create_time FROM " 
+        .$ecs->table('wx_keyword'). " WHERE keyword_id='$keyword_id'";
 
-    $keyword = $db->GetRow($sql);
+    $wx_keyword = $db->GetRow($sql);
 
     /* 模板赋值 */
     $smarty->assign('action_link', array('text' => $_LANG['03_wx_keyword_list'], 'href' => 'wx_keyword.php?act=list'));
 
-    $smarty->assign('keyword_info', $keyword);
+    $smarty->assign('wx_keyword', $wx_keyword);
     $smarty->assign('form_act', 'update');
 
     /* 显示页面 */
@@ -154,29 +153,26 @@ if ($_REQUEST['act'] == 'update')
 {
     /* 权限检查 */
     admin_priv('wx_manage');
-
-    /* 初始化变量 */
-    $keyword_id      = !empty($_POST['keyword_id']) ? intval($_POST['keyword_id'])     : 0;
     $old_keywords    = $_POST['old_keywords'];
+    /* 初始化变量 */
+    $keyword_id      = !empty($_POST['keyword_id']) ? intval($_POST['keyword_id'])       : 0;
     $wx_keyword['keywords']  = !empty($_POST['keywords']) ? trim($_POST['keywords'])     : '';
-    $wx_keyword['content']   = !empty($_POST['content']) ? $_POST['content']           : '';
+    $wx_keyword['content']   = !empty($_POST['content']) ? $_POST['content']             : '';
     $wx_keyword['create_time']  =  time();
 
     /* 判断关键字名是否重复 */
-/*    if ($wx_keyword['keywords'] != $old_keyword_keywords)
+    if ($wx_keyword['keywords'] != $old_keyword_keywords)
     {
         if (wx_keyword_exists($wx_keyword['keywords']))
         {
            $link[] = array('text' => $_LANG['go_back'], 'href' => 'javascript:history.back(-1)');
            sys_msg($_LANG['keywords_exist'], 0, $link);
         }
-    }*/
-
-    $dat = $db->getRow("SELECT keywords FROM ". $ecs->table('wx_keyword') . " WHERE keyword_id = '$keyword_id'");
+    }
 
     if ($db->autoExecute($ecs->table('wx_keyword'), $wx_keyword, 'UPDATE', "keyword_id='$keyword_id'"))
     {
-        /* 更新分类信息成功 */
+        /* 更新回复关键字信息成功 */
         clear_cache_files(); // 清除缓存
         admin_log($_POST['keywords'], 'edit', 'wx_keyword'); // 记录管理员操作
 
@@ -194,7 +190,7 @@ if ($_REQUEST['act'] == 'remove')
 {
     check_authz_json('wx_manage');
 
-    /* 初始化分类ID并取得分类名称 */
+    /* 初始化ID并取得回复关键字名称 */
     $keyword_id   = intval($_GET['id']);
     
     $keywords = $db->getOne('SELECT keywords FROM ' .$ecs->table('wx_keyword'). " WHERE keyword_id='$keyword_id'");
@@ -281,7 +277,7 @@ function wx_keyword_list()
         $filter = page_and_size($filter);
 
         /* 查询 */
-        $sql = "SELECT c.keyword_id, c.keywords, c.msg_type, c.article_id, c.status, c.content, c.create_time".
+        $sql = "SELECT c.keyword_id, c.keywords, c.msg_type, c.news_id, c.status, c.content, c.create_time".
                " FROM ".$GLOBALS['ecs']->table('wx_keyword'). " AS c " .
                " ORDER by " . $filter['sort_by'] .
                " LIMIT " . $filter['start'] . ',' . $filter['page_size'];

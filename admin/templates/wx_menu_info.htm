@@ -7,7 +7,7 @@
       <tr>
         <td class="label">{$lang.wx_menu_name}:</td>
         <td>
-          <input type='text' name='menu_name' maxlength="20" value='{$wx_menu_info.menu_name|escape:html}' size='27' /> <font color="red">*</font>
+          <input type='text' name='menu_name' maxlength="20" value='{$wx_menu_info.menu_name|escape:html}' size='27' />{$lang.require_field}
         </td>
       </tr>
       <tr>
@@ -23,14 +23,16 @@
       <tr>
         <td class="label">{$lang.wx_menu_type}:</td>
         <td>
-          <input type="radio" name="menu_type" value="view"  {if $wx_menu_info.menu_type eq "view"}  checked="true" {/if} /> {$lang.wx_menu_type_url}
+          <input type="radio" name="menu_type" value="view"  {if ($wx_menu_info.menu_type eq "view" || $wx_menu_info.menu_type eq "" )}  checked="true" {/if} /> 
+          {$lang.wx_menu_type_url}
           <input type="radio" name="menu_type" value="click" {if $wx_menu_info.menu_type eq "click"} checked="true" {/if} /> {$lang.wx_menu_type_event}
         </td>
       </tr>
       <tr>
         <td class="label"><a href="javascript:showNotice('noticeUrl');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.notice_style}"></a>{$lang.wx_menu_view_url}:</td>
         <td>
-          <input type="text" name="web_url" value="{$wx_menu_info.web_url}" size="40" /> <br />
+          <input type="text" name="web_url" value="{$wx_menu_info.web_url}" size="40" 
+          style="color:#aaa;" onfocus="if (this.value == ''){this.value='http://';this.style.color='#000';}"/>{$lang.require_field} <br/>
           <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeUrl">{$lang.notice_url}</span>
         </td>
       </tr>
@@ -38,7 +40,7 @@
       <tr>
         <td class="label"><a href="javascript:showNotice('noticeKey');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.notice_style}"></a>{$lang.wx_menu_click_key}:</td>
         <td>
-          <input type="text" name="event_key" value="{$wx_menu_info.event_key}" size="40" /> <br />
+          <input type="text" name="event_key" value="{$wx_menu_info.event_key}" size="40" />{$lang.require_field}<br/>
           <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeKey">{$lang.notice_key}</span>
         </td>
       </tr>
@@ -53,7 +55,7 @@
       <tr>
         <td class="label">{$lang.wx_menu_desc}:</td>
         <td>
-          <textarea name='menu_desc' rows="6" cols="48">{$wx_menu_info.menu_desc}</textarea>
+          <textarea name='menu_desc' rows="6" cols="48">{$wx_menu_info.menu_desc}</textarea>{$lang.require_field}
         </td>
       </tr>
       </table>

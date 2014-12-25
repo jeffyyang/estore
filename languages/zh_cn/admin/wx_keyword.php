@@ -14,12 +14,12 @@
 */
 
 /* 回复关键字字段信息 */
-$_LANG['wx_keyword_id'] = '标识号';
+$_LANG['wx_keyword_id'] = '编号';
 $_LANG['wx_keyword_keywords'] = '关键字';
-$_LANG['wx_keyword_content_type']  = '回复类型';
+$_LANG['wx_keyword_content_type']  = '回复消息类型';
 $_LANG['wx_keyword_content_article_id'] = '图文标识';
-$_LANG['wx_keyword_content'] = '回复文本内容';
-$_LANG['wx_keyword_article'] = '回复图文内容';
+$_LANG['wx_keyword_content'] = '回复文本消息内容';
+$_LANG['wx_keyword_news']    = '回复图文消息';
 $_LANG['wx_keyword_status'] = '状态';
 $_LANG['wx_keyword_create_time'] = '创建时间';
 $_LANG['wx_keyword_edit'] = '编辑关键字';
@@ -35,6 +35,7 @@ $_LANG['continue_add'] = '继续添加微信关键字';
 $_LANG['drop_confirm'] = '确定要删除吗?';
 
 $_LANG['keywords_empty'] = '关键字不能为空!';
+$_LANG['content_empty']  = '文本消息的内容不能为空!';
 $_LANG['keywords_exist'] = '已存在相同的关键字!';
 $_LANG['delete_info'] = '删除选中';
 $_LANG['add_succed']  = '新关键字添加成功!';
@@ -43,6 +44,5 @@ $_LANG['drop_succed'] = '微信关键字删除成功!';
 
 /*JS 语言项*/
 $_LANG['js_languages']['keywords_empty'] = '关键字不能为空!';
-$_LANG['js_languages']['is_leafcat'] = '您选定的分类是一个末级分类。\r\n新分类的上级分类不能是一个末级分类';
-$_LANG['js_languages']['not_leafcat'] = '您选定的分类不是一个末级分类。\r\n商品的分类转移只能在末级分类之间才可以操作。';
+$_LANG['js_languages']['content_empty']  = '文本消息的内容不能为空!';
 ?>
