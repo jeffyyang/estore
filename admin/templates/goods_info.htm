@@ -94,7 +94,6 @@
           </tr>
           -->
          {if $is_admin eq 1} 
-
            {if $suppliers_exists eq 1}
             <tr>
               <td class="label">{$lang.label_suppliers}</td>
@@ -118,9 +117,9 @@
             <td class="label"><label for="is_promote"><input type="checkbox" id="is_promote" name="is_promote" value="1" {if $goods.is_promote}checked="checked"{/if} onclick="handlePromote(this.checked);" /> {$lang.lab_promote_price}</label></td>
             <td id="promote_3"><input type="text" id="promote_1" name="promote_price" value="{$goods.promote_price}" size="20" /></td>
           </tr> -->
-          <tr id="promote_4">
-            <td class="label" id="promote_5">{$lang.lab_group_date}</td>
-            <td id="promote_6">
+          <tr id="group_date">
+            <td class="label">{$lang.lab_group_date}</td>
+            <td>
               <input name="promote_start_date" type="text" id="promote_start_date" size="12" value='{$goods.promote_start_date}' readonly="readonly" /><input name="selbtn1" type="button" id="selbtn1" onclick="return showCalendar('promote_start_date', '%Y-%m-%d', false, false, 'selbtn1');" value="{$lang.btn_select}" class="button"/> - <input name="promote_end_date" type="text" id="promote_end_date" size="12" value='{$goods.promote_end_date}' readonly="readonly" /><input name="selbtn2" type="button" id="selbtn2" onclick="return showCalendar('promote_end_date', '%Y-%m-%d', false, false, 'selbtn2');" value="{$lang.btn_select}" class="button"/>
             </td>
           </tr>
@@ -195,7 +194,6 @@
               <input name="use_start_date" type="text" id="use_start_date" size="12" value='{$goods.use_start_date}' readonly="readonly" /><input name="selbtn1" type="button" id="selbtn1" onclick="return showCalendar('use_start_date', '%Y-%m-%d', false, false, 'selbtn1');" value="{$lang.btn_select}" class="button"/> - <input name="use_end_date" type="text" id="use_end_date" size="12" value='{$goods.use_end_date}' readonly="readonly" /><input name="selbtn2" type="button" id="selbtn2" onclick="return showCalendar('use_end_date', '%Y-%m-%d', false, false, 'selbtn2');" value="{$lang.btn_select}" class="button"/>
             </td>
           </tr>
-
           <tr>
             <td class="label">{$lang.lab_picture}</td>
             <td>
@@ -838,7 +836,7 @@
     // hideCatDiv();
     
     var use_date_div = document.getElementById("use_date");
-    var group_date_div = document.getElementById("promote_4");
+    var group_date_div = document.getElementById("group_date");
 
     var parent = obj.options[obj.selectedIndex].value;
 
@@ -846,12 +844,12 @@
 
       if(use_date_div.style.display != null)
       {
-          use_date_div.style.display = 'block';
+          use_date_div.style.display = 'table-row';
       }
 
       if(group_date_div.style.display != null)
       {
-          group_date_div.style.display = 'block';
+          group_date_div.style.display = 'table-row';
       }
       document.forms['theForm'].elements['extension_code'].value = 'virtual_goods';
     
