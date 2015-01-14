@@ -79,13 +79,15 @@ switch ($action)
         //     $ids_array = explode(';', $send_ids);
         // }
 
-        $send_group_id = isset($_POST['send_group']) ? $_POST['send_group'] : 0;
+        // $send_group_id = isset($_POST['send_group']) ? $_POST['send_group'] : 0;
 
-        $msg_type   = isset($_POST['msg_type']) ? $_POST['msg_type']: 0;
+        // $msg_type   = isset($_POST['msg_type']) ? $_POST['msg_type']: 0;
 
-        $msg_txt    = isset($_POST['msg_txt']) ? $_POST['msg_txt']: '';
+        // $msg_txt    = isset($_POST['msg_txt']) ? $_POST['msg_txt']: '';
         
-        $result = $wechat->sendMessage($send_group_id, $msg_type, $msg_txt);
+        // $result = $wechat->sendMessage($send_group_id, $msg_type, $msg_txt);
+        // $result = $wechat->sendDeliverMessage('o5iYiuBp4F8VtjZcCulZc1M4VdII', 'STO快递', '727661');
+        $result = $wechat->sendRefundEndMessage('o5iYiuBp4F8VtjZcCulZc1M4VdII', '用户申请退款', '20元');
 
         $link[] = array('text'  =>  $_LANG['back'] . $_LANG['06_wx_msg_send'],
                         'href'  =>  'wx_message.php?act=display_send_ui');

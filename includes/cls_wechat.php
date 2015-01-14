@@ -34,6 +34,7 @@ class wechat
      */
     var $api_urls   = array(
                             'access_token'           =>  'https://api.weixin.qq.com/cgi-bin/token',
+                            'tpl_send'               =>  'https://api.weixin.qq.com/cgi-bin/message/template/send', 
                             'custom_send'            =>  'https://api.weixin.qq.com/cgi-bin/message/custom/send',
                             'mass_send'              =>  'https://api.weixin.qq.com/cgi-bin/message/mass/send',
                             'mass_send_all'          =>  'https://api.weixin.qq.com/cgi-bin/message/mass/sendall',
@@ -136,10 +137,58 @@ class wechat
 
         $post_json_body = $this->json->encode($send_str);
 
-        echo $post_json_body;
-
         $result = $this->mass_send_all($post_json_body);
 
+        return $result;
+    }
+
+    /* 发送发货提示消息
+     *
+     * @access  public
+     * @param   arry    $open_id      
+     * @param   string  $msg             发送的消息内容
+     */
+    function sendDeliverMessage($open_id, $deliver_name, $deliver_order_sn)
+    {
+        $tpl_id = 'S-EIiYAIcqEjCx4a0g8CAhEtHwANopQzm6LYUqz3tMs';
+        $send_str = array();
+        $send_str['touser'] = $open_id;
+        $send_str['template_id'] = $tpl_id;
+        $send_str['url'] = 'http://weixin.qq.com/download';
+        $send_str['topcolor'] = '#FF0000';
+
+        $send_str['data']['first'] = array('value' => '亲，宝贝已经启程了，好想快点来到你身边', 'color' => '#173177');
+        $send_str['data']['delivername'] = array('value' => $deliver_name, 'color' => '#173177');
+        $send_str['data']['ordername'] = array('value' => $deliver_order_sn, 'color' => '#173177');
+        $send_str['data']['remark'] = array('value' => '如果疑问，请在微信服务号中输入“KF”，**将在第一时间为您服务！', 'color' => '#173177');
+
+        $post_json_body = $this->json->encode($send_str);
+        $result = $this->tpl_send($post_json_body);
+        return $result;
+    }
+
+    /* 发送退款完成消息
+     *
+     * @access  public
+     * @param   arry    $open_id      
+     * @param   string  $msg       发送的消息内容
+     */
+    function sendRefundEndMessage($open_id, $reason, $refund_amount)
+    {
+        $tpl_id = 'c-jyJ4vx3KOr60SllhWh09rYkGSpp2nR9ZMDEUVVEZE';
+        $send_str = array();
+        $send_str['touser'] = $open_id;
+        $send_str['template_id'] = $tpl_id;
+        $send_str['url'] = 'http://weixin.qq.com/download';
+        $send_str['topcolor'] = '#FF0000';
+
+        $send_str['data']['first'] = array('value' => '您好，您对微信影城影票的抢购未成功，已退款。', 'color' => '#173177');
+        $send_str['data']['reason'] = array('value' => $reason, 'color' => '#173177');
+        $send_str['data']['refund'] = array('value' => $refund_amount, 'color' => '#173177');
+        $send_str['data']['remark'] = array('value' => '备注：如有疑问，请致电13912345678联系我们，或回复M来了解详情', 'color' => '#173177');
+
+        $post_json_body = $this->json->encode($send_str);
+        $result = $this->tpl_send($post_json_body);
         return $result;
     }
 
@@ -159,6 +208,15 @@ class wechat
 
         $access_token = $this->get_cached_access_token();
         $api_url = $this->get_url('mass_send').'?access_token='.$access_token;
+        $response = $this->t->request($api_url, $json_body,'POST');
+        $result = $this->json->decode($response['body'], true);
+        return $result;
+    }
+
+    // OPenID列表发消息
+    function tpl_send($json_body){
+        $access_token = $this->get_cached_access_token();
+        $api_url = $this->get_url('tpl_send').'?access_token='.$access_token;
         $response = $this->t->request($api_url, $json_body,'POST');
         $result = $this->json->decode($response['body'], true);
         return $result;
