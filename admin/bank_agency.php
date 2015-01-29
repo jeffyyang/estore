@@ -286,6 +286,7 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
         $suppliers['address']           = !empty($_POST['suppliers_address'])   ? trim($_POST['suppliers_address']) : '';
         $suppliers['traffic_info']      = !empty($_POST['traffic_info'])        ? trim($_POST['traffic_info'])      : '';
         $suppliers['agency_desc']       = !empty($_POST['suppliers_desc'])      ? trim($_POST['suppliers_desc'])    : '';
+        $suppliers['add_time']          = gmtime();
 
         /* 判断名称是否重复 */
         $sql = "SELECT agency_id
