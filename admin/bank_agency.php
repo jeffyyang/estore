@@ -83,7 +83,7 @@ elseif ($_REQUEST['act'] == 'edit_agency_name')
     }
     else
     {
-        /* 保存供货商信息 */
+        /* 保存银行机构信息 */
         $sql = "UPDATE " . $ecs->table('bank_agency') . "
                 SET agency_name = '$name'
                 WHERE agency_id = '$id'";
@@ -134,7 +134,7 @@ elseif ($_REQUEST['act'] == 'remove')
 }
 
 /*------------------------------------------------------ */
-//-- 修改门店状态
+//-- 修改银行机构状态
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'is_check')
 {
@@ -214,14 +214,10 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
     if ($_REQUEST['act'] == 'add')
     {
         $agency = array();
-        /* 取得地区 */
-        // $province_list = get_regions(1,1);
-        // $smarty->assign('province_list', $province_list);
-        // 吉林
-        $city_list = get_regions_list(2,15);
-        // 江苏
-        // $city_list = get_regions_list(2,16);
-        $smarty->assign('city_list', $city_list);
+
+        /* 取得省份列表 */
+        $province_list = get_regions_list(1,1);
+        $smarty->assign('province_list', $province_list);   
 
         $smarty->assign('ur_here', $_LANG['add_bank_agency']);
         $smarty->assign('action_link', array('href' => 'bank_agency.php?act=list', 'text' => $_LANG['suppliers_list']));
@@ -241,9 +237,10 @@ elseif (in_array($_REQUEST['act'], array('add', 'edit')))
         $sql = "SELECT * FROM " . $ecs->table('bank_agency') . " WHERE agency_id = '$id'";
         $agency = $db->getRow($sql);
 
-        /* 取得地区 */
-        // $province_list = get_regions(1,1);
-        // $smarty->assign('province_list', $province_list);
+        /* 取得省份列表 */
+        $province_list = get_regions_list(1,1);
+        $smarty->assign('province_list', $province_list);
+        
         $city = get_region($agency['region_cities']); 
         $smarty->assign('city', $city);
 
