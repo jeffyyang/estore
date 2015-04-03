@@ -1,0 +1,149 @@
+<!-- $Id: account_list.htm 14928 2008-10-06 09:25:48Z testyang $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,listtable.js"}
+
+<div class="form-div">
+    <form method="post" action="bill.php?act=list&suppliers_id={$smarty.get.suppliers_id}" name="searchForm">
+      <select name="pay_status" onchange="document.forms['searchForm'].submit();">
+        <option value="-1" {if $pay_status eq -1 } selected="selected" {/if}> {$lang.all_bill}</option>
+        <option value="0"  {if $pay_status eq 1 }  selected="selected" {/if}> {$lang.bill_unpay}</option>
+        <option value="1"  {if $pay_status eq 0 }  selected="selected" {/if}> {$lang.bill_paid}</option>
+      </select>
+      <strong>{$lang.label_user_name}</strong>{$user.user_name}
+      <strong>{$lang.label_sum_fee}</strong>{$sum_fee}  <strong>元</strong>  
+      <span class="action-span" ><input type="button" value="{$lang.button_paid}" /></span>
+    </form>
+</div>
+
+<form method="post" action="" name="listForm" onsubmit="return check();">
+<div class="list-div" id="listDiv">
+{/if}
+  <table cellpadding="3" cellspacing="1">
+    <tr>
+      <th width="12%">
+        <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" />
+        {$lang.label_order_sn}
+      </th>
+<!--       <th width="15%">{$lang.label_order_sn}</th> -->
+      <th width="8%">{$lang.label_bill_type}</th>
+      <th width="8%">{$lang.label_bill_money}</th>
+      <th width="8%">{$lang.label_bill_charge}</th>      
+      <th width="8%">{$lang.label_trans_status}</th>
+      <th width="12%">{$lang.label_trans_time}</th>
+      <th width="8%">{$lang.label_bill_status}</th>
+      <th width="12%">{$lang.label_bill_time}</th>
+      <th width="12%">{$lang.label_bill_admin}</th>
+    </tr>
+    {foreach from=$bill_list item=bill}
+    <tr>
+      <td valign="top" nowrap="nowrap"><input type="checkbox" name="checkboxes" value="{$bill.order_sn}" />
+        {$bill.order_sn}
+      </td>      
+      <td align="center">
+        支付
+        <!-- {if $bill.process_type eq 0 }支付{/if} {if $bill.process_type eq 1 }退款{/if} --> 
+      </td>      
+      <td align="right" >
+        {if $bill.amount gt 0}
+          <span style="color:#00FF59">{$bill.amount}</span>
+        {elseif $bill.order_amount lt 0}
+          <span style="color:#FF0000">{$bill.amount}</span>
+        {/if}
+      </td>  
+      <td align="right" >
+        {if $bill.charge gt 0}
+          <span style="color:#FF0000">{$bill.charge}</span>
+        {elseif $bill.charge lt 0}
+          <span style="color:#00FF59">{$bill.charge}</span>
+        {/if}
+      </td>            
+      <td align='center'>{$bill.trans_status}</td>
+      <td align="right" >{$bill.trans_time}</td>
+      <td align='center'>{$bill.pay_status}</td>
+      <td align="right" >{$bill.paid_time}</td>
+      <td align="right" >{$bill.admin_user}</td>
+    </tr>
+    {foreachelse}
+    <tr><td class="no-records" colspan="6">{$lang.no_records}</td></tr>
+    {/foreach}
+  </table>
+<table id="page-table" cellspacing="0">
+  <tr>
+    <td align="right" nowrap="true">
+    {include file="page.htm"}
+    </td>
+  </tr>
+</table>
+
+{if $full_page}
+</div>
+  <div>
+    <input type="hidden" name="act" value="batch" />
+    <!-- <input name="confirm" type="submit" id="btnSubmit" value="{$lang.operate_paid}" class="button" disabled="true" onclick="this.form.target = '_self'" /> -->
+    <input name="confirm" type="submit" id="btnSubmit" value="{$lang.operate_paid}" class="button" disabled="true" onclick="changeAction();" />
+    <input name="batch" type="hidden" value="1" />
+  </div>
+</form>
+<script type="text/javascript" language="javascript">
+  <!--
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+
+  {foreach from=$filter item=item key=key}
+  listTable.filter.{$key} = '{$item}';
+  {/foreach}
+
+  {literal}
+  onload = function()
+  {
+      // 开始检查订单
+      startCheckOrder();
+  }
+
+  function check()
+  {
+    var snArray = new Array();
+    var eles = document.forms['listForm'].elements;
+    for (var i=0; i<eles.length; i++)
+    {
+      if (eles[i].tagName == 'INPUT' && eles[i].type == 'checkbox' && eles[i].checked && eles[i].value != 'on')
+      {
+        snArray.push(eles[i].value);
+      }
+    }
+    if (snArray.length == 0)
+    {
+      return false;
+    }
+    else
+    {
+      eles['order_id'].value = snArray.toString();
+      return true;
+    }
+  }
+
+  /**
+   * @param: bool ext 其他条件：用于转移分类
+   */
+  function confirmSubmit(frm, ext)
+  {
+    return confirm(batch_paid_confirm);
+
+  }
+
+  /*  批量操作*/
+  function changeAction()
+  {
+      var frm = document.forms['listForm'];
+      if (!document.getElementById('btnSubmit').disabled &&
+          confirmSubmit(frm, false))
+      {
+          frm.submit();
+      }
+  }
+  {/literal}
+  //-->
+</script>
+{include file="pagefooter.htm"}
+{/if}

@@ -20,8 +20,8 @@ if (!defined('IN_ECS'))
 
 
 $modules['01_shop']['shopcate_list']                = 'shopcate.php?act=list';         // 商户分类列表
-$modules['01_shop']['shop_list'] 					= 'shops.php?act=list';            // 商户列表
-$modules['01_shop']['suppliers_list']         		= 'suppliers.php?act=list';        // 门店列表
+$modules['01_shop']['shop_list'] 					          = 'shops.php?act=list';            // 商户列表
+$modules['01_shop']['suppliers_list']         		  = 'suppliers.php?act=list';        // 门店列表
 
 $modules['02_cat_and_goods']['01_goods_list']       = 'goods.php?act=list';         // 商品列表
 $modules['02_cat_and_goods']['02_goods_add']        = 'goods.php?act=add';          // 添加商品
@@ -31,7 +31,7 @@ $modules['02_cat_and_goods']['03_category_list']    = 'category.php?act=list';
 $modules['02_cat_and_goods']['08_goods_type']       = 'goods_type.php?act=manage';
 $modules['02_cat_and_goods']['11_goods_trash']      = 'goods.php?act=trash';        // 商品回收站
 // $modules['02_cat_and_goods']['12_batch_pic']        = 'picture_batch.php';
-// $modules['02_cat_and_goods']['13_batch_add']        = 'goods_batch.php?act=add';    // 商品批量上传
+$modules['02_cat_and_goods']['13_batch_add']        = 'goods_batch.php?act=add';    // 商品批量上传
 // $modules['02_cat_and_goods']['14_goods_export']     = 'goods_export.php?act=goods_export';
 // $modules['02_cat_and_goods']['15_batch_edit']       = 'goods_batch.php?act=select'; // 商品批量修改
 // $modules['02_cat_and_goods']['16_goods_script']     = 'gen_goods_script.php?act=setup';
@@ -70,6 +70,12 @@ $modules['04_order']['10_back_order']               = 'order.php?act=back_list';
 $modules['04_order']['11_excode_verify']            = 'excode.php?act=list';
 $modules['04_order']['11_refund_list']              = 'refund.php?act=list';
 $modules['04_order']['12_complaints_list']          = 'complaints.php?act=list';
+
+// 结算管理
+$modules['05_settle']['01_batch_bill_import']       = 'bill_batch.php?act=add';
+$modules['05_settle']['02_bill_list']               = 'bill.php?act=list';
+$modules['05_settle']['03_suppliers_bill_list']     = 'bill.php?act=list';
+
 // 
 // 广告管理
 // $modules['05_banner']['ad_position']                = 'ad_position.php?act=list';
